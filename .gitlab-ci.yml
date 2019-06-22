@@ -1,0 +1,20 @@
+stages:
+- analysis
+
+sonarqube:
+  stage: analysis
+  image: ciricihq/gitlab-sonar-scanner
+  variables:
+    SONAR_URL: http://54.38.94.170:9000/
+    SONAR_ANALYSIS_MODE: issues
+  script:
+  - gitlab-sonar-scanner
+
+sonarqube-reports:
+  stage: analysis
+  image: ciricihq/gitlab-sonar-scanner
+  variables:
+    SONAR_URL: http://54.38.94.170:9000/
+    SONAR_ANALYSIS_MODE: publish
+  script:
+  - gitlab-sonar-scanner
