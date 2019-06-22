@@ -8,7 +8,7 @@ code_quality:
     DOCKER_DRIVER: overlay2
   script:
     - docker run
-        --env SOURCE_CODE="$PWD"
+        --env SOURCE_CODE="http://54.38.94.170:9080/gara/gara-developer-console.git"
         --volume "$PWD":/code
         --volume /var/run/docker.sock:/var/run/docker.sock
         "registry.gitlab.com/gitlab-org/security-products/codequality:11-8-stable" /code
