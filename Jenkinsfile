@@ -29,8 +29,7 @@ pipeline {
         
         stage('Deploy') { 
             steps {
-                sh 'export PATH=/bin/bash:$PATH'
-                sh './var/jenkins_home/workspace/gara-developer-console/scripts/deploy-int.sh'
+                sh '/usr/bin/bash /var/jenkins_home/workspace/gara-developer-console/scripts/deploy-int.sh'
             }
         }
     }
