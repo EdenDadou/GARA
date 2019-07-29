@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo "Starting deployment in the nginx server"
 set -x
 cp -R ../dist/* /home/nginx/console/
