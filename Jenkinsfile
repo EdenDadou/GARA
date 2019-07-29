@@ -29,7 +29,7 @@ pipeline {
         
         stage('Deploy') { 
             steps {
-                bash '$(pwd)/scripts/deploy-int.sh' 
+                sh '.$(pwd)/scripts/deploy-int.sh' 
             }
         }
     }
