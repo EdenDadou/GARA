@@ -29,10 +29,9 @@ pipeline {
         
         stage('Deploy') { 
             steps {
-
-                sh '''#!/bin/bash
-                      cp -R var/jenkins_home/workspace/gara-developer-console/dist/* /home/nginx/console/
-                     '''
+                sh 'chmod +x /var/jenkins_home/workspace/gara-developer-console/scripts/deploy-int.sh'
+                sh 'cd /var/jenkins_home/workspace/gara-developer-console/scripts/'
+                sh './deploy-int.sh'
             }
         }
     }
