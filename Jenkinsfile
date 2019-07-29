@@ -29,7 +29,7 @@ pipeline {
         
         stage('Deploy') { 
             steps {
-                sh '/usr/bin/bash /var/jenkins_home/workspace/gara-developer-console/scripts/deploy-int.sh'
+                sh 'cat /var/jenkins_home/workspace/gara-developer-console/scripts/deploy-int.sh'
             }
         }
     }
