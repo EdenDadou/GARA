@@ -30,7 +30,7 @@ pipeline {
         stage('Deploy') { 
             steps {
                 sh 'chmod +x /var/jenkins_home/workspace/gara-developer-console/scripts/deploy-int.sh'
-                sh 'script/deploy-int.sh'
+                sh './var/jenkins_home/workspace/gara-developer-console/scripts/deploy-int.sh'
             }
         }
     }
