@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
-                sh './scripts/deploy-int.sh'
+                sh 'sh scripts/deploy-int.sh'
                 sh 'npm install' 
             }
         }
