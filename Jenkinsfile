@@ -12,6 +12,7 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
+                sh 'ls /home'
                 sh 'sh scripts/deploy-int.sh'
                 sh 'npm install' 
             }
