@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
-                sh 'ls /home/nginx/console'
+                sh 'ls'
                 sh 'npm install' 
             }
         }
