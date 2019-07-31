@@ -12,8 +12,6 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
-                sh 'ls /home'
-                sh 'sh scripts/deploy-int.sh'
                 sh 'npm install' 
             }
         }
@@ -28,11 +26,6 @@ pipeline {
                 sh 'npm run build' 
             }
         }
-        
-        stage('Deploy') { 
-            steps {
-                sh 'yes | cp -R dist/* /home/nginx/console'
-            }
-        }
+
     }
 }
