@@ -29,9 +29,11 @@ pipeline {
         
         stage('Deploy') { 
             steps {
-                     bash '''#!/bin/bash
-                        echo "hello world" 
-                    '''
+                sh '''#!/bin/bash
+
+                    echo "Hello from bash"
+                    echo "Who I'm $SHELL"
+                '''
             }
         }
     }
