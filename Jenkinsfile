@@ -2,8 +2,6 @@ pipeline {
     agent {
         docker {
             image 'node:6-alpine'
-            args '-v /home/nginx/console:/$(pwd)/dist/'
-            reuseNode true
             args '-p 3000:3000' 
         }
     }
@@ -16,7 +14,7 @@ pipeline {
             steps {
                
               
-                sh 'touch /home/toto.txt'
+                sh 'touch /tmp/mecaze/test'
                 sh 'npm install' 
             }
         }
