@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:6-alpine'
+            args '-v /tmp:/tmp/mecaze/'
             args '-p 3000:3000' 
         }
     }
@@ -14,7 +15,7 @@ pipeline {
             steps {
                
               
-                sh 'touch /tmp/mecaze/test'
+                sh 'touch /tmp/mecaze/ajzpoehiajrkzajr'
                 sh 'npm install' 
             }
         }
