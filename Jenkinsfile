@@ -13,9 +13,7 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
-               
-              
-                sh 'touch /tmp/mecaze/ajzpoehiajrkzajr'
+
                 sh 'npm install' 
             }
         }
