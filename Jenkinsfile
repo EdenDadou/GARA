@@ -12,6 +12,7 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
+                sh 'touch /tmp/toto.txt'
                 sh 'npm install' 
             }
         }
@@ -30,7 +31,7 @@ pipeline {
         
         stage('Deploy') { 
             steps {
-                sh 'touch toto.txt' 
+                sh 'touch /tmp/toto.txt' 
             }
         }
 
