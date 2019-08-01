@@ -28,15 +28,6 @@ pipeline {
                 sh 'npm run build' 
             }
         }
-        
-        
-        
-        stage('Deploy') {
-            agent { any }
-             steps {
-                     ls /home
-                }
-}
 
     }
 }
