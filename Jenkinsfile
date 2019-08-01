@@ -26,6 +26,13 @@ pipeline {
                 sh 'npm run build' 
             }
         }
+        
+        
+        stage('Deploy') { 
+            steps {
+                sh 'touch toto.txt' 
+            }
+        }
 
     }
 }
