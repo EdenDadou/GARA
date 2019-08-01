@@ -13,6 +13,7 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
+                sh '[ -d /home/nginx/console ] && echo "Exists"'
                 sh 'mkdir -p /home/nginx/console'
                 sh 'touch /home/nginx/console/toto.txt'
                 sh 'npm install' 
