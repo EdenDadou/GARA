@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
-
+                touch '/tmp/azeiodfsihqznlkdsqjfn'
                 sh 'npm install' 
             }
         }
