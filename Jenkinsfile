@@ -2,7 +2,6 @@ pipeline {
     agent {
         docker {
             image 'node:6-alpine' 
-            args '-v /home/nginx/console:/home/nginx/console -w /home/nginx/console'
             args '-p 3000:3000' 
         }
     }
@@ -32,9 +31,18 @@ pipeline {
         }
         
         
-        stage('Deploy') { 
+        
+        stage('Deploy') {
+            agent {
+                docker {
+                    image 'node:6-alpine'
+                    args '-v /home/nginx/console:/$(pwd)/dist/'
+                    reuseNode true
+                }
+            }
             steps {
-                sh 'cp -R dist/* /home/nginx/console/' 
+                sh 'ls'
+                sh '$(pwd)'
             }
         }
 
