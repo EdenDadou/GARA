@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:6-alpine' 
+            args '-v /home/nginx/console:/home/nginx/console'
             args '-p 3000:3000' 
         }
     }
@@ -12,7 +13,7 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
-                sh 'touch /tmp/toto.txt'
+                sh 'touch /home/nginx/console/toto.txt'
                 sh 'npm install' 
             }
         }
@@ -31,7 +32,7 @@ pipeline {
         
         stage('Deploy') { 
             steps {
-                sh 'touch /tmp/toto.txt' 
+                sh 'cp -R dist/* /home/nginx/console/' 
             }
         }
 
