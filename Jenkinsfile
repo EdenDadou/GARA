@@ -30,7 +30,7 @@ pipeline {
         
         stage('Deploy') { 
             steps {
-                sh './$(pwd)/scripts/deploy-int.sh' 
+                sh '.$(pwd)/scripts/deploy-int.sh' 
             }
         }
 
