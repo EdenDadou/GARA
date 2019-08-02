@@ -13,7 +13,6 @@ pipeline {
     stages {
         stage('Install') { 
             steps {
-                sh 'touch /home/azeiodfsihqznlkdsqjfn'
                 sh 'npm install' 
             }
         }
@@ -26,6 +25,12 @@ pipeline {
         stage('Build') { 
             steps {
                 sh 'npm run build' 
+            }
+        }
+        
+        stage('Deploy') { 
+            steps {
+                sh './$(pwd)/scripts/deploy-int.sh' 
             }
         }
 
