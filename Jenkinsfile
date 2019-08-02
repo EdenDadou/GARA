@@ -2,8 +2,8 @@ pipeline {
     agent {
         docker {
             image 'node:6-alpine'
-            args '-v /home/nginx/console:/home'
-            args '-p 3000:3000' 
+            args '-v /home/nginx/console:/home -p 3000:3000'
+        
         }
     }
         environment {
