@@ -31,7 +31,6 @@ pipeline {
         stage('Deploy') { 
             steps {
                 sh 'cp -R dist/* /home' 
-                 sh 'java -version'
             }
         }
         
