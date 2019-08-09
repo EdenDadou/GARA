@@ -35,9 +35,7 @@ pipeline {
         }
         
         stage('Sonarqube analysis') {
-            tools {
-                   jdk "jdk8"
-            }
+  
             steps {
                 script {
                     scannerHome = tool 'SonarQube Scanner';
