@@ -44,7 +44,7 @@ pipeline {
  
                 }
                 withSonarQubeEnv('sonar') {
-                        ls "$JAVA_HOME/bin/java"
+                        sh "sl $JAVA_HOME/bin/java"
                         sh "${scannerHome}/bin/sonar-scanner" 
                 }
 
