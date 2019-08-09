@@ -35,13 +35,16 @@ pipeline {
         }
         
         stage('Sonarqube analysis') {
+            tools {
+                   jdk "jdk8"
+            }
             steps {
-                 script {
+                script {
                     scannerHome = tool 'SonarQube Scanner';
                 }
                 withSonarQubeEnv('sonar') {
                         sh "${scannerHome}/bin/sonar-scanner" 
-                    }
+                }
 
             }
         }
