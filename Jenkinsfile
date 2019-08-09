@@ -41,15 +41,10 @@ pipeline {
 
                 script {
                     scannerHome = tool 'SonarQube Scanner';
-                                                
-                if [ -n "$JAVA_HOME" ]
-                then
-                  java_cmd="$JAVA_HOME/bin/java"
-                else
-                  java_cmd="$(which java)"
-                fi
+ 
                 }
                 withSonarQubeEnv('sonar') {
+                        ls "$JAVA_HOME/bin/java"
                         sh "${scannerHome}/bin/sonar-scanner" 
                 }
 
