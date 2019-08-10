@@ -34,22 +34,5 @@ pipeline {
             }
         }
         
-        stage('Sonarqube analysis') {
-  
-            steps {
-
-
-                script {
-                    scannerHome = tool 'SonarQube Scanner';
- 
-                }
-                withSonarQubeEnv('sonar') {
-                        sh "${scannerHome}/bin/sonar-scanner" 
-                }
-
-            }
-        }
-
-
     }
 }
