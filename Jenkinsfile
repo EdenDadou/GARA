@@ -41,7 +41,7 @@ pipeline {
   
             steps {
             nodejs('nodejs') {
-                 node -v
+                 sh "node -v"
             }
 
                 script {
