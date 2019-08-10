@@ -7,13 +7,13 @@ pipeline {
     stages {
         stage('Install') { 
         
-            agent { docker 'node:6-alpine'  args '-v /home/nginx/console:/home -p 3000:3000'     }
+            agent { docker 'node:6-alpine'     }
             steps {
                 sh 'npm install' 
             }
         }
         stage('Test') { 
-            agent { docker 'node:6-alpine'  args '-v /home/nginx/console:/home -p 3000:3000'     }
+            agent { docker 'node:6-alpine'      }
             steps {
             
                 sh 'npm test' 
@@ -21,7 +21,7 @@ pipeline {
         }
         
         stage('Build') { 
-            agent { docker 'node:6-alpine'  args '-v /home/nginx/console:/home -p 3000:3000'     }
+            agent { docker 'node:6-alpine'      }
             steps {
             
                 sh 'npm run build' 
@@ -29,14 +29,14 @@ pipeline {
         }
         
         stage('Deploy') { 
-            agent { docker 'node:6-alpine'  args '-v /home/nginx/console:/home -p 3000:3000'     }
+            agent { docker 'node:6-alpine'     }
             steps {
                 sh 'cp -R dist/* /home' 
             }
         }
         
         stage('Sonarqube analysis') {
-           agent {     docker   'maven:3-alpine'    args '-v /root/.m2:/root/.m2' }
+           agent {     docker   'maven:3-alpine'   }
   
             steps {
 
