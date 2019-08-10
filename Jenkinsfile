@@ -8,6 +8,10 @@ pipeline {
         stage('Install') { 
         
             agent { docker 'node:6-alpine'     }
+                        nodejs('nodejs') {
+                 sh "which node"
+            }
+
             steps {
                 sh 'npm install' 
             }
@@ -41,7 +45,7 @@ pipeline {
   
             steps {
             nodejs('nodejs') {
-                 sh "node -v"
+                 sh "which node"
             }
 
                 script {
