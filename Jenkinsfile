@@ -42,9 +42,6 @@ pipeline {
            agent {     docker   'maven:3-alpine'   }
   
             steps {
-                nodejs('nodejs') {
-                     sh "/usr/local/bin/node -v"
-                }
 
                 script {
                     scannerHome = tool 'SonarQube Scanner';
