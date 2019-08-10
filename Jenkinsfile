@@ -8,12 +8,9 @@ pipeline {
         stage('Install') { 
         
             agent { docker 'node:6-alpine'     }
-  
+
 
             steps {
-            nodejs('nodejs') {
-                 sh "which node"
-            }
                 sh 'npm install' 
             }
         }
@@ -45,9 +42,9 @@ pipeline {
            agent {     docker   'maven:3-alpine'   }
   
             steps {
-            nodejs('nodejs') {
-                 sh "which node"
-            }
+                nodejs('nodejs') {
+                     sh "/usr/local/bin/node -v"
+                }
 
                 script {
                     scannerHome = tool 'SonarQube Scanner';
