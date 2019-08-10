@@ -40,6 +40,9 @@ pipeline {
            agent {     docker   'maven:3-alpine'   }
   
             steps {
+            nodejs('nodejs') {
+                 node -v
+            }
 
                 script {
                     scannerHome = tool 'SonarQube Scanner';
@@ -48,6 +51,7 @@ pipeline {
                 withSonarQubeEnv('sonar') {
                         sh "${scannerHome}/bin/sonar-scanner" 
                 }
+                
 
             }
         }
