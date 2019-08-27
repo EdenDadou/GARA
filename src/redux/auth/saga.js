@@ -1,11 +1,11 @@
 
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { auth } from '../../firebase';
+import { auth } from '../../helpers/Firebase';
 import {
     LOGIN_USER,
     REGISTER_USER,
     LOGOUT_USER
-} from 'Constants/actionTypes';
+} from '../actions';
 
 import {
     loginUserSuccess,
@@ -29,11 +29,9 @@ function* loginWithEmailPassword({ payload }) {
             yield put(loginUserSuccess(loginUser));
             history.push('/');
         } else {
-            // catch throw
             console.log('login failed :', loginUser.message)
         }
     } catch (error) {
-        // catch throw
         console.log('login error : ', error)
     }
 }
@@ -53,11 +51,9 @@ function* registerWithEmailPassword({ payload }) {
             yield put(registerUserSuccess(registerUser));
             history.push('/')
         } else {
-            // catch throw
             console.log('register failed :', registerUser.message)
         }
     } catch (error) {
-        // catch throw
         console.log('register error : ', error)
     }
 }

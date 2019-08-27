@@ -4,7 +4,7 @@ import {
 	SURVEY_GET_DETAILS_ERROR,
 	SURVEY_DELETE_QUESTION,
     SURVEY_SAVE
-} from 'Constants/actionTypes';
+} from '../actions';
 
 const INIT_STATE = {
 	survey:null,

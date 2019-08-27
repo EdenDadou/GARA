@@ -23,11 +23,6 @@ $gradient-color-1 : #582553;
 $gradient-color-2 : #461d42;
 $gradient-color-3 : #64295e;
 
-$lp-bg-color-1 : #240429;
-$lp-bg-color-2 : #29072b;
-$lp-bg-color-3 : #4e114b;
-$lp-bg-color-4 : #701969;
-
 $shadowOffsetsTop : 1 3 10 14 19;
 $shadowBlursTop: 2 6 10 14 19;
 $shadowOpacitiesTop: 0.1 0.3 0.6 0.7 0.8;
@@ -38,9 +33,6 @@ $shadowOpacitiesBottom: 0.1 0.3 0.6 0.7 0.8;
 
 $logoPath: "/assets/img/logo-white.svg";
 $logoPathMobile: "/assets/img/logo-mobile.svg";
-
-$lpLogoPath: "/assets/img/logo-white.svg";
-$lpLogoPathPinned: "/assets/img/logo-white.svg";
 
 @import "../_mixins.scss";
 @import "../_gogo.style.scss";

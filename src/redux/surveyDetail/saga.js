@@ -1,12 +1,10 @@
 
-import axios from 'axios';
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 
 import {
 	SURVEY_GET_DETAILS,
-	SURVEY_DELETE_QUESTION,
-	SURVEY_SAVE
-} from 'Constants/actionTypes';
+	SURVEY_DELETE_QUESTION
+} from '../actions';
 
 import {
 	getSurveyDetailSuccess,
@@ -14,7 +12,7 @@ import {
 	saveSurvey
 } from './actions';
 
-import surveyDetailData from 'Data/survey.detail.json';
+import surveyDetailData from '../../data/survey.detail.json';
 
 
 const getSurveyDetailRequest = async () => {
@@ -30,7 +28,7 @@ const getSurveyDetailRequest = async () => {
 
 const deleteQuestionRequest = async (quesitonId, survey) => {
 
-		survey.questions = survey.questions.filter(x => x.id != quesitonId);
+		survey.questions = survey.questions.filter(x => x.id !== quesitonId);
 		return await new Promise((success, fail) => {
 			success(survey);
 		})

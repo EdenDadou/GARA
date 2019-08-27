@@ -9,7 +9,7 @@ import {
     TODO_ADD_ITEM_SUCCESS,
     TODO_ADD_ITEM_ERROR,
     TODO_SELECTED_ITEMS_CHANGE
-} from 'Constants/actionTypes';
+} from '../actions';
 
 
 export const getTodoList = () => ({

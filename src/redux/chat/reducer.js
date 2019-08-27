@@ -9,7 +9,7 @@ import {
 	CHAT_CREATE_CONVERSATION,
 	CHAT_SEARCH_CONTACT,
 	CHAT_CHANGE_CONVERSATION
-} from 'Constants/actionTypes';
+} from '../actions';
 
 const INIT_STATE = {
 	allContacts: null,
@@ -51,7 +51,7 @@ export default (state = INIT_STATE, action) => {
 			return { ...state, loadingConversations: false, error: action.payload };
 
 		case CHAT_CHANGE_CONVERSATION:
-			return { ...state, selectedUser: state.allContacts.find(x => x.id == action.payload) };
+			return { ...state, selectedUser: state.allContacts.find(x => x.id === action.payload) };
 
 
 		case CHAT_ADD_MESSAGE_TO_CONVERSATION:

@@ -1,8 +1,7 @@
-import axios from "axios";
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-import { getDateWithFormat } from "Util/Utils";
+import { getDateWithFormat } from "../../helpers/Utils";
 
-import { TODO_GET_LIST, TODO_ADD_ITEM } from "Constants/actionTypes";
+import { TODO_GET_LIST, TODO_ADD_ITEM } from "../actions";
 
 import {
   getTodoListSuccess,
@@ -11,7 +10,7 @@ import {
   addTodoItemError
 } from "./actions";
 
-import todoData from "Data/todos.json";
+import todoData from "../../data/todos.json";
 
 const getTodoListRequest = async () => {
   return await new Promise((success, fail) => {

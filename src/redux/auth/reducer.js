@@ -4,7 +4,7 @@ import {
     REGISTER_USER,
     REGISTER_USER_SUCCESS,
     LOGOUT_USER
-} from 'Constants/actionTypes';
+} from '../actions';
 
 const INIT_STATE = {
     user: localStorage.getItem('user_id'),
