@@ -34,7 +34,21 @@ Table of Contents
   07.20.Tables
 */
 
+
 module.exports = {
+  /*ADD*/
+  "button.next": "Next",
+  "button.previous": "Previous",
+  "users.gender" : "Gender",
+  "users.birthday" : 'Birthday',
+  "users.phone" : 'Phone Number',
+  "forms.country": "Country",
+  'user.agrement': 'Accept Terms of Uses',
+
+
+
+
+
   /* 01.General */
   "general.copyright": "Gogo React © 2018 All Rights Reserved.",
 

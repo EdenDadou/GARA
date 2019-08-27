@@ -5,16 +5,28 @@ import { NavLink } from "react-router-dom";
 
 import { Colxx } from "Components/CustomBootstrap";
 
+import FormUserDetails from "Components/FormUserRegistration/FormUserDetails"
+import FormPersonalDetails from "Components/FormUserRegistration/FormPersonalDetails"
+import Confirm from "Components/FormUserRegistration/Confirm"
+
 import { connect } from "react-redux";
 import { registerUser } from "Redux/actions";
 
 class RegisterLayout extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      email: "demo@gogo.com",
-      password: "gogo123",
-      name: "Sarah Kortney"
+      step: 1,
+      firstName: '',
+      lastName: '',
+      email: '',
+      birthday: '',
+      country:'',
+      password: '',
+      gender: '',
+      agreeToTermsOfUse: '',
+      phoneNumber: ''
     };
   }
   onUserRegister() {
@@ -26,13 +38,72 @@ class RegisterLayout extends Component {
 
   componentDidMount() {
     document.body.classList.add("background");
+    console.log(this.state)
   }
+
+
   componentWillUnmount() {
     document.body.classList.remove("background");
   }
+
+  //Proceed to next step
+  nextStep = () => {
+    const { step } = this.state;
+    console.log(this.state.step)
+    this.setState({ step: step + 1 });
+  }
+
+
+  //Go back to previous step
+  previousStep = () => {
+    const { step } = this.state;
+    this.setState({ step: step - 1 })
+  }
+
+  //Handle field change
+  changeHandler = input => e => {
+    this.setState({ [input]: e.target.value })
+  }
+
+  //Handle field change
+  changeHandler2 = (input,value) => {
+    this.setState({ [input]: value })
+  }
+
+
+
   render() {
-    return (
-      <Fragment>
+    console.log(this.state)
+    const { step } = this.state;
+    
+    const { firstName,
+      lastName,
+      email,
+      birthday,
+      country,
+      password,
+      agreeToTermsOfUse,
+      phoneNumber,
+      gender } = this.state
+      
+      
+      
+      const values = {
+        firstName,
+        lastName,
+        email,
+        birthday,
+        country,
+        password,
+        agreeToTermsOfUse,
+        phoneNumber,
+        gender
+      }
+      
+      
+      return (
+        
+        <Fragment>
         <div className="fixed-background" />
         <main>
           <div className="container">
@@ -57,33 +128,37 @@ class RegisterLayout extends Component {
                     <CardTitle className="mb-4">
                       <IntlMessages id="user.register" />
                     </CardTitle>
-                    <Form>
-                      <Label className="form-group has-float-label mb-4">
-                        <Input type="name" defaultValue={this.state.name} />
-                        <IntlMessages id="user.fullname" />
-                      </Label>
-                      <Label className="form-group has-float-label mb-4">
-                        <Input type="email" defaultValue={this.state.email} />
-                        <IntlMessages id="user.email" />
-                      </Label>
-                      <Label className="form-group has-float-label mb-4">
-                        <Input type="password" />
-                        <IntlMessages
-                          id="user.password"
-                          defaultValue={this.state.password}
-                        />
-                      </Label>
-                      <div className="d-flex justify-content-end align-items-center">
-                        <Button
-                          color="primary"
-                          className="btn-shadow"
-                          size="lg"
-                          onClick={() => this.onUserRegister()}
-                        >
-                          <IntlMessages id="user.register-button" />
-                        </Button>
-                      </div>
-                    </Form>
+                    {(() => {
+                      switch (step) {
+                        case 1:
+                          return (
+                            <FormUserDetails
+                              nextStep={this.nextStep}
+                              changeHandler={this.changeHandler}
+                              values={values} />
+                          )
+
+                        case 2:
+                          return (
+                            <FormPersonalDetails
+                              nextStep={this.nextStep}
+                              previousStep={this.previousStep}
+                              changeHandler={this.changeHandler}
+                              changeHandler2={this.changeHandler2}
+                              values={values}/>
+                          )
+                          case 3:
+                            return(<Confirm
+                              nextStep={this.nextStep}
+                              previousStep={this.previousStep}
+                              changeHandler={this.changeHandler}
+                              changeHandler2={this.changeHandler2}
+                              values={values}/>
+                              )
+                      };
+
+                    })()}
+
                   </div>
                 </Card>
               </Colxx>
