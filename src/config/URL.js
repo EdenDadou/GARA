@@ -1,1 +1,0 @@
-export const GET_ROOT_URL= 'http://ns3140923.ip-54-38-94.eu:8080/gara-web/api/';
