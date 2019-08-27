@@ -9,7 +9,7 @@ import {
     CHAT_CREATE_CONVERSATION,
     CHAT_SEARCH_CONTACT,
     CHAT_CHANGE_CONVERSATION
-} from 'Constants/actionTypes';
+} from '../actions';
 
 
 export const getContacts = () => ({

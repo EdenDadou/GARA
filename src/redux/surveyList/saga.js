@@ -1,11 +1,10 @@
-import axios from "axios";
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-import { getDateWithFormat } from "Util/Utils";
+import { getDateWithFormat } from "../../helpers/Utils";
 
 import {
   SURVEY_LIST_GET_LIST,
   SURVEY_LIST_ADD_ITEM
-} from "Constants/actionTypes";
+} from "../actions";
 
 import {
   getSurveyListSuccess,
@@ -14,7 +13,7 @@ import {
   addSurveyItemError
 } from "./actions";
 
-import surveyListData from "Data/survey.list.json";
+import surveyListData from "../../data/survey.list.json";
 
 const getSurveyListRequest = async () => {
   return await new Promise((success, fail) => {

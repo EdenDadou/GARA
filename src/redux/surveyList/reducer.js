@@ -9,7 +9,7 @@ import {
 	SURVEY_LIST_ADD_ITEM_SUCCESS,
 	SURVEY_LIST_ADD_ITEM_ERROR,
 	SURVEY_LIST_SELECTED_ITEMS_CHANGE
-} from 'Constants/actionTypes';
+} from '../actions';
 
 const INIT_STATE = {
 	allSurveyItems: null,
@@ -47,7 +47,7 @@ export default (state = INIT_STATE, action) => {
 			return { ...state, loading: true, error: action.payload };
 
 		case SURVEY_LIST_GET_LIST_WITH_FILTER:
-			if (action.payload.column === '' || action.payload.value == '') {
+			if (action.payload.column === '' || action.payload.value === '') {
 				return { ...state, loading: true, surveyItems: state.allSurveyItems, filter: null };
 			} else {
 				const filteredItems = state.allSurveyItems.filter((item) =>

@@ -9,7 +9,7 @@ import {
     SURVEY_LIST_ADD_ITEM_SUCCESS,
     SURVEY_LIST_ADD_ITEM_ERROR,
     SURVEY_LIST_SELECTED_ITEMS_CHANGE
-} from 'Constants/actionTypes';
+} from '../actions';
 
 
 export const getSurveyList = () => ({

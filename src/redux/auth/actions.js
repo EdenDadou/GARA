@@ -4,7 +4,7 @@ import {
   LOGOUT_USER,
   REGISTER_USER,
   REGISTER_USER_SUCCESS
-} from 'Constants/actionTypes';
+} from '../actions';
 
 export const loginUser = (user, history) => ({
   type: LOGIN_USER,
