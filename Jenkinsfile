@@ -14,12 +14,19 @@ pipeline {
                 sh 'npm -v'
                 sh 'node -v'
                 sh 'npm install'
-                 sh 'npm run build' 
             
                
             }
         }
 
+        stage('Build') { 
+        
+            agent { docker 'node:10.16-alpine'     }
+            steps {
+                 
+                sh 'npm run build' 
+            }
+        }
         
 
         stage('Deploy') { 
