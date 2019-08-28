@@ -21,6 +21,7 @@ pipeline {
         
             agent { docker 'node:10.16-alpine'     }
             steps {
+                sh 'npm rebuild node-sass'
                 sh 'npm install'
                 sh 'npm run build' 
             }
