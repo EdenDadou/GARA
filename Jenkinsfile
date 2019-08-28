@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Install') { 
         
-            agent { docker 'node:10.16-alpine'     }
+            agent { docker 'node'     }
 
 
             steps {
