@@ -14,13 +14,7 @@ pipeline {
                 sh 'npm install' 
             }
         }
-        stage('Test') { 
-            agent { docker 'node:6-alpine'      }
-            steps {
-            
-                sh 'npm test' 
-            }
-        }
+
         
         stage('Build') { 
             agent { docker 'node:6-alpine'      }
