@@ -23,7 +23,7 @@ pipeline {
         
             agent { docker 'node:10.16-alpine'     }
             steps {
-                 
+                sh 'unset CI'
                 sh 'npm run build' 
             }
         }
