@@ -11,7 +11,7 @@ pipeline {
 
 
             steps {
-                sh 'npm rebuild node-sass'
+            
                 sh 'npm install' 
             }
         }
@@ -20,7 +20,7 @@ pipeline {
         stage('Build') { 
             agent { docker 'node:6-alpine'      }
             steps {
-                sh 'npm rebuild node-sass'
+        
                 sh 'npm run build' 
             }
         }
