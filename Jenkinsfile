@@ -21,7 +21,8 @@ pipeline {
 
         
         stage('Build') { 
-            agent { docker 'node:6-alpine'      }
+        
+            agent { docker 'node:10.16-alpine'     }
             steps {
                  
                 sh 'npm run build' 
