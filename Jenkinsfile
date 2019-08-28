@@ -12,6 +12,8 @@ pipeline {
 
             steps {
                 sh 'npm -v'
+                sh 'node -v'
+                sh 'npm install'
             
                
             }
@@ -21,7 +23,7 @@ pipeline {
         stage('Build') { 
             agent { docker 'node:6-alpine'      }
             steps {
-                sh 'npm install' 
+                 
                 sh 'npm run build' 
             }
         }
