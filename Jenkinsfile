@@ -5,7 +5,7 @@ pipeline {
     }
 
     stages {
-        stage('Install and build') { 
+        stage('Install') { 
         
             agent { docker 'node:10.16-alpine'     }
 
@@ -13,9 +13,7 @@ pipeline {
             steps {
                 sh 'npm -v'
                 sh 'node -v'
-                sh 'npm install'
-            
-               
+
             }
         }
 
@@ -23,6 +21,7 @@ pipeline {
         
             agent { docker 'node:10.16-alpine'     }
             steps {
+                sh 'npm install'
                 sh 'npm run build' 
             }
         }
