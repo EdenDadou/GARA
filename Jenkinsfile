@@ -24,18 +24,13 @@ pipeline {
                 sh 'npm rebuild node-sass'
                 sh 'npm install'
                 sh 'npm run build' 
-            }
-        }
-        
-
-        stage('Deploy') { 
-            agent { docker 'node:6-alpine'     }
-            steps {
                 sh 'cp -R build/* /home'
                 sshPublisher(publishers: [sshPublisherDesc(configName: 'vm-int', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'sudo cp -R /var/jenkins_home/workspace/gara-developer-console/build/* /home/nginx/console/', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/home/nginx/console/', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '/var/jenkins_home/workspace/gara-developer-console/build/*')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             }
         }
         
+
+
         stage('Sonarqube analysis') {
            agent {     docker   'maven:3-alpine'   }
   
