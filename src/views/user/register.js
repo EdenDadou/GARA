@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Row, CardTitle, Card, CardBody,CustomInput, FormGroup, Label, Input, Spinner, Form } from "reactstrap";
+import { Row, CardTitle, Card, CardBody,CustomInput, FormGroup, Label, Input, Spinner, Form, Button } from "reactstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import { Wizard, Steps, Step } from 'react-albus';
 import { injectIntl } from 'react-intl';
@@ -13,21 +13,24 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
+import { postDeveloper, APIstatus} from "../../services/Developer";
 
 let APIcountries = getCountries()
 let APIcountrieslist = []
 let countrylist = []
+
+console.log(APIstatus)
 
 class Register extends Component {
     constructor(props) {
         super(props);
         this.onClickNext = this.onClickNext.bind(this);
         this.onClickPrev = this.onClickPrev.bind(this);
-
+        
         this.form0 = React.createRef();
         this.form1 = React.createRef();
         this.form2 = React.createRef();
-
+        
         this.state = {
             bottomNavHidden: false,
             topNavDisabled: false,
@@ -41,12 +44,14 @@ class Register extends Component {
             selectedCountry: null,
             password: '',
             passwordConfirm: '',
-            gender: '',
+            gender: 'Man',
+            male : '',
             agreeToTermsOfUse: '',
-            phoneNumber: ''
+            phoneNumber: '',
+            statusPostDev: ''
         }
     }
-
+    
     componentWillMount() {
         this.getCountrylistFromAPI();
         this.setState({ agreeToTermsOfUse: false });
@@ -69,18 +74,23 @@ class Register extends Component {
     /*handle change Date*/
     handleChangeDate = (date) => {
         this.setState({ selectedDate: date });
-        this.setState({ birthday: date.format('DD-MMMM-YYYY') });
+        this.setState({ birthday: date.format()});
     }
 
  /*Handle change Gender  */ 
     handleChangeGender = gender => {
-        this.setState({ gender: gender.value });
+        this.setState({ gender: gender});
+        if(gender === 'Man'){
+            this.setState({male: true})
+        }else {
+            this.setState({male : false})
+        }
     };
 
 /*Handle change Country*/
     handleChangeCountry = country => {
         this.setState({ selectedCountry: country });
-        this.setState({ country: country.value });
+        this.setState({ country: APIcountrieslist[country.key]});
     };
 
     /*Handle field change*/
@@ -93,53 +103,77 @@ class Register extends Component {
         this.setState({ [input]: e.target.value });
     }
 
-    /*Get country and store them*/
-    async getCountrylistFromAPI() {
-        await APIcountries
+    async postDeveloperOnAPI(){
+        let developer = 
+        {
+            "agreeToTermsOfUse": true,
+            "birthday": "2019-08-03T22:58:16.315Z",
+            "country": this.state.country,
+            "createDate": "2019-08-03T22:58:16.315Z",
+            "email": this.state.email,
+            "firstName": this.state.firstName,
+            "language": "English",
+            "lastName": this.state.lastName,
+            "male": this.state.male,
+            "modifiedDate": "2019-08-03T22:58:16.315Z",
+            "password":this.state.password,
+            "phoneNumber": this.state.phoneNumber
+          }
+         await postDeveloper(developer)
+        }
+        
+
+        
+        /*Get country and store them*/
+        async getCountrylistFromAPI() {
+            await APIcountries
             .then((array) => {
                 /*---Convert the list get from the back end to ahave the correct format with the index---*/
                 countrylist.push(...array.map(({ name }, index) => ({ label: name, value: name, key: index })));
                 array.forEach((country) => { APIcountrieslist.push(country) });
-
+                
                 /*--Update the state to put the new format of the list---*/
                 this.setState({
                     countrylist: countrylist
                 });
             });
-    }
-
-    hideNavigation() {
-        this.setState({ bottomNavHidden: true, topNavDisabled: true });
-    }
-
-    /*Go Next*/
-    onClickNext(goToNext, steps, step) {
-        console.log(this.state)
-        if (steps.length - 1 <= steps.indexOf(step)) {
-            return;
         }
-        if (steps.indexOf(step)=== 0 
-        && this.state.firstName !== ''
+        
+        hideNavigation() {
+            this.setState({ bottomNavHidden: true, topNavDisabled: true });
+        }
+        
+        /*Go Next*/
+        onClickNext(goToNext, steps, step) {
+            if (steps.length - 1 <= steps.indexOf(step)) {
+                return;
+            }
+            if (steps.indexOf(step)=== 0 
+            && this.state.firstName !== ''
             && this.state.lastName !== ''
             && this.state.email !== ''
             && this.state.password !== ''
             && this.state.passwordConfirm !== ''
             && this.state.passwordConfirm === this.state.password) {
-                goToNext();
+                goToNext(2);
             }
             if (steps.indexOf(step)=== 1 
             && this.state.birthday !== ''
-                && this.state.gender !== ''
-                && this.state.phoneNumber !== ''
-                && this.state.country!=='') {
-                    goToNext();
-                }
-                if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true){
-                    this.hideNavigation();
-                    goToNext();
-                }
-    }
-
+            && this.state.gender !== ''
+            && this.state.phoneNumber !== ''
+            && this.state.country!=='') {
+                goToNext();
+            }
+            if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true){
+               this.postDeveloperOnAPI().then(res => {
+                console.log(res)
+                // axiosResponse = res;
+                })
+                this.hideNavigation();
+                goToNext();
+            }
+        }
+        
     /*Go Previous*/
     onClickPrev(goToPrev, steps, step) {
         if (steps.indexOf(step) <= 0) {
@@ -402,9 +436,14 @@ class Register extends Component {
                                                                 <p><IntlMessages id="wizard.async" /></p>
                                                             </div>
                                                         ) : (
+                                                            <div>
                                                                 <div>
                                                                     <h2 className="mb-2"><IntlMessages id="wizard.content-thanks" /></h2>
                                                                     <p><IntlMessages id="wizard.registered" /></p>
+                                                                </div>
+                                                                <Button /*onClick={}*/ >
+                                                                    Se connecter
+                                                                    </Button>
                                                                 </div>
                                                             )
                                                     }
