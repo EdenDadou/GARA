@@ -43,6 +43,8 @@ module.exports = {
 "user.phone" : "Phone Number",
 "user.country" : "Country",
 "user.agrement" : "Accept the Terms of Uses",
+"register.error.title": "Please try again later",
+"register.error.text": "Oups, there is a pb",
 
   /* 01.General */
   "general.copyright": "Gogo React © 2018 All Rights Reserved.",

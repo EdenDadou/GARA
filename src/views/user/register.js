@@ -13,19 +13,21 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
-import { postDeveloper, APIstatus} from "../../services/Developer";
+import { postDeveloper } from "../../services/Developer";
 
 let APIcountries = getCountries()
 let APIcountrieslist = []
 let countrylist = []
 
-console.log(APIstatus)
+
 
 class Register extends Component {
     constructor(props) {
         super(props);
+   
         this.onClickNext = this.onClickNext.bind(this);
         this.onClickPrev = this.onClickPrev.bind(this);
+
         
         this.form0 = React.createRef();
         this.form1 = React.createRef();
@@ -48,7 +50,7 @@ class Register extends Component {
             male : '',
             agreeToTermsOfUse: '',
             phoneNumber: '',
-            statusPostDev: ''
+            statusPostDev: null
         }
     }
     
@@ -102,27 +104,6 @@ class Register extends Component {
     changeHandler2 = input => e => {
         this.setState({ [input]: e.target.value });
     }
-
-    async postDeveloperOnAPI(){
-        let developer = 
-        {
-            "agreeToTermsOfUse": true,
-            "birthday": "2019-08-03T22:58:16.315Z",
-            "country": this.state.country,
-            "createDate": "2019-08-03T22:58:16.315Z",
-            "email": this.state.email,
-            "firstName": this.state.firstName,
-            "language": "English",
-            "lastName": this.state.lastName,
-            "male": this.state.male,
-            "modifiedDate": "2019-08-03T22:58:16.315Z",
-            "password":this.state.password,
-            "phoneNumber": this.state.phoneNumber
-          }
-         await postDeveloper(developer)
-        }
-        
-
         
         /*Get country and store them*/
         async getCountrylistFromAPI() {
@@ -165,10 +146,22 @@ class Register extends Component {
                 goToNext();
             }
             if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true){
-               this.postDeveloperOnAPI().then(res => {
-                console.log(res)
-                // axiosResponse = res;
-                })
+                let developer =   {
+                    "agreeToTermsOfUse": true,
+                    "birthday": "2019-08-03T22:58:16.315Z",
+                    "country": this.state.country,
+                    "createDate": "2019-08-03T22:58:16.315Z",
+                    "email": this.state.email,
+                    "firstName": this.state.firstName,
+                    "language": "English",
+                    "lastName": this.state.lastName,
+                    "male": this.state.male,
+                    "modifiedDate": "2019-08-03T22:58:16.315Z",
+                    "password":this.state.password,
+                    "phoneNumber": this.state.phoneNumber
+                }
+               postDeveloper(developer)
+               .then(res => {this.setState({statusPostDev : res.status})})
                 this.hideNavigation();
                 goToNext();
             }
@@ -184,6 +177,7 @@ class Register extends Component {
 
     render() {
         const { messages } = this.props.intl;
+        console.log(this.state.statusPostDev)
         const COUNTRY = this.state.countrylist
         const GENDER = [
             { value: 'Woman', label: 'Woman', key: 1 },
@@ -430,21 +424,30 @@ class Register extends Component {
                                             <Step id="step4" hideTopNav={true}>
                                                 <div className="wizard-basic-step text-center pt-3">
                                                     {
-                                                        this.state.loading ? (
+                                                        this.state.statusPostDev === 200 ? (
                                                             <div>
-                                                                <Spinner color="primary" className="mb-1" />
-                                                                <p><IntlMessages id="wizard.async" /></p>
+                                                            <div>
+                                                                <h2 className="mb-2"><IntlMessages id="wizard.content-thanks" /></h2>
+                                                                <p><IntlMessages id="wizard.registered" /></p>
+                                                            
+                                                            </div>
+                                                            <Button /*onClick={}*/ >
+                                                                Se connecter
+                                                                </Button>
                                                             </div>
                                                         ) : (
                                                             <div>
-                                                                <div>
-                                                                    <h2 className="mb-2"><IntlMessages id="wizard.content-thanks" /></h2>
-                                                                    <p><IntlMessages id="wizard.registered" /></p>
-                                                                </div>
-                                                                <Button /*onClick={}*/ >
-                                                                    Se connecter
-                                                                    </Button>
-                                                                </div>
+                                                                    <div>
+                                                                <h2 className="mb-2"><IntlMessages id="register.error.title" /></h2>
+                                                                <p><IntlMessages id="register.error.text" /></p>
+                                                            
+                                                            </div>
+                                                      
+                                                            <Button /*onClick={}*/ >
+                                                               Retry
+                                                                </Button>
+                                                            </div>
+                                                 
                                                             )
                                                     }
                                                 </div>
