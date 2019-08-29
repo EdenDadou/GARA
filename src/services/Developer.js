@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { GET_ROOT_URL } from '../config/URL';
 
- export const APIstatus;
+ export const APIstatus = 0;
 
 export const postDeveloper = (developer) => {
   axios.post( GET_ROOT_URL + 'developer/create', developer)
