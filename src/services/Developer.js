@@ -1,18 +1,15 @@
 import axios from 'axios';
 import { GET_ROOT_URL } from '../config/URL';
 
+ export const APIstatus = 0;
+
 export const postDeveloper = (developer) => {
-  axios({
-    method: 'post',
-    url: GET_ROOT_URL + 'developer/create',
-    data: developer
-  }).then(res => {
-    console.log(res);
-    console.log(res.data);
-    
-  }).catch(error => {
-      console.log(error.message);
-    })
+  axios.post( GET_ROOT_URL + 'developer/create', developer)
+  .then(res => {
+    if(res.status === 200){
+      APIstatus = 200;
+    }
+  })
 }
 
-export let responsePostDev= postDeveloper();
+

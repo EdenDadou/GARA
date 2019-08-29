@@ -13,11 +13,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
-import { postDeveloper, responsePostDev } from "../../services/Developer";
+import { postDeveloper, APIstatus} from "../../services/Developer";
 
 let APIcountries = getCountries()
 let APIcountrieslist = []
 let countrylist = []
+
+console.log(APIstatus)
 
 class Register extends Component {
     constructor(props) {
@@ -46,7 +48,7 @@ class Register extends Component {
             male : '',
             agreeToTermsOfUse: '',
             phoneNumber: '',
-            responsePostDev: ''
+            statusPostDev: ''
         }
     }
     
@@ -117,63 +119,61 @@ class Register extends Component {
             "password":this.state.password,
             "phoneNumber": this.state.phoneNumber
           }
-          console.log(developer)
-          postDeveloper(developer)
-          }
-    
+         await postDeveloper(developer)
+        }
+        
 
-
-    /*Get country and store them*/
-    async getCountrylistFromAPI() {
-        await APIcountries
+        
+        /*Get country and store them*/
+        async getCountrylistFromAPI() {
+            await APIcountries
             .then((array) => {
                 /*---Convert the list get from the back end to ahave the correct format with the index---*/
                 countrylist.push(...array.map(({ name }, index) => ({ label: name, value: name, key: index })));
                 array.forEach((country) => { APIcountrieslist.push(country) });
-
+                
                 /*--Update the state to put the new format of the list---*/
                 this.setState({
                     countrylist: countrylist
                 });
             });
-    }
-
-    hideNavigation() {
-        this.setState({ bottomNavHidden: true, topNavDisabled: true });
-    }
-
-    /*Go Next*/
-    onClickNext(goToNext, steps, step) {
-        console.log(this.state)
-        if (steps.length - 1 <= steps.indexOf(step)) {
-            return;
         }
-        if (steps.indexOf(step)=== 0 
-        && this.state.firstName !== ''
+        
+        hideNavigation() {
+            this.setState({ bottomNavHidden: true, topNavDisabled: true });
+        }
+        
+        /*Go Next*/
+        onClickNext(goToNext, steps, step) {
+            if (steps.length - 1 <= steps.indexOf(step)) {
+                return;
+            }
+            if (steps.indexOf(step)=== 0 
+            && this.state.firstName !== ''
             && this.state.lastName !== ''
             && this.state.email !== ''
             && this.state.password !== ''
             && this.state.passwordConfirm !== ''
             && this.state.passwordConfirm === this.state.password) {
-                goToNext();
+                goToNext(2);
             }
             if (steps.indexOf(step)=== 1 
             && this.state.birthday !== ''
-                && this.state.gender !== ''
-                && this.state.phoneNumber !== ''
-                && this.state.country!=='') {
-                    goToNext();
-                }
-                if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true /*&& this.state.responsePostDev === 200*/){
-                    console.log(responsePostDev)
-                    this.postDeveloperOnAPI()
-                    this.hideNavigation();
-                    goToNext();
-                }else if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true && this.state.responsePostDev !== 200){
-
-                }
-    }
-
+            && this.state.gender !== ''
+            && this.state.phoneNumber !== ''
+            && this.state.country!=='') {
+                goToNext();
+            }
+            if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true){
+               this.postDeveloperOnAPI().then(res => {
+                console.log(res)
+                // axiosResponse = res;
+                })
+                this.hideNavigation();
+                goToNext();
+            }
+        }
+        
     /*Go Previous*/
     onClickPrev(goToPrev, steps, step) {
         if (steps.indexOf(step) <= 0) {
