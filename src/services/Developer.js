@@ -1,11 +1,17 @@
 import axios from 'axios';
 import { GET_ROOT_URL } from '../config/URL';
 
-export const postDeveloper = (developer) => {
+export const RegisterDeveloper = (developer) => {
   const PromiseResponse =  axios.post( GET_ROOT_URL + 'developer/create', developer)
-
     return PromiseResponse
 }
+
+export const LoginDeveloper = (user) => {
+  const PromiseResponse =  axios.post( GET_ROOT_URL + 'utils/token', user)
+    return PromiseResponse
+}
+
+
 
 
 
