@@ -4,20 +4,34 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { loginUser } from "../../redux/actions";
+import { LoginDeveloper } from "../../services/Developer";
+
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
+
+
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "demo@gogo.com",
-      password: "gogo123"
+      email: "",
+      password: "",
+      token: "",
     };
   }
   onUserLogin() {
+    let user = {email: this.state.email, password : this.state.password}
     if (this.state.email !== "" && this.state.password !== "") {
-      this.props.loginUser(this.state, this.props.history);
+      this.setState({ [user.email]: this.state.email, [user.password]: this.state.password})
+      this.props.loginUser(user, this.props.history);
+      LoginDeveloper(user)
+      .then(res => {console.log(res)})
     }
+  }
+
+  /*Handle field change*/
+  changeHandler = input => e => {
+    this.setState({ [input]: e.target.value });
   }
 
   render() {
@@ -46,15 +60,14 @@ class Login extends Component {
               </CardTitle>
               <Form>
                 <Label className="form-group has-float-label mb-4">
-                  <Input type="email" defaultValue={this.state.email} />
+                  <Input type="email" defaultValue={this.state.email}
+                    onChange={this.changeHandler('email')} />
                   <IntlMessages id="user.email" />
                 </Label>
                 <Label className="form-group has-float-label mb-4">
-                  <Input type="password" />
-                  <IntlMessages
-                    id="user.password"
-                    defaultValue={this.state.password}
-                  />
+                  <Input type="password" 
+                  onChange={this.changeHandler('password')} />
+                  <IntlMessages id="user.password"/>
                 </Label>
                 <div className="d-flex justify-content-between align-items-center">
                   <NavLink to={`/forgot-password`}>
@@ -77,6 +90,7 @@ class Login extends Component {
     );
   }
 }
+
 const mapStateToProps = ({ authUser }) => {
   const { user, loading } = authUser;
   return { user, loading };
