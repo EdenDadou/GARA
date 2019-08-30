@@ -14,6 +14,7 @@ import NotificationContainer from './components/common/react-notifications/Notif
 import { isMultiColorActive, isDemo } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 
+
 const ViewMain = React.lazy(() =>
   import(/* webpackChunkName: "views" */ './views')
 );

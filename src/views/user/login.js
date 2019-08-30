@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 
 import { loginUser } from "../../redux/actions";
 import { LoginDeveloper } from "../../services/Developer";
+import cookie from 'react-cookies'
 
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
@@ -16,16 +17,27 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      token: "",
+      token:""
     };
   }
+
+  componentWillMount() {
+    this.state =  { token: cookie.load('token') }
+  }
+
   onUserLogin() {
     let user = {email: this.state.email, password : this.state.password}
     if (this.state.email !== "" && this.state.password !== "") {
-      this.setState({ [user.email]: this.state.email, [user.password]: this.state.password})
-      this.props.loginUser(user, this.props.history);
+      // this.props.loginUser(user, this.props.history);
       LoginDeveloper(user)
-      .then(res => {console.log(res)})
+      .then(res => {this.setState({token : res.data})})
+      .catch(error => console.log(error))
+    }
+    if(this.state.token !==""){
+      // this.setState({ token })
+      cookie.set('token', this.state.token, { path: '/' })
+      console.log(cookie)
+      console.log(this.state.token)
     }
   }
 

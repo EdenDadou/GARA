@@ -7,7 +7,7 @@ export const RegisterDeveloper = (developer) => {
 }
 
 export const LoginDeveloper = (user) => {
-  const PromiseResponse =  axios.post( GET_ROOT_URL + 'utils/token', user)
+  const PromiseResponse =  axios.post( GET_ROOT_URL + 'developer/token', user)
     return PromiseResponse
 }
 

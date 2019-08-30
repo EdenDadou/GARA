@@ -15,6 +15,7 @@ import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
 import { RegisterDeveloper } from "../../services/Developer";
 
+
 let APIcountries = getCountries()
 let APIcountrieslist = []
 let countrylist = []
@@ -76,7 +77,7 @@ class Register extends Component {
     /*handle change Date*/
     handleChangeDate = (date) => {
         this.setState({ selectedDate: date });
-        this.setState({ birthday: date.format()});
+        this.setState({ birthday: date.toISOString() });
     }
 
  /*Handle change Gender  */ 
@@ -148,7 +149,7 @@ class Register extends Component {
             if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true){
                 let developer =   {
                     "agreeToTermsOfUse": true,
-                    "birthday": "2019-08-03T22:58:16.315Z",
+                    "birthday": this.state.birthday,
                     "country": this.state.country,
                     "createDate": "2019-08-03T22:58:16.315Z",
                     "email": this.state.email,
@@ -162,9 +163,10 @@ class Register extends Component {
                 }
                 this.setState({ loading: true }, ()=>{
                 RegisterDeveloper(developer)
-               .then(res => {this.setState({loading: false, statusPostDev : res.status})})})
+               .then(res =>{this.setState({loading: false, statusPostDev : res.status})})
+                .catch(error =>{this.setState({loading: false})})})
                this.hideNavigation();
-            //    this.asyncLoading()
+               console.log(developer)
                goToNext();
             }
         }
@@ -177,9 +179,9 @@ class Register extends Component {
         goToPrev();
     }
 
+
     render() {
         const { messages } = this.props.intl;
-        console.log(this.state.statusPostDev)
         const COUNTRY = this.state.countrylist
         const GENDER = [
             { value: 'Woman', label: 'Woman', key: 1 },
@@ -439,7 +441,7 @@ class Register extends Component {
                                                         
                                                         </div>
                                                         <Button /*onClick={}*/ >
-                                                            Se connecter
+                                                            Login
                                                             </Button>
                                                         </div>
                                                     ) : (
@@ -449,10 +451,17 @@ class Register extends Component {
                                                             <p><IntlMessages id="register.error.text" /></p>
                                                         
                                                         </div>
-                                                  
+                                                        <NavLink to="/user/register">
                                                         <Button>
                                                            Retry
-                                                            </Button>
+                                                        </Button>
+                                                        </NavLink>
+                                                        <NavLink to="/user/login">
+                                                        <Button>
+                                                           Login
+                                                        </Button>
+                                                        </NavLink>
+                                                   
                                                         </div>))}
                                                 </div>
                                              </Step>
