@@ -13,19 +13,21 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
-import { postDeveloper, APIstatus} from "../../services/Developer";
+import { RegisterDeveloper } from "../../services/Developer";
 
 let APIcountries = getCountries()
 let APIcountrieslist = []
 let countrylist = []
 
-console.log(APIstatus)
+
 
 class Register extends Component {
     constructor(props) {
         super(props);
+   
         this.onClickNext = this.onClickNext.bind(this);
         this.onClickPrev = this.onClickPrev.bind(this);
+
         
         this.form0 = React.createRef();
         this.form1 = React.createRef();
@@ -33,8 +35,8 @@ class Register extends Component {
         
         this.state = {
             bottomNavHidden: false,
+            loading: true,
             topNavDisabled: false,
-            loading: false,
             firstName: '',
             lastName: '',
             email: '',
@@ -48,7 +50,7 @@ class Register extends Component {
             male : '',
             agreeToTermsOfUse: '',
             phoneNumber: '',
-            statusPostDev: ''
+            statusPostDev: null
         }
     }
     
@@ -102,27 +104,6 @@ class Register extends Component {
     changeHandler2 = input => e => {
         this.setState({ [input]: e.target.value });
     }
-
-    async postDeveloperOnAPI(){
-        let developer = 
-        {
-            "agreeToTermsOfUse": true,
-            "birthday": "2019-08-03T22:58:16.315Z",
-            "country": this.state.country,
-            "createDate": "2019-08-03T22:58:16.315Z",
-            "email": this.state.email,
-            "firstName": this.state.firstName,
-            "language": "English",
-            "lastName": this.state.lastName,
-            "male": this.state.male,
-            "modifiedDate": "2019-08-03T22:58:16.315Z",
-            "password":this.state.password,
-            "phoneNumber": this.state.phoneNumber
-          }
-         await postDeveloper(developer)
-        }
-        
-
         
         /*Get country and store them*/
         async getCountrylistFromAPI() {
@@ -155,7 +136,7 @@ class Register extends Component {
             && this.state.password !== ''
             && this.state.passwordConfirm !== ''
             && this.state.passwordConfirm === this.state.password) {
-                goToNext(2);
+                goToNext();
             }
             if (steps.indexOf(step)=== 1 
             && this.state.birthday !== ''
@@ -165,12 +146,26 @@ class Register extends Component {
                 goToNext();
             }
             if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true){
-               this.postDeveloperOnAPI().then(res => {
-                console.log(res)
-                // axiosResponse = res;
-                })
-                this.hideNavigation();
-                goToNext();
+                let developer =   {
+                    "agreeToTermsOfUse": true,
+                    "birthday": "2019-08-03T22:58:16.315Z",
+                    "country": this.state.country,
+                    "createDate": "2019-08-03T22:58:16.315Z",
+                    "email": this.state.email,
+                    "firstName": this.state.firstName,
+                    "language": "English",
+                    "lastName": this.state.lastName,
+                    "male": this.state.male,
+                    "modifiedDate": "2019-08-03T22:58:16.315Z",
+                    "password":this.state.password,
+                    "phoneNumber": this.state.phoneNumber
+                }
+                this.setState({ loading: true }, ()=>{
+                RegisterDeveloper(developer)
+               .then(res => {this.setState({loading: false, statusPostDev : res.status})})})
+               this.hideNavigation();
+            //    this.asyncLoading()
+               goToNext();
             }
         }
         
@@ -184,6 +179,7 @@ class Register extends Component {
 
     render() {
         const { messages } = this.props.intl;
+        console.log(this.state.statusPostDev)
         const COUNTRY = this.state.countrylist
         const GENDER = [
             { value: 'Woman', label: 'Woman', key: 1 },
@@ -356,7 +352,7 @@ class Register extends Component {
                                                                         <Label className="form-group has-float-label size-1rem">
                                                                             <IntlMessages id="user.phone" />
                                                                         </Label>
-                                                                        <Input type="text"
+                                                                        <Input type="number"
                                                                             required
                                                                             name="phoneNumber"
                                                                             value={this.state.phoneNumber}
@@ -429,26 +425,37 @@ class Register extends Component {
                                             </Step>
                                             <Step id="step4" hideTopNav={true}>
                                                 <div className="wizard-basic-step text-center pt-3">
-                                                    {
-                                                        this.state.loading ? (
-                                                            <div>
-                                                                <Spinner color="primary" className="mb-1" />
-                                                                <p><IntlMessages id="wizard.async" /></p>
-                                                            </div>
-                                                        ) : (
-                                                            <div>
+                                                       {
+                                                          this.state.loading ? (
+                                               <div>
+                                                        <Spinner color="primary" className="mb-1" />
+                                                         <p><IntlMessages id="message.wait" /></p>
+                                               </div>
+                                                    ) : ( this.state.statusPostDev === 200? (
+                                                        <div>
+                                                        <div>
+                                                            <h2 className="mb-2"><IntlMessages id="wizard.content-thanks" /></h2>
+                                                            <p><IntlMessages id="wizard.registered" /></p>
+                                                        
+                                                        </div>
+                                                        <Button /*onClick={}*/ >
+                                                            Se connecter
+                                                            </Button>
+                                                        </div>
+                                                    ) : (
+                                                        <div>
                                                                 <div>
-                                                                    <h2 className="mb-2"><IntlMessages id="wizard.content-thanks" /></h2>
-                                                                    <p><IntlMessages id="wizard.registered" /></p>
-                                                                </div>
-                                                                <Button /*onClick={}*/ >
-                                                                    Se connecter
-                                                                    </Button>
-                                                                </div>
-                                                            )
-                                                    }
+                                                            <h2 className="mb-2"><IntlMessages id="register.error.title" /></h2>
+                                                            <p><IntlMessages id="register.error.text" /></p>
+                                                        
+                                                        </div>
+                                                  
+                                                        <Button>
+                                                           Retry
+                                                            </Button>
+                                                        </div>))}
                                                 </div>
-                                            </Step>
+                                             </Step>
                                         </Steps>
                                         <BottomNavigation onClickNext={this.onClickNext} onClickPrev={this.onClickPrev} className={"justify-content-center " + (this.state.bottomNavHidden && "invisible")} prevLabel={messages["wizard.prev"]} nextLabel={messages["wizard.next"]} />
                                     </Wizard>
