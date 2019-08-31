@@ -65,7 +65,7 @@ class Login extends Component {
             </div>
             <div className="form-side">
               <NavLink to={`/`} className="white">
-                <span className="logo-single" />
+                <span className="logo-single mb-5 pb-5" />
               </NavLink>
               <CardTitle className="mb-4">
                 <IntlMessages id="user.login-title" />
