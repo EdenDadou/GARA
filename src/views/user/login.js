@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Row, Card, CardBody, CardTitle, Form, Label, Input, Button, Spinner } from "reactstrap";
-import { NavLink, Redirect } from "react-router-dom";
+import { Row, Card, CardBody, CardTitle, Form, Label, Input, Spinner } from "reactstrap";
+import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import { loginUser } from "../../redux/actions";
 import { LoginDeveloper, VerifToken } from "../../services/Developer";
@@ -9,44 +9,48 @@ import { BottomNavigationNext } from "../../components/wizard/BottomNavigation";
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import { Cookies } from 'react-cookie';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 const cookies = new Cookies();
 
 class Login extends Component {
-  
+
   constructor(props) {
     // const { history } = this.props;
     super(props);
     this.onClickNext = this.onClickNext.bind(this);
-    
+
     this.state = {
       email: "",
       password: "",
-      token:'',
+      token: '',
       loading: '',
       user: { email: '', password: '' },
       ResStatus: ''
     };
-    }
+  }
 
-// when mouting component, if there is already a token in the cookies, redirect to page /app/dashboard
-  componentWillMount() {
+  // when mouting component, if there is already a token in the cookies, redirect to page /app/dashboard
+ componentWillMount() {
     var token = cookies.get('token')
     console.log(token)
-    VerifToken(token)
+    VerifToken()
     .then(res => console.log(res))
     .catch(error => console.log(error))
     // if(cookies.get('token')!==''){
-    //   console.log(cookies.get('token'))
-    //   this.props.history.push('/app');
-    // }
+      //   console.log(cookies.get('token'))
+      //   this.props.history.push('/app');
+      // }
+  
   }
 
   // creation du cookies token 
   setCookie() {
     cookies.set('token', this.state.token, { path: '/' });
     console.log(this.state.token)
-  };
+ 
+  
+      }
+  
 
   /*Handle field change*/
   changeHandler = input => e => {
@@ -62,10 +66,12 @@ class Login extends Component {
       this.setState({ user: { email: this.state.email, password: this.state.password } });
       this.setState({ loading: true }, () => {
         LoginDeveloper(this.state.user)
-          .then(res => { this.setState({ loading: false, token: res.data, ResStatus: res.status }); 
-          this.setCookie() })
+          .then(res => {
+            this.setState({ loading: false, token: res.data, ResStatus: res.status });
+            this.setCookie()
+          })
           .catch(error => { this.setState({ loading: false }) })
-        
+
         goToNext();
       })
     }
@@ -170,6 +176,6 @@ const mapStateToProps = ({ authUser }) => {
 };
 
 
-export default withRouter(connect(mapStateToProps,{loginUser})(Login));
+export default withRouter(connect(mapStateToProps, { loginUser })(Login));
 
 
