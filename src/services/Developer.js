@@ -12,17 +12,14 @@ export const LoginDeveloper = (user) => {
   return PromiseResponse
 }
 
-export const VerifToken=() =>{
+export const VerifToken=(token) =>{
   let config = {
     headers: { 
-      'Authorization': 'Bearer 073e1378-3e7a-480f-a1fb-4cc6bb4c0071',
-      'Access-Control-Allow-Origin': '*' }
+      'Authorization': 'Bearer ' + token
+    }
   }
-
- 
-    axios.get(GET_ROOT_URL + 'secure/mobilemoneyoperator', { params:{}, config})
-    .then(res => console.log(res))
-    .catch(error => console.log(error))
+  const PromiseResponse =  axios.get(GET_ROOT_URL + 'secure/mobilemoneyoperator', config)
+  return PromiseResponse
 }
 
 

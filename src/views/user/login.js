@@ -9,7 +9,7 @@ import { BottomNavigationNext } from "../../components/wizard/BottomNavigation";
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import { Cookies } from 'react-cookie';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 const cookies = new Cookies();
 
 class Login extends Component {
@@ -25,22 +25,23 @@ class Login extends Component {
       token: '',
       loading: '',
       user: { email: '', password: '' },
-      ResStatus: ''
+      ResStatusOnLogin: '',
+      ResStatusOnVerifToken: ''
     };
   }
 
   // when mouting component, if there is already a token in the cookies, redirect to page /app/dashboard
- componentWillMount() {
+  componentWillMount() {
+    if(cookies.get('token')!==''){
     var token = cookies.get('token')
     console.log(token)
-    VerifToken()
-    // .then(res => console.log(res))
-    // .catch(error => console.log(error))
-    // if(cookies.get('token')!==''){
-      //   console.log(cookies.get('token'))
-      //   this.props.history.push('/app');
-      // }
-  
+    VerifToken(token)
+    .then(res => this.setState({ResStatusOnVerifToken: res.status }))
+    .catch(error => console.log(error))
+  }
+  if(this.state.ResStatusOnVerifToken === 200){
+    this.props.history.push('/app');
+  }
   }
 
   // creation du cookies token 
@@ -61,15 +62,19 @@ class Login extends Component {
       return;
     }
     if (steps.indexOf(step) === 0) {
-      this.setState({ user: { email: this.state.email, password: this.state.password } });
+      let user = {
+        "email" : this.state.email,
+        "password": this.state.password
+      }
+      console.log(user)
       this.setState({ loading: true }, () => {
-        LoginDeveloper(this.state.user)
+        LoginDeveloper(user)
           .then(res => {
-            this.setState({ loading: false, token: res.data, ResStatus: res.status });console.log(res);
-            this.setCookie()
+            this.setState({ loading: false, token: res.data, ResStatusOnLogin: res.status });
+            console.log(res)
           })
-          .catch(error => { this.setState({ loading: false }) })
-
+          .catch(error => { console.log(error); this.setState({ loading: false }) });
+          this.setCookie()
         goToNext();
       })
     }
@@ -77,6 +82,7 @@ class Login extends Component {
 
 
   render() {
+    console.log(this.state)
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
@@ -128,9 +134,9 @@ class Login extends Component {
                                 <Spinner color="primary" className="mb-1" />
                                 <p><IntlMessages id="message.wait" /></p>
                               </div>
-                            ) : (this.state.token !== '' && this.state.ResStatus === 200 ? (
+                            ) : (this.state.token !== '' && this.state.ResStatusOnLogin === 200 ? (
                               <div>
-                                {/* <Redirect to="/app" /> */}
+                                <Redirect to="/app" />
                               </div>
                             ) : (this.state.ResStatus === 402 || 403 ? (
                               <div>

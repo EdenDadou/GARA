@@ -16,7 +16,7 @@ import { getCountries } from "../../services/Country";
 import { RegisterDeveloper } from "../../services/Developer";
 
 
-let APIcountries = getCountries()
+// let APIcountries = getCountries()
 let APIcountrieslist = []
 let countrylist = []
 
@@ -108,7 +108,7 @@ class Register extends Component {
         
         /*Get country and store them*/
         async getCountrylistFromAPI() {
-            await APIcountries
+            await getCountries()
             .then((array) => {
                 /*---Convert the list get from the back end to ahave the correct format with the index---*/
                 countrylist.push(...array.map(({ name }, index) => ({ label: name, value: name, key: index })));
