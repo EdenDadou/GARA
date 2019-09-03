@@ -34,8 +34,8 @@ class Login extends Component {
     var token = cookies.get('token')
     console.log(token)
     VerifToken()
-    .then(res => console.log(res))
-    .catch(error => console.log(error))
+    // .then(res => console.log(res))
+    // .catch(error => console.log(error))
     // if(cookies.get('token')!==''){
       //   console.log(cookies.get('token'))
       //   this.props.history.push('/app');
@@ -47,8 +47,6 @@ class Login extends Component {
   setCookie() {
     cookies.set('token', this.state.token, { path: '/' });
     console.log(this.state.token)
- 
-  
       }
   
 
@@ -67,7 +65,7 @@ class Login extends Component {
       this.setState({ loading: true }, () => {
         LoginDeveloper(this.state.user)
           .then(res => {
-            this.setState({ loading: false, token: res.data, ResStatus: res.status });
+            this.setState({ loading: false, token: res.data, ResStatus: res.status });console.log(res);
             this.setCookie()
           })
           .catch(error => { this.setState({ loading: false }) })
