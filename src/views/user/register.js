@@ -166,7 +166,6 @@ class Register extends Component {
                .then(res =>{this.setState({loading: false, statusPostDev : res.status})})
                 .catch(error =>{this.setState({loading: false})})})
                this.hideNavigation();
-               console.log(developer)
                goToNext();
             }
         }
