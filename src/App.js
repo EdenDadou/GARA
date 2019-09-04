@@ -13,6 +13,8 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
 import { isMultiColorActive, isDemo } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
+import { withCookies} from 'react-cookie';
+
 
 const ViewMain = React.lazy(() =>
   import(/* webpackChunkName: "views" */ './views')
@@ -34,18 +36,19 @@ const AuthRoute = ({ component: Component, authUser, ...rest }) => (
       authUser || isDemo ? (
         <Component {...props} />
       ) : (
-        <Redirect
-          to={{
-            pathname: '/user/login',
-            state: { from: props.location }
-          }}
-        />
-      )
+          <Redirect
+            to={{
+              pathname: '/user/login',
+              state: { from: props.location }
+            }}
+          />
+        )
     }
   />
 );
 
 class App extends Component {
+  
   constructor(props) {
     super(props);
     const direction = getDirection();
@@ -111,7 +114,10 @@ const mapStateToProps = ({ authUser, settings }) => {
 };
 const mapActionsToProps = {};
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(App);
+// export default connect(
+//   mapStateToProps,
+//   mapActionsToProps
+// )(App);
+
+export default withCookies(connect(mapStateToProps, mapActionsToProps)(App));
+

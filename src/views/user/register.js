@@ -15,7 +15,7 @@ import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
 import { RegisterDeveloper } from "../../services/Developer";
 
-let APIcountries = getCountries()
+
 let APIcountrieslist = []
 let countrylist = []
 
@@ -76,7 +76,7 @@ class Register extends Component {
     /*handle change Date*/
     handleChangeDate = (date) => {
         this.setState({ selectedDate: date });
-        this.setState({ birthday: date.format()});
+        this.setState({ birthday: date.toISOString() });
     }
 
  /*Handle change Gender  */ 
@@ -107,7 +107,7 @@ class Register extends Component {
         
         /*Get country and store them*/
         async getCountrylistFromAPI() {
-            await APIcountries
+            await getCountries()
             .then((array) => {
                 /*---Convert the list get from the back end to ahave the correct format with the index---*/
                 countrylist.push(...array.map(({ name }, index) => ({ label: name, value: name, key: index })));
@@ -148,7 +148,7 @@ class Register extends Component {
             if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true){
                 let developer =   {
                     "agreeToTermsOfUse": true,
-                    "birthday": "2019-08-03T22:58:16.315Z",
+                    "birthday": this.state.birthday,
                     "country": this.state.country,
                     "createDate": "2019-08-03T22:58:16.315Z",
                     "email": this.state.email,
@@ -162,9 +162,10 @@ class Register extends Component {
                 }
                 this.setState({ loading: true }, ()=>{
                 RegisterDeveloper(developer)
-               .then(res => {this.setState({loading: false, statusPostDev : res.status})})})
+               .then(res =>{this.setState({loading: false, statusPostDev : res.status})})
+                .catch(error =>{this.setState({loading: false})})})
                this.hideNavigation();
-            //    this.asyncLoading()
+
                goToNext();
             }
         }
@@ -176,6 +177,7 @@ class Register extends Component {
         }
         goToPrev();
     }
+
 
     render() {
         const { messages } = this.props.intl;
@@ -438,8 +440,9 @@ class Register extends Component {
                                                             <p><IntlMessages id="wizard.registered" /></p>
                                                         
                                                         </div>
-                                                        <Button /*onClick={}*/ >
-                                                            Se connecter
+                                                        <Button>
+                                                            Login
+
                                                             </Button>
                                                         </div>
                                                     ) : (
@@ -449,10 +452,16 @@ class Register extends Component {
                                                             <p><IntlMessages id="register.error.text" /></p>
                                                         
                                                         </div>
-                                                  
+                                                        <NavLink to="/user/register">
                                                         <Button>
                                                            Retry
-                                                            </Button>
+                                                        </Button>
+                                                        </NavLink>
+                                                        <NavLink to="/user/login">
+                                                        <Button>
+                                                           Login
+                                                        </Button>
+                                                        </NavLink>
                                                         </div>))}
                                                 </div>
                                              </Step>

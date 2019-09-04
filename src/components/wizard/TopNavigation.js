@@ -33,7 +33,7 @@ export class TopNavigation extends Component {
               steps.map((stepItem, index) => {
                 if (!stepItem.hideTopNav) {
                   return (
-                    <li key={index} className={"nav-item " + this.getClassName(steps, step, index, stepItem)}>
+                    <li key={index} className={"reset-padding nav-item " + this.getClassName(steps, step, index, stepItem)}>
                       <NavLink to="#" className="nav-link" onClick={()=> this.itemClick(stepItem, push)}>
                         <span>{stepItem.name}</span>
                         <small>{stepItem.desc}</small>

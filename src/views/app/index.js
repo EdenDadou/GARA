@@ -15,8 +15,8 @@ const Applications = React.lazy(() =>
 );
 const Ui = React.lazy(() => import(/* webpackChunkName: "ui" */ './ui'));
 const Menu = React.lazy(() => import(/* webpackChunkName: "menu" */ './menu'));
-const BlankPage = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './blank-page')
+const Company = React.lazy(() =>
+  import(/* webpackChunkName: "blank-page" */ './company')
 );
 
 class App extends Component {
@@ -54,8 +54,8 @@ class App extends Component {
                 render={props => <Menu {...props} />}
               />
               <Route
-                path={`${match.url}/blank-page`}
-                render={props => <BlankPage {...props} />}
+                path={`${match.url}/company`}
+                render={props => <Company {...props} />}
               />
               <Redirect to="/error" />
             </Switch>

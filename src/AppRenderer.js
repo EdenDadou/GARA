@@ -3,15 +3,18 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { configureStore } from './redux/store';
+import { CookiesProvider } from 'react-cookie';
 
 const App = React.lazy(() => import(/* webpackChunkName: "App" */'./App' ));
 
 ReactDOM.render(
+  <CookiesProvider>
   <Provider store={configureStore()}>
     <Suspense fallback={<div className="loading" />}>
       <App />
     </Suspense>
-  </Provider>,
+  </Provider>
+  </CookiesProvider>,
   document.getElementById('root')
 );
 /*
