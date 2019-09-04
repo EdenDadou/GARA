@@ -15,7 +15,6 @@ const cookies = new Cookies();
 class Login extends Component {
 
   constructor(props) {
-    // const { history } = this.props;
     super(props);
     this.onClickNext = this.onClickNext.bind(this);
 
@@ -30,26 +29,27 @@ class Login extends Component {
     };
   }
 
-  // when mouting component, if there is already a token in the cookies, redirect to page /app/dashboard
   componentWillMount() {
-    if(cookies.get('token')!==''){
     var token = cookies.get('token')
-    console.log(token)
-    VerifToken(token)
-    .then(res => this.setState({ResStatusOnVerifToken: res.status }))
-    .catch(error => console.log(error))
-  }
-  if(this.state.ResStatusOnVerifToken === 200){
-    this.props.history.push('/app');
-  }
+    //when mounting component, if there is a token in the cookies, send it to API VerifToken (http://ns3140923.ip-54-38-94.eu:8080/gara-web/api/secure/mobilemoneyoperator)
+    if (token) {
+      VerifToken(token)
+        .then(res => {
+          this.setState({ ResStatusOnVerifToken: res.status });
+          //if VerifToken send back a code 200 it's mean that token is still active, then redirect to acceuil page
+          if (this.state.ResStatusOnVerifToken === 200) {
+            this.props.history.push('/app');
+          }
+        })
+        .catch(error => console.log(error))
+    }
   }
 
-  // creation du cookies token 
+  // create cookies whith the token that we get on return when we log (LoginDeveloper)
   setCookie() {
     cookies.set('token', this.state.token, { path: '/' });
-    console.log(this.state.token)
-      }
-  
+  }
+
 
   /*Handle field change*/
   changeHandler = input => e => {
@@ -63,18 +63,17 @@ class Login extends Component {
     }
     if (steps.indexOf(step) === 0) {
       let user = {
-        "email" : this.state.email,
+        "email": this.state.email,
         "password": this.state.password
       }
-      console.log(user)
       this.setState({ loading: true }, () => {
         LoginDeveloper(user)
           .then(res => {
+            //if the promise is resolved, stock the token and the status that we get back on the state
             this.setState({ loading: false, token: res.data, ResStatusOnLogin: res.status });
-            console.log(res)
+            this.setCookie()
           })
           .catch(error => { console.log(error); this.setState({ loading: false }) });
-          this.setCookie()
         goToNext();
       })
     }
