@@ -23,3 +23,19 @@ export class BottomNavigation extends Component {
         )
     }
 }
+
+export class BottomNavigationNext extends Component {
+    render() {
+        return (
+            <WithWizard render={({ next, previous, step, steps }) => (
+                <div className={"wizard-buttons " + this.props.className}>
+                    <Button color="primary"
+                        className={(steps.indexOf(step) >= steps.length - 1 ? "disabled" : "")}
+                        onClick={() => { this.props.onClickNext(next, steps, step) }}>
+                        {this.props.nextLabel}
+                    </Button>
+                </div>
+            )} />
+        )
+    }
+}
