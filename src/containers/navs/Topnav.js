@@ -33,6 +33,10 @@ import TopnavNotifications from "./Topnav.Notifications";
 import TopnavDarkSwitch from "./Topnav.DarkSwitch";
 
 import { getDirection, setDirection } from "../../helpers/Utils";
+import { Cookies } from "react-cookie";
+const cookies = new Cookies();
+
+
 class TopNav extends Component {
   constructor(props) {
     super(props);
@@ -174,7 +178,9 @@ class TopNav extends Component {
   };
 
   handleLogout = () => {
-    this.props.logoutUser(this.props.history);
+    localStorage.setItem('Login', false);
+    cookies.remove('token',{path : '/'})
+    this.props.history.push('/user/login');
   };
 
   menuButtonClick = (e, menuClickCount, containerClassnames) => {
