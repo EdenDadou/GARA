@@ -43,7 +43,6 @@ module.exports = {
 "user.phone" : "Phone Number",
 "user.country" : "Country",
 "user.agrement" : "Accept the Terms of Uses",
-"register.error.title": "Please try again later",
 "register.error.text": "Oups, there is a problems",
 "register.error.mismatch": "It's seem that your informations are incorrect",
 "register.error.contact": "Please contact the client service",

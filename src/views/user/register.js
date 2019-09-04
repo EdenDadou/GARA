@@ -16,7 +16,6 @@ import { getCountries } from "../../services/Country";
 import { RegisterDeveloper } from "../../services/Developer";
 
 
-// let APIcountries = getCountries()
 let APIcountrieslist = []
 let countrylist = []
 
@@ -166,6 +165,7 @@ class Register extends Component {
                .then(res =>{this.setState({loading: false, statusPostDev : res.status})})
                 .catch(error =>{this.setState({loading: false})})})
                this.hideNavigation();
+
                goToNext();
             }
         }
@@ -181,6 +181,7 @@ class Register extends Component {
 
     render() {
         const { messages } = this.props.intl;
+        console.log(this.state.statusPostDev)
         const COUNTRY = this.state.countrylist
         const GENDER = [
             { value: 'Woman', label: 'Woman', key: 1 },
@@ -439,8 +440,9 @@ class Register extends Component {
                                                             <p><IntlMessages id="wizard.registered" /></p>
                                                         
                                                         </div>
-                                                        <Button /*onClick={}*/ >
+                                                        <Button>
                                                             Login
+
                                                             </Button>
                                                         </div>
                                                     ) : (
@@ -460,7 +462,6 @@ class Register extends Component {
                                                            Login
                                                         </Button>
                                                         </NavLink>
-                                                   
                                                         </div>))}
                                                 </div>
                                              </Step>

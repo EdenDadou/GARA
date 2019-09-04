@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { GET_ROOT_URL } from '../config/URL';
 
-
 export const RegisterDeveloper = (developer) => {
   const PromiseResponse = axios.post(GET_ROOT_URL + 'developer/create', developer)
   return PromiseResponse
@@ -21,6 +20,8 @@ export const VerifToken=(token) =>{
   const PromiseResponse =  axios.get(GET_ROOT_URL + 'secure/mobilemoneyoperator', config)
   return PromiseResponse
 }
+
+
 
 
 
