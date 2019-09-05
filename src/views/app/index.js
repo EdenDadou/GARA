@@ -4,20 +4,12 @@ import { connect } from 'react-redux';
 
 import AppLayout from '../../layout/AppLayout';
 
-const Dashboards = React.lazy(() =>
-  import(/* webpackChunkName: "dashboards" */ './dashboards')
-);
-const Pages = React.lazy(() =>
-  import(/* webpackChunkName: "pages" */ './pages')
-);
-const Applications = React.lazy(() =>
-  import(/* webpackChunkName: "applications" */ './applications')
-);
+const Dashboards = React.lazy(() => import(/* webpackChunkName: "dashboards" */ './dashboards'));
+const Pages = React.lazy(() => import(/* webpackChunkName: "pages" */ './pages'));
+const Applications = React.lazy(() => import(/* webpackChunkName: "applications" */ './applications'));
 const Ui = React.lazy(() => import(/* webpackChunkName: "ui" */ './ui'));
 const Menu = React.lazy(() => import(/* webpackChunkName: "menu" */ './menu'));
-const Company = React.lazy(() =>
-  import(/* webpackChunkName: "blank-page" */ './company')
-);
+const Company = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './company'));
 
 class App extends Component {
   render() {

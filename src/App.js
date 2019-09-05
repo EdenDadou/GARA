@@ -32,6 +32,8 @@ const ViewError = React.lazy(() =>
 );
 
 
+
+
 //if authUser (Login in localstorage) is true, display component, else redirect to login
 const AuthRoute = ({ component: Component, authUser, ...rest }) => (
 
@@ -56,6 +58,9 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      AuthUser : false
+    }
     const direction = getDirection();
     if (direction.isRtl) {
       document.body.classList.add('rtl');
@@ -65,23 +70,30 @@ class App extends Component {
       document.body.classList.remove('rtl');
     }
   }
+
   componentWillMount(){
     //On mounting I get the token from localstorage and send it to api for verification,
     //if i get a status 200, i store a "true" variable on login, in localstorage
-    var token = localStorage.getItem('token')
-    VerifToken(token)
-        .then(res => {
-          if(res.status === 200){
-            localStorage.setItem('Login', true)
-          }
-        })
-        .catch(error => {localStorage.setItem('Login', false)})
+    if(cookies.get('token') && localStorage.getItem('Login')){
+      console.log(cookies.get('token'))
+      var token = cookies.get('token')
+      VerifToken(token)
+      .then(res => {
+        if(res.status === 200){
+          this.setState({AuthUser : true});
+          localStorage.setItem('Login', true);
+        }
+      })
+      .catch(error => {console.log(error);localStorage.setItem('Login', false)})
+    }
   }
-
+  
   
   render() {
-    const { locale, loginUser } = this.props;
+    console.log(this.state)
+    const { locale } = this.props;
     const currentAppLocale = AppLocale[locale];
+ 
     return (
 
       <div className="h-100">
@@ -98,7 +110,7 @@ class App extends Component {
                   {/* authUser stock Login from localstorage */}
                   <AuthRoute
                     path="/app"
-                    authUser={localStorage.getItem('Login')}
+                    authUser={this.state.AuthUser}
                     component={ViewApp}
                   />
                   <Route

@@ -11,13 +11,13 @@ export const LoginDeveloper = (user) => {
   return PromiseResponse
 }
 
-export const VerifToken = (token) => {
+export const VerifToken=(token)=>{
   let config = {
     headers: {
       'Authorization': 'Bearer ' + token
     }
   }
-  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/mobilemoneyoperator', config)
+  const PromiseResponse =  axios.get(GET_ROOT_URL + 'secure/mobilemoneyoperator', config)
   return PromiseResponse
 }
 

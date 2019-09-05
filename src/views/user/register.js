@@ -209,7 +209,6 @@ class Register extends Component {
 
     render() {
         const { messages } = this.props.intl;
-        console.log(this.state.statusPostDev)
         const COUNTRY = this.state.countrylist
         const GENDER = [
             { value: 'Woman', label: 'Woman', key: 1 },
