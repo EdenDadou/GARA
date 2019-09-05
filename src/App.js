@@ -13,7 +13,9 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
 import { isMultiColorActive, isDemo } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { withCookies} from 'react-cookie';
+import { withCookies, Cookies } from 'react-cookie';
+import { VerifToken } from './services/Developer';
+const cookies = new Cookies();
 
 
 const ViewMain = React.lazy(() =>
@@ -29,11 +31,14 @@ const ViewError = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './views/error')
 );
 
+
+//if authUser (Login in localstorage) is true, display component, else redirect to login
 const AuthRoute = ({ component: Component, authUser, ...rest }) => (
+
   <Route
     {...rest}
     render={props =>
-      authUser || isDemo ? (
+      authUser ? (
         <Component {...props} />
       ) : (
           <Redirect
@@ -48,7 +53,6 @@ const AuthRoute = ({ component: Component, authUser, ...rest }) => (
 );
 
 class App extends Component {
-  
   constructor(props) {
     super(props);
     const direction = getDirection();
@@ -60,12 +64,25 @@ class App extends Component {
       document.body.classList.remove('rtl');
     }
   }
+  componentWillMount(){
+    //On mounting I get the token from localstorage and send it to api for verification,
+    //if i get a status 200, i store a "true" variable on login, in localstorage
+    var token = localStorage.getItem('token')
+    VerifToken(token)
+        .then(res => {
+          if(res.status === 200){
+            localStorage.setItem('Login', true)
+          }
+        })
+        .catch(error => {localStorage.setItem('Login', false)})
+  }
 
+  
   render() {
     const { locale, loginUser } = this.props;
     const currentAppLocale = AppLocale[locale];
-
     return (
+
       <div className="h-100">
         <IntlProvider
           locale={currentAppLocale.locale}
@@ -77,9 +94,10 @@ class App extends Component {
             <Suspense fallback={<div className="loading" />}>
               <Router>
                 <Switch>
+                  {/* authUser stock Login from localstorage */}
                   <AuthRoute
                     path="/app"
-                    authUser={loginUser}
+                    authUser={localStorage.getItem('Login')}
                     component={ViewApp}
                   />
                   <Route

@@ -5896,7 +5896,7 @@ input:-webkit-autofill {
   }
 
   .form-side {
-    width: 60%;
+    width: 100%;
     padding: 50px;
   }
 
@@ -6917,7 +6917,8 @@ input:-webkit-autofill {
 }
 
 .wizard {
-  margin-top: -2rem;
+  //We remove the margin top of wizard
+  //margin-top: -2rem;
 }
 
 .wizard ul.nav {

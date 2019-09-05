@@ -6,14 +6,16 @@ import { injectIntl } from 'react-intl';
 import { BottomNavigation } from "../../components/wizard/BottomNavigation";
 import { TopNavigation } from "../../components/wizard/TopNavigation";
 import { Colxx } from "../../components/common/CustomBootstrap";
-import { NavLink } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
 import { AvForm, AvField, AvGroup, AvInput} from 'availity-reactstrap-validation';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
-import { RegisterDeveloper } from "../../services/Developer";
+import { RegisterDeveloper,LoginDeveloper } from "../../services/Developer";
+import { Cookies } from 'react-cookie';
+const cookies = new Cookies();
 
 
 let APIcountrieslist = []
@@ -50,7 +52,9 @@ class Register extends Component {
             male : '',
             agreeToTermsOfUse: '',
             phoneNumber: '',
-            statusPostDev: null
+            statusPostDev: null,
+            ResStatusOnLogin : null,
+            token : null
         }
     }
     
@@ -123,7 +127,31 @@ class Register extends Component {
         hideNavigation() {
             this.setState({ bottomNavHidden: true, topNavDisabled: true });
         }
-        
+
+        Login(){
+            let user = {
+                "email": this.state.email,
+                "password": this.state.password
+              }
+
+            LoginDeveloper(user)
+            .then(res => {
+                //if the promise is resolved, stock the token and the status that we get back on the state
+                this.setState({ loading: false, token: res.data, ResStatusOnLogin: res.status });
+                this.setCookie()
+                if(this.state.token && this.state.ResStatusOnLogin){
+                    this.props.history.push('/app');
+
+                }
+            })
+            .catch(error => { console.log(error); this.setState({ loading: false }) });
+        }
+
+          // create cookies whith the token that we get on return when we log (LoginDeveloper)
+        setCookie() {
+            cookies.set('token', this.state.token, { path: '/' });
+        }
+            
         /*Go Next*/
         onClickNext(goToNext, steps, step) {
             if (steps.length - 1 <= steps.indexOf(step)) {
@@ -192,13 +220,7 @@ class Register extends Component {
             <Row className="h-100">
                 <Colxx xxs="12" md="10" className="mx-auto my-auto">
                     <Card className="auth-card">
-                        <div className="position-relative image-side ">
-                            <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
-                            <p className="white mb-0">
-                                Please use this form to register. <br />
-                                If you are a member, please{" "}
-                                <NavLink to={`/login`} className="white">login</NavLink>.</p>
-                        </div>
+
                         <div className="form-side">
                             <NavLink to={`/`} className="white">
                                 <span className="logo-single" />
@@ -440,10 +462,7 @@ class Register extends Component {
                                                             <p><IntlMessages id="wizard.registered" /></p>
                                                         
                                                         </div>
-                                                        <Button>
-                                                            Login
-
-                                                            </Button>
+                                                        <Button onClick = {this.Login()}>Login</Button>
                                                         </div>
                                                     ) : (
                                                         <div>
@@ -477,4 +496,5 @@ class Register extends Component {
         );
     }
 }
-export default injectIntl(Register)
+
+export default withRouter(injectIntl(Register));
