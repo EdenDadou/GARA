@@ -48,6 +48,7 @@ module.exports = {
 "register.error.contact": "Please contact the client service",
 "register.error.tryagain": "Please try again to connect",
 "message.wait": " Please wait a seconde",
+"menu.company": "Company",
 
   /* 01.General */
   "general.copyright": "Gogo React © 2018 All Rights Reserved.",

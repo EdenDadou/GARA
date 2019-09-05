@@ -353,10 +353,10 @@ const data = [{
     ]
   },
   {
-    id: "blankpage",
+    id: "company",
     icon: "iconsminds-bucket",
-    label: "menu.blank-page",
-    to: "/app/blank-page"
+    label: "menu.company",
+    to: "/app/company"
   },
   {
     id: "docs",

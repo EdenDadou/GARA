@@ -178,8 +178,9 @@ class TopNav extends Component {
   };
 
   handleLogout = () => {
-    localStorage.setItem('Login', false);
-    cookies.remove('token',{path : '/'})
+    localStorage.removeItem('Login');
+    cookies.remove('token')
+  
     this.props.history.push('/user/login');
   };
 
