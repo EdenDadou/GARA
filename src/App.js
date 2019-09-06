@@ -7,15 +7,15 @@ import {
   Redirect
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import './helpers/Firebase';
 import AppLocale from './lang';
 import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
-import { isMultiColorActive, isDemo } from './constants/defaultValues';
+import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { withCookies, Cookies } from 'react-cookie';
-import { VerifToken } from './services/Developer';
-const cookies = new Cookies();
+import { withCookies } from 'react-cookie';
+import { configureStore } from "./redux/store";
+import { loginUserSuccess } from "./redux/actions";
+
 
 
 const ViewMain = React.lazy(() =>
@@ -59,7 +59,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      AuthUser : false
+      AuthUser : true,
+      Allow : ''
     }
     const direction = getDirection();
     if (direction.isRtl) {
@@ -69,28 +70,9 @@ class App extends Component {
       document.body.classList.add('ltr');
       document.body.classList.remove('rtl');
     }
-  }
-
-  componentWillMount(){
-    //On mounting I get the token from localstorage and send it to api for verification,
-    //if i get a status 200, i store a "true" variable on login, in localstorage
-    if(cookies.get('token') && localStorage.getItem('Login')){
-      console.log(cookies.get('token'))
-      var token = cookies.get('token')
-      VerifToken(token)
-      .then(res => {
-        if(res.status === 200){
-          this.setState({AuthUser : true});
-          localStorage.setItem('Login', true);
-        }
-      })
-      .catch(error => {console.log(error);localStorage.setItem('Login', false)})
-    }
-  }
-  
+  }  
   
   render() {
-    console.log(this.state)
     const { locale } = this.props;
     const currentAppLocale = AppLocale[locale];
  
@@ -138,17 +120,25 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, settings }) => {
-  const { user: loginUser } = authUser;
+const mapStateToProps = ({ settings }, state) => {
+  const { user } = state;
   const { locale } = settings;
-  return { loginUser, locale };
+  return { user, locale };
 };
-const mapActionsToProps = {};
 
-// export default connect(
-//   mapStateToProps,
-//   mapActionsToProps
-// )(App);
+// const mapStateToProps = ({state, settings}) => {
+//   const { locale } = settings;
+//   return { user: state.user, locale  };
+// };
 
-export default withCookies(connect(mapStateToProps, mapActionsToProps)(App));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginUserSuccess: () => {
+      dispatch(loginUserSuccess());
+    }
+  }
+}
+
+
+export default withCookies(connect(mapStateToProps, mapDispatchToProps)(App));
 

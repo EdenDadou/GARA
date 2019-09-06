@@ -1,3 +1,7 @@
+/* ADD */
+export const ALLOW_CONNECTION = "ALLOW_CONNECTION";
+export const LOGIN_USER_FAIL = "LOGIN_USER_FAIL";
+
 /* SETTINGS */
 export const CHANGE_LOCALE = "CHANGE_LOCALE";
 

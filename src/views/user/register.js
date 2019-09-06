@@ -13,9 +13,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
-import { RegisterDeveloper,LoginDeveloper } from "../../services/Developer";
+import { connect } from "react-redux";
+import { configureStore } from "../../redux/store";
+import { loginUser, registerUser } from "../../redux/actions";
+
 import { Cookies } from 'react-cookie';
 const cookies = new Cookies();
+const store = configureStore();
 
 
 let APIcountrieslist = []
@@ -128,26 +132,7 @@ class Register extends Component {
             this.setState({ bottomNavHidden: true, topNavDisabled: true });
         }
 
-        Login(){
-            let user = {
-                "email": this.state.email,
-                "password": this.state.password
-              }
-
-            LoginDeveloper(user)
-            .then(res => {
-                //if the promise is resolved, stock the token and the status that we get back on the state
-                this.setState({ loading: false, token: res.data, ResStatusOnLogin: res.status });
-                this.setCookie()
-                if(this.state.token && this.state.ResStatusOnLogin){
-                    this.props.history.push('/app');
-
-                }
-            })
-            .catch(error => { console.log(error); this.setState({ loading: false }) });
-        }
-
-          // create cookies whith the token that we get on return when we log (LoginDeveloper)
+          /*create cookies whith the token that we get on return when we log (LoginDeveloper)*/
         setCookie() {
             cookies.set('token', this.state.token, { path: '/' });
         }
@@ -174,27 +159,26 @@ class Register extends Component {
                 goToNext();
             }
             if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true){
+                let {agreeToTermsOfUse, birthday, country ,email, firstName, lastName,male, password, phoneNumber} = this.state
                 let developer =   {
-                    "agreeToTermsOfUse": true,
-                    "birthday": this.state.birthday,
-                    "country": this.state.country,
+                    "agreeToTermsOfUse": agreeToTermsOfUse,
+                    "birthday": birthday,
+                    "country": country,
                     "createDate": "2019-08-03T22:58:16.315Z",
-                    "email": this.state.email,
-                    "firstName": this.state.firstName,
+                    "email": email,
+                    "firstName": firstName,
                     "language": "English",
-                    "lastName": this.state.lastName,
-                    "male": this.state.male,
+                    "lastName": lastName,
+                    "male": male,
                     "modifiedDate": "2019-08-03T22:58:16.315Z",
-                    "password":this.state.password,
-                    "phoneNumber": this.state.phoneNumber
+                    "password":password,
+                    "phoneNumber": phoneNumber
                 }
-                this.setState({ loading: true }, ()=>{
-                RegisterDeveloper(developer)
-               .then(res =>{this.setState({loading: false, statusPostDev : res.status})})
-                .catch(error =>{this.setState({loading: false})})})
+                this.setState({ loading: true }, ()=>{ 
+                this.props.registerUser(developer, this.props.history)
                this.hideNavigation();
-
                goToNext();
+            })
             }
         }
         
@@ -502,4 +486,16 @@ class Register extends Component {
     }
 }
 
-export default withRouter(injectIntl(Register));
+
+const mapStateToProps = ({ authUser }) => {
+    const { user, loading } = authUser;
+    return { user, loading };
+  };
+  
+
+export default withRouter(injectIntl(connect(
+    mapStateToProps,
+    {
+      registerUser, loginUser
+    }
+  )(Register)));
