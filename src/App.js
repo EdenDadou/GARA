@@ -12,7 +12,7 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { VerifToken } from './services/Developer';
+import { VerifToken, DeveloperInfo} from './services/Developer';
 
 
 
@@ -85,7 +85,11 @@ class App extends Component {
         localStorage.setItem('Allow', false)
       })
 
+      
     }
+    DeveloperInfo(localStorage.getItem('token'))
+    .then(res => console.log(res))
+    .catch(error => console.log(error))
   }
   
 

@@ -38,7 +38,6 @@ function* loginWithEmailPassword({ payload }) {
             //create a "cookies" to stock token
             localStorage.setItem('token', loginUser.data)
             yield put(loginUserSuccess(loginUser));
-
             //create a "cookie Allow" to keep connection to app
             localStorage.setItem('Allow', true)
 

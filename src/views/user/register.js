@@ -14,12 +14,7 @@ import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
 import { connect } from "react-redux";
-import { configureStore } from "../../redux/store";
 import { loginUser, registerUser } from "../../redux/actions";
-
-import { Cookies } from 'react-cookie';
-const cookies = new Cookies();
-const store = configureStore();
 
 
 let APIcountrieslist = []
@@ -132,9 +127,8 @@ class Register extends Component {
             this.setState({ bottomNavHidden: true, topNavDisabled: true });
         }
 
-          /*create cookies whith the token that we get on return when we log (LoginDeveloper)*/
-        setCookie() {
-            cookies.set('token', this.state.token, { path: '/' });
+        RedirectToRegister=()=>{
+            // this.props.push('/user/register')
         }
             
         /*Go Next*/
@@ -174,11 +168,9 @@ class Register extends Component {
                     "password":password,
                     "phoneNumber": phoneNumber
                 }
-                store.subscribe(() => {
-                    this.setState({ loading: store.getState().authUser.loading });
-                  });
+            
 
-                store.dispatch(registerUser(developer, this.props.history))
+                this.props.registerUser(developer, this.props.history)
                 this.hideNavigation();
                goToNext();
             
@@ -442,7 +434,7 @@ class Register extends Component {
                                             <Step id="step4" hideTopNav={true}>
                                                 <div className="wizard-basic-step text-center pt-3">
                                                        {
-                                                          this.state.loading ? (
+                                                          this.props.loading ? (
                                                <div>
                                                         <Spinner color="primary" className="mb-1" />
                                                          <p><IntlMessages id="message.wait" /></p>
@@ -463,11 +455,11 @@ class Register extends Component {
                                                             <p><IntlMessages id="register.error.text" /></p>
                                                         
                                                         </div>
-                                                        <NavLink to="/user/register">
-                                                        <Button>
+                                                        
+                                                        <Button onClick={this.RedirectToRegister()}>
                                                            Retry
                                                         </Button>
-                                                        </NavLink>
+                                                      
                                                         <NavLink to="/user/login">
                                                         <Button>
                                                            Login

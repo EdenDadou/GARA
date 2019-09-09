@@ -21,6 +21,11 @@ export const VerifToken=(token)=>{
   return PromiseResponse
 }
 
+export const DeveloperInfo = (token) => {
+  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/developer/1', token)
+  return PromiseResponse
+}
+
 
 
 
