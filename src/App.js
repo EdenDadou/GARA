@@ -54,7 +54,6 @@ const AuthRoute = ({ component: Component, authUser, ...rest }) => (
 );
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     const direction = getDirection();
