@@ -11,7 +11,6 @@ import {
 
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-
 import IntlMessages from "../../helpers/IntlMessages";
 import {
   setContainerClassnames,
@@ -19,6 +18,7 @@ import {
   logoutUser,
   changeLocale
 } from "../../redux/actions";
+import { configureStore } from "../../redux/store";
 
 import {
   menuHiddenBreakpoint,
@@ -33,8 +33,7 @@ import TopnavNotifications from "./Topnav.Notifications";
 import TopnavDarkSwitch from "./Topnav.DarkSwitch";
 
 import { getDirection, setDirection } from "../../helpers/Utils";
-import { Cookies } from "react-cookie";
-const cookies = new Cookies();
+const store = configureStore()
 
 
 class TopNav extends Component {
@@ -178,10 +177,8 @@ class TopNav extends Component {
   };
 
   handleLogout = () => {
-    localStorage.removeItem('Login');
-    cookies.remove('token')
-  
-    this.props.history.push('/user/login');
+    store.dispatch(logoutUser(this.props.history))
+    
   };
 
   menuButtonClick = (e, menuClickCount, containerClassnames) => {

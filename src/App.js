@@ -7,15 +7,14 @@ import {
   Redirect
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import './helpers/Firebase';
 import AppLocale from './lang';
 import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
-import { isMultiColorActive, isDemo } from './constants/defaultValues';
+import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { withCookies, Cookies } from 'react-cookie';
 import { VerifToken } from './services/Developer';
-const cookies = new Cookies();
+
+
 
 
 const ViewMain = React.lazy(() =>
@@ -34,13 +33,13 @@ const ViewError = React.lazy(() =>
 
 
 
-//if authUser (Login in localstorage) is true, display component, else redirect to login
+//if localStorage.getItem('Allow')  is true, display component, else redirect to login
 const AuthRoute = ({ component: Component, authUser, ...rest }) => (
 
   <Route
     {...rest}
     render={props =>
-      authUser ? (
+      localStorage.getItem('Allow') ? (
         <Component {...props} />
       ) : (
           <Redirect
@@ -57,9 +56,6 @@ const AuthRoute = ({ component: Component, authUser, ...rest }) => (
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      AuthUser : false
-    }
     const direction = getDirection();
     if (direction.isRtl) {
       document.body.classList.add('rtl');
@@ -68,31 +64,34 @@ class App extends Component {
       document.body.classList.add('ltr');
       document.body.classList.remove('rtl');
     }
-  }
+  }  
 
   componentWillMount(){
-    //On mounting I get the token from localstorage and send it to api for verification,
-    //if i get a status 200, i store a "true" variable on login, in localstorage
-    if(cookies.get('token') && localStorage.getItem('Login')){
-      console.log(cookies.get('token'))
-      var token = cookies.get('token')
-      VerifToken(token)
+
+  //On mounting, after verification that we stock a token
+    if(localStorage.getItem('token')!==null){
+      //Send it to API for validity verification
+      VerifToken(localStorage.getItem('token'))
       .then(res => {
         if(res.status === 200){
-          this.setState({AuthUser : true});
-          localStorage.setItem('Login', true);
+          //If res.status === 200, then change Allow value to true
+          localStorage.setItem('Allow', true)
+        }else{
+          localStorage.setItem('Allow', false)
         }
       })
-      .catch(error => {console.log(error);localStorage.setItem('Login', false)})
+      .then(error => {
+        localStorage.setItem('Allow', false)
+      })
+
     }
   }
   
-  
+
+
   render() {
-    console.log(this.state)
     const { locale } = this.props;
     const currentAppLocale = AppLocale[locale];
- 
     return (
 
       <div className="h-100">
@@ -109,7 +108,6 @@ class App extends Component {
                   {/* authUser stock Login from localstorage */}
                   <AuthRoute
                     path="/app"
-                    authUser={this.state.AuthUser}
                     component={ViewApp}
                   />
                   <Route
@@ -144,10 +142,7 @@ const mapStateToProps = ({ authUser, settings }) => {
 };
 const mapActionsToProps = {};
 
-// export default connect(
-//   mapStateToProps,
-//   mapActionsToProps
-// )(App);
-
-export default withCookies(connect(mapStateToProps, mapActionsToProps)(App));
-
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(App);

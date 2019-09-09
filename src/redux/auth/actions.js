@@ -3,8 +3,11 @@ import {
   LOGIN_USER_SUCCESS,
   LOGOUT_USER,
   REGISTER_USER,
-  REGISTER_USER_SUCCESS
+  REGISTER_USER_SUCCESS,
+  LOGIN_USER_FAIL,
+  REGISTER_USER_FAIL
 } from '../actions';
+
 
 export const loginUser = (user, history) => ({
   type: LOGIN_USER,
@@ -16,14 +19,20 @@ export const loginUserSuccess = (user) => ({
   payload: user
 });
 
-export const registerUser = (user, history) => ({
+
+export const registerUser = (developer, history) => ({
   type: REGISTER_USER,
-  payload: { user, history }
+  payload:  {developer, history}
 })
-export const registerUserSuccess = (user) => ({
+export const registerUserSuccess = (developer) => ({
   type: REGISTER_USER_SUCCESS,
-  payload: user
+  payload: developer
 })
+
+export const registerUserFail = (registerUser) => ({
+  type: REGISTER_USER_FAIL,
+  payload: registerUser
+});
 
 export const logoutUser = (history) => ({
   type: LOGOUT_USER,

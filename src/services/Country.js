@@ -7,7 +7,7 @@ import { GET_ROOT_URL } from '../config/URL';
 export async function getCountries() {
     let APIcountrie =[]
     await axios.get(GET_ROOT_URL + 'utils/countries')
-    .then(res => { console.log(res);
+    .then(res => { 
         APIcountrie = res.data})
        
         return APIcountrie

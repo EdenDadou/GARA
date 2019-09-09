@@ -1,40 +1,31 @@
 import React, { Component } from "react";
-import { Row, Card, CardBody, CardTitle, Form, Label, Input, Spinner } from "reactstrap";
+import { Row, Card, CardBody, CardTitle, Form, Label, Input, Spinner, Button } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import { loginUser, loginUserSuccess } from "../../redux/actions";
-import { LoginDeveloper, VerifToken } from "../../services/Developer";
-import { Wizard, Steps, Step } from 'react-albus';
-import { BottomNavigationNext } from "../../components/wizard/BottomNavigation";
+import { loginUser } from "../../redux/actions";
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
-import { Cookies } from 'react-cookie';
-import { withRouter, Redirect } from 'react-router-dom';
-const cookies = new Cookies()
+
+
 
 class Login extends Component {
 
   constructor(props) {
     super(props);
-    this.onClickNext = this.onClickNext.bind(this);
-
     this.state = {
       email: "",
       password: "",
-      token: '',
-      loading: '',
-      ResStatusOnLogin: '',
-      
+      Error: ""
     };
   }
 
-  componentWillMount(){
-   
-    console.log(localStorage.getItem('Login'))
-    if(localStorage.getItem('Login')){
-      this.props.history.push('/app')
 
-    }
+
+  componentDidMount() {
+
+    //If Allow that we initialize on App.js ComponentWillMount/VerifToken function its true, redirect to app 
+    if (localStorage.getItem('Allow'))
+      this.props.history.push('/app')
   }
 
 
@@ -43,39 +34,20 @@ class Login extends Component {
     this.setState({ [input]: e.target.value });
   }
 
-  /*Go Next*/
-  onClickNext(goToNext, steps, step) {
-    let user = {
-      "email": this.state.email,
-      "password": this.state.password
-    }
-    if (steps.length - 1 <= steps.indexOf(step)) {
-      return;
-    }
-    if (steps.indexOf(step) === 0) {
-      this.setState({ loading: true }, () => {
-        LoginDeveloper(user)
-          .then(res => {
-            //if the promise is resolved, stock the token and the status that we get back on the state
-            this.setState({loading: false, token: res.data, ResStatusOnLogin: res.status });
-            console.log(this.state)
-            console.log(res)
 
-            // create cookies with the token that we get on return when we log (LoginDeveloper)
-            cookies.set('token', this.state.token)
-            localStorage.setItem('Login', true);
-            console.log(this.state)
-          })
-          .catch(error => { console.log(error); this.setState({ loading: false }) });
-        //when mounting component, if there is a token in the cookies, send it to API VerifToken (http://ns3140923.ip-54-38-94.eu:8080/gara-web/api/secure/mobilemoneyoperator)
+  //On submit Login Form
+  handleSubmit = () => {
+    if (this.state.email !== "" && this.state.password !== "") {
+      
+      let user = { email: this.state.email, password: this.state.password }
+      
 
-          goToNext();
-
-      })
+      //Call Redux from props
+      this.props.loginUser(user, this.props.history)
     }
-    if(steps.indexOf(step) === 1){
-      window.location.reload();
-    }
+    
+    //if there is error set State of Error, to display error message
+    this.setState({ Error: localStorage.getItem('Error') })
   }
 
 
@@ -93,74 +65,52 @@ class Login extends Component {
               </CardTitle>
               <Card>
                 <CardBody className="wizard wizard-default">
-                  <Wizard>
-                    <Steps>
-                      <Step id="step1">
-                        <Form>
-                          <Label className="form-group has-float-label mb-4">
-                            <Input type="email" defaultValue={this.state.email}
-                              onChange={this.changeHandler('email')} />
-                            <IntlMessages id="user.email" />
-                          </Label>
-                          <Label className="form-group has-float-label mb-4">
-                            <Input type="password"
-                              onChange={this.changeHandler('password')} />
-                            <IntlMessages id="user.password" />
-                          </Label>
-                          <div className="d-flex justify-content-between align-items-center">
+                  <Form>
+                    <Label className="form-group has-float-label mb-4">
+                      <Input type="email" defaultValue={this.state.email}
+                        onChange={this.changeHandler('email')} />
+                      <IntlMessages id="user.email" />
+                    </Label>
+                    <Label className="form-group has-float-label mb-4">
+                      <Input type="password"
+                        onChange={this.changeHandler('password')} />
+                      <IntlMessages id="user.password" />
+                    </Label>
+                    <div className="d-flex justify-content-between align-items-center">
+                      <Row>
+
+                        {/* If there is a Error, display Error message, else, display only the forget password part */}
+
+                        {(this.state.Error && this.props.loading === false) ? (
+                          <div>
+                            <p><IntlMessages id="register.error.mismatch" /></p>
                             <NavLink to={`/forgot-password`}>
                               <IntlMessages id="user.forgot-password-question" />
                             </NavLink>
                           </div>
-                        </Form>
-                      </Step>
-                      <Step id="step2">
-                        <div className="wizard-basic-step text-center pt-3">
-                          {
-                            this.state.loading ? (
-                              <div>
-                                <Spinner color="primary" className="mb-1" />
-                                <p><IntlMessages id="message.wait" /></p>
-                              </div>
-                            ) : (this.state.token  && this.state.ResStatusOnLogin === 200 ? (
-                              <div>
-                                <Redirect to="/app" />
-                              </div>
-                            ) : (this.state.ResStatusOnLogin === 402 || 403 ? (
-                              <div>
-                                <div>
-                                  <h2 className="mb-2"><IntlMessages id="register.error.text" /></h2>
-                                  <p><IntlMessages id="register.error.mismatch" /></p>
-                                </div>
-                              </div>
-                            ) : (this.state.ResStatusOnLogin === 500 ? (
-                              <div>
-                                <div>
-                                  <h2 className="mb-2"><IntlMessages id="register.error.text" /></h2>
-                                  <p><IntlMessages id="register.error.contact" /></p>
-                                </div>
-                              </div>
+                        ) : (
+                            <NavLink to={`/forgot-password`}>
+                              <IntlMessages id="user.forgot-password-question" />
+                            </NavLink>)}
 
-                            ) : <div>
-                                <div>
-                                  <h2 className="mb-2"><IntlMessages id="register.error.text" /></h2>
-                                  <p><IntlMessages id="register.error.tryagain" /></p>
-                                </div>
-                              </div>)))}
+                      </Row>
+                    </div>
+                    <div className="wizard-basic-step text-center pt-3">
+
+                      {/* If it's loading, diplay spinner, else display the login button */}
+
+                      {(this.props.loading) ? (
+                        <div>
+                          <Spinner color="primary" className="mb-1" />
+                          <p><IntlMessages id="message.wait" /></p>
                         </div>
-                      </Step>
-                      <Step id="step3">
-                        <div className="wizard-basic-step text-center pt-3">
-                 
-                              <div>
-                                <Redirect to="/user/login" />
-                              </div>
-                       
+                      ) : (<div>
+                        <div>
+                          <Button onClick={this.handleSubmit}> Login </Button>
                         </div>
-                      </Step>
-                    </Steps>
-                    <BottomNavigationNext onClickNext={this.onClickNext} className={"justify-content-center "} nextLabel={'Login'} />
-                  </Wizard>
+                      </div>)}
+                    </div>
+                  </Form>
                 </CardBody>
               </Card>
             </div>
@@ -171,12 +121,17 @@ class Login extends Component {
   }
 }
 
+
 const mapStateToProps = ({ authUser }) => {
   const { user, loading } = authUser;
   return { user, loading };
 };
 
-
-export default withRouter(connect(mapStateToProps, { loginUser })(Login));
+export default connect(
+  mapStateToProps,
+  {
+    loginUser
+  }
+)(Login);
 
 
