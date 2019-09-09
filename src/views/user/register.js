@@ -174,11 +174,14 @@ class Register extends Component {
                     "password":password,
                     "phoneNumber": phoneNumber
                 }
-                this.setState({ loading: true }, ()=>{ 
-                this.props.registerUser(developer, this.props.history)
-               this.hideNavigation();
+                store.subscribe(() => {
+                    this.setState({ loading: store.getState().authUser.loading });
+                  });
+
+                store.dispatch(registerUser(developer, this.props.history))
+                this.hideNavigation();
                goToNext();
-            })
+            
             }
         }
         

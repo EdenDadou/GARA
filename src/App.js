@@ -12,9 +12,8 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { withCookies } from 'react-cookie';
-import { configureStore } from "./redux/store";
-import { loginUserSuccess } from "./redux/actions";
+import { VerifToken } from './services/Developer';
+
 
 
 
@@ -34,13 +33,13 @@ const ViewError = React.lazy(() =>
 
 
 
-//if authUser (Login in localstorage) is true, display component, else redirect to login
+//if localStorage.getItem('Allow')  is true, display component, else redirect to login
 const AuthRoute = ({ component: Component, authUser, ...rest }) => (
 
   <Route
     {...rest}
     render={props =>
-      authUser ? (
+      localStorage.getItem('Allow') ? (
         <Component {...props} />
       ) : (
           <Redirect
@@ -58,10 +57,6 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      AuthUser : true,
-      Allow : ''
-    }
     const direction = getDirection();
     if (direction.isRtl) {
       document.body.classList.add('rtl');
@@ -71,11 +66,33 @@ class App extends Component {
       document.body.classList.remove('rtl');
     }
   }  
+
+  componentWillMount(){
+
+  //On mounting, after verification that we stock a token
+    if(localStorage.getItem('token')!==null){
+      //Send it to API for validity verification
+      VerifToken(localStorage.getItem('token'))
+      .then(res => {
+        if(res.status === 200){
+          //If res.status === 200, then change Allow value to true
+          localStorage.setItem('Allow', true)
+        }else{
+          localStorage.setItem('Allow', false)
+        }
+      })
+      .then(error => {
+        localStorage.setItem('Allow', false)
+      })
+
+    }
+  }
   
+
+
   render() {
     const { locale } = this.props;
     const currentAppLocale = AppLocale[locale];
- 
     return (
 
       <div className="h-100">
@@ -92,7 +109,6 @@ class App extends Component {
                   {/* authUser stock Login from localstorage */}
                   <AuthRoute
                     path="/app"
-                    authUser={this.state.AuthUser}
                     component={ViewApp}
                   />
                   <Route
@@ -120,25 +136,14 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ settings }, state) => {
-  const { user } = state;
+const mapStateToProps = ({ authUser, settings }) => {
+  const { user: loginUser } = authUser;
   const { locale } = settings;
-  return { user, locale };
+  return { loginUser, locale };
 };
+const mapActionsToProps = {};
 
-// const mapStateToProps = ({state, settings}) => {
-//   const { locale } = settings;
-//   return { user: state.user, locale  };
-// };
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loginUserSuccess: () => {
-      dispatch(loginUserSuccess());
-    }
-  }
-}
-
-
-export default withCookies(connect(mapStateToProps, mapDispatchToProps)(App));
-
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(App);
