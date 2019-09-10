@@ -12,7 +12,7 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { VerifToken, DeveloperInfo} from './services/Developer';
+import { VerifToken} from './services/Developer';
 
 
 
@@ -39,16 +39,8 @@ const AuthRoute = ({ component: Component, authUser, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      localStorage.getItem('Allow') ? (
-        <Component {...props} />
-      ) : (
-          <Redirect
-            to={{
-              pathname: '/user/login',
-              state: { from: props.location }
-            }}
-          />
-        )
+      localStorage.getItem('Allow') ? 
+      ( <Component {...props} />):(<Redirect to={{pathname: '/user/login', state: { from: props.location }}}/>)
     }
   />
 );
@@ -83,12 +75,7 @@ class App extends Component {
       .then(error => {
         localStorage.setItem('Allow', false)
       })
-
-      
     }
-    DeveloperInfo(localStorage.getItem('token'))
-    .then(res => console.log(res))
-    .catch(error => console.log(error))
   }
   
 
@@ -109,7 +96,6 @@ class App extends Component {
             <Suspense fallback={<div className="loading" />}>
               <Router>
                 <Switch>
-                  {/* authUser stock Login from localstorage */}
                   <AuthRoute
                     path="/app"
                     component={ViewApp}

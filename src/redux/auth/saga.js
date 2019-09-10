@@ -1,6 +1,6 @@
 
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { LoginDeveloper, RegisterDeveloper } from '../../services/Developer';
+import { LoginDeveloper, RegisterDeveloper, DeveloperInfo} from '../../services/Developer';
 import {
     LOGIN_USER,
     REGISTER_USER,
@@ -27,37 +27,54 @@ const loginWithEmailPasswordAsync = async (email, password) =>
 function* loginWithEmailPassword({ payload }) {
     const { email, password } = payload.user;
     const { history } = payload;
+    if(localStorage.getItem('onProcess')==='false'){
+        localStorage.setItem('onProcess', true)
     try {
 
-        //Call of API
-        const loginUser = yield call(loginWithEmailPasswordAsync, email, password);
-
-        //If response 200
-        if (loginUser.status === 200) {
-
-            //create a "cookies" to stock token
-            localStorage.setItem('token', loginUser.data)
-            yield put(loginUserSuccess(loginUser));
-            //create a "cookie Allow" to keep connection to app
-            localStorage.setItem('Allow', true)
-
-            //redirect to app
-            history.push('/app');
-
-        }
-        else {
+            
+            //Call of API
+            const loginUser = yield call(loginWithEmailPasswordAsync, email, password);
+            
+            //If response 200
+            if (loginUser.status === 200) {
+                
+                //create a "cookies" to stock token
+                localStorage.setItem('token', loginUser.data)
+                yield put(loginUserSuccess(loginUser));
+                //create a "cookie Allow" to keep connection to app
+                localStorage.setItem('Allow', true)
+                
+                console.log(localStorage.getItem('token'))
+                // DeveloperInfo(localStorage.getItem('token'))
+                // .then(res => console.log(res)
+                //     // localStorage.setItem('CurrentWorkingCompany', res.data.currentWorkingCompany.activated)
+                //     )
+                // .catch(error => console.log(error))
+                
+                console.log(localStorage.getItem('CurrentWorkingCompany'))
+                
+                localStorage.setItem('onProcess', false)
+                
+                //redirect to app
+                history.push('/app');
+                
+            }
+            else {
+                localStorage.setItem('Error', true);
+                yield put(loginUserSuccess(loginUser));
+                console.log('LOGIN failed :', loginUser);
+                localStorage.setItem('onProcess', false);
+                
+            }
+        } catch (error) {
             localStorage.setItem('Error', true);
-            yield put(loginUserSuccess(loginUser));
-            console.log('LOGIN failed :', loginUser);
-        
+            yield put(loginUserSuccess(error));
+            console.log('login failed :', error);
+            localStorage.setItem('onProcess', false);
         }
-    } catch (error) {
-        localStorage.setItem('Error', true);
-        yield put(loginUserSuccess(error));
-        console.log('login failed :', error)
     }
-}
-
+    }
+    
 
 //---------------register User function---------------//
 
@@ -111,6 +128,7 @@ function* logout({ payload }) {
         //delete token, and authorization
         localStorage.removeItem('Allow');
         localStorage.removeItem('token');
+        localStorage.removeItem('CurrentWorkingCompany');
 
         yield call(logoutAsync, history);
 

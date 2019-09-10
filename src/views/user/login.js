@@ -22,10 +22,13 @@ class Login extends Component {
 
 
   componentDidMount() {
-
     //If Allow that we initialize on App.js ComponentWillMount/VerifToken function its true, redirect to app 
-    if (localStorage.getItem('Allow'))
+    if (localStorage.getItem('Allow')) {
       this.props.history.push('/app')
+    } 
+    // else if (localStorage.getItem('Allow') && localStorage.getItem('CurrentWorkingCompany') === null) {
+    //   this.props.history.push('/app/company')
+    // }
   }
 
 
@@ -38,14 +41,14 @@ class Login extends Component {
   //On submit Login Form
   handleSubmit = () => {
     if (this.state.email !== "" && this.state.password !== "") {
-      
+
       let user = { email: this.state.email, password: this.state.password }
-      
+
 
       //Call Redux from props
       this.props.loginUser(user, this.props.history)
     }
-    
+
     //if there is error set State of Error, to display error message
     this.setState({ Error: localStorage.getItem('Error') })
   }
@@ -110,6 +113,7 @@ class Login extends Component {
                         </div>
                       </div>)}
                     </div>
+                    <p>You don't have any account. Click <NavLink to={`/user/register`}>here</NavLink></p>
                   </Form>
                 </CardBody>
               </Card>

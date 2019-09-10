@@ -22,7 +22,12 @@ export const VerifToken=(token)=>{
 }
 
 export const DeveloperInfo = (token) => {
-  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/developer/1', token)
+  let config = {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  }
+  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/developer/1', config)
   return PromiseResponse
 }
 

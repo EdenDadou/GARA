@@ -6,12 +6,14 @@ import Breadcrumb from "../../containers/navs/Breadcrumb";
 import { RegisterCompany } from "../../services/Company";
 
 export default class Company extends Component {
+
+
     render() {
         return (
             <Fragment>
             <Row>
               <Colxx xxs="12">
-                <Breadcrumb heading="menu.blank-page" match={this.props.match} />
+                <Breadcrumb heading="menu.blank-page" />
                 <Separator className="mb-5" />
               </Colxx>
             </Row>
