@@ -357,33 +357,6 @@ const data = [{
     icon: "iconsminds-bucket",
     label: "menu.company",
     to: "/app/company",
-    subs: [{
-      icon: "simple-icon-logout",
-      label: "menu.types",
-      to: "/app/menu/types"
-    },
-    {
-      icon: "simple-icon-layers",
-      label: "menu.levels",
-      to: "/app/menu/levels",
-      subs: [{
-          icon: "simple-icon-arrow-right",
-          label: "menu.third-level-1",
-          to: "/app/menu/levels/third-level-1"
-        },
-        {
-          icon: "simple-icon-arrow-right",
-          label: "menu.third-level-2",
-          to: "/app/menu/levels/third-level-2"
-        },
-        {
-          icon: "simple-icon-arrow-right",
-          label: "menu.third-level-3",
-          to: "/app/menu/levels/third-level-3"
-        }
-      ]
-    }
-  ]
   },
   {
     id: "docs",

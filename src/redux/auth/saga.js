@@ -27,6 +27,7 @@ const loginWithEmailPasswordAsync = async (email, password) =>
 function* loginWithEmailPassword({ payload }) {
     const { email, password } = payload.user;
     const { history } = payload;
+    
     if(localStorage.getItem('onProcess')==='false'){
         localStorage.setItem('onProcess', true)
     try {

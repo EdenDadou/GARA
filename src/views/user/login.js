@@ -45,6 +45,7 @@ class Login extends Component {
       let user = { email: this.state.email, password: this.state.password }
 
 
+      localStorage.setItem('onProcess', false)
       //Call Redux from props
       this.props.loginUser(user, this.props.history)
     }

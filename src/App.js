@@ -13,6 +13,8 @@ import NotificationContainer from './components/common/react-notifications/Notif
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 import { VerifToken} from './services/Developer';
+import { withRouter } from "react-router";
+
 
 
 
@@ -99,6 +101,7 @@ class App extends Component {
                   <AuthRoute
                     path="/app"
                     component={ViewApp}
+                    history={this.props.history}
                   />
                   <Route
                     path="/user"

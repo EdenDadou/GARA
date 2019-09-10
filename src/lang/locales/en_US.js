@@ -50,6 +50,9 @@ module.exports = {
 "register.error.tryagain": "Please try again to connect",
 "message.wait": " Please wait a seconde",
 "menu.company": "Company",
+"add.company": "New Company",
+
+
 
   /* 01.General */
   "general.copyright": "Gogo React © 2018 All Rights Reserved.",
