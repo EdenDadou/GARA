@@ -6,72 +6,93 @@ import {
   Row,
   Label,
   Button,
-  CardBody
+  CardBody, Card,
+  ButtonGroup, FormGroup, CardTitle
 } from "reactstrap";
+import IntlMessages from "../../helpers/IntlMessages";
 
-import { BottomNavigation } from "../../components/wizard/BottomNavigation";
+import { BottomNavigationNext } from "../../components/wizard/BottomNavigation";
 import { TopNavigation } from "../../components/wizard/TopNavigation";
 
 import { Colxx } from "../../components/common/CustomBootstrap";
 import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
+import Select from "react-select";
+import CustomSelectInput from "../../components/common/CustomSelectInput";
+import { getCountries } from "../../services/Country";
 
 
 
-import {
-  getSurveyList,
-  getSurveyListWithOrder,
-  getSurveyListSearch,
-  selectedSurveyItemsChange
-} from "../../redux/actions";
+let APIcountrieslist = []
+let countrylist = []
 
 
 class NewCompany extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      dropdownSplitOpen: false,
-      modalOpen: false,
-      lastChecked: null,
-
-      title: "",
-      label: {},
-      category: {},
-      status: "ACTIVE",
-      displayOptionsIsOpen: false
+      companyName: "",
+      description: "",
+      adress: "",
+      country: "",
+      zipCode: "",
+      city: "",
     };
   }
-  componentDidMount() {
-    this.props.getSurveyList();
+
+  componentWillMount() {
+    this.getCountrylistFromAPI();
   }
 
-  hideNavigation() {
-    this.setState({ bottomNavHidden: true, topNavDisabled: true });
+  /*Get country and store them*/
+  async getCountrylistFromAPI() {
+    await getCountries()
+      .then((array) => {
+        /*---Convert the list get from the back end to ahave the correct format with the index---*/
+        countrylist.push(...array.map(({ name }, index) => ({ label: name, value: name, key: index })));
+        array.forEach((country) => { APIcountrieslist.push(country) });
+
+        /*--Update the state to put the new format of the list---*/
+        this.setState({
+          countrylist: countrylist
+        });
+      });
   }
 
 
-  /*Handle field change*/
+
+  // -------Handle field change-----------//
   changeHandler = (input, value) => {
     this.setState({ [input]: value })
   }
 
-  /*Handle field change*/
   changeHandler2 = input => e => {
     this.setState({ [input]: e.target.value });
+  }
+
+  handleChangeCountry = country => {
+    this.setState({ selectedCountry: country });
+    this.setState({ country: APIcountrieslist[country.key] });
+  };
+
+
+  //---------Navigation------//
+
+  hideNavigation() {
+    this.setState({ bottomNavHidden: true, topNavDisabled: true });
   }
 
   onClickNext(goToNext, steps, step) {
     if (steps.length - 1 <= steps.indexOf(step)) {
       return;
     }
-   
-        goToNext();
-        step.isDone = true;
-        if (steps.length - 2 <= steps.indexOf(step)) {
-        }
-      }
-
-
+    if (steps.indexOf(step) === 0) {
+      // this.hideNavigation()
+      goToNext();
+    }
+    step.isDone = true;
+    if (steps.length - 2 <= steps.indexOf(step)) {
+    }
+  }
   onClickPrev(goToPrev, steps, step) {
     if (steps.indexOf(step) <= 0) {
       return;
@@ -79,267 +100,164 @@ class NewCompany extends Component {
     goToPrev();
   }
 
-  toggleDisplayOptions = () => {
-    this.setState({ displayOptionsIsOpen: !this.state.displayOptionsIsOpen });
-  };
+  //--------Submit Forms-------//
+  handleSubmit() {
 
-  toggleModal = () => {
-    this.setState({
-      modalOpen: !this.state.modalOpen
-    });
-  };
-
-  toggleSplit = () => {
-    this.setState(prevState => ({
-      dropdownSplitOpen: !prevState.dropdownSplitOpen
-    }));
-  };
-
-  changeOrderBy = column => {
-    this.props.getSurveyListWithOrder(column);
-  };
-
-  handleKeyPress = e => {
-    if (e.key === "Enter") {
-      this.props.getSurveyListSearch(e.target.value);
-    }
-  };
-
-  handleCheckChange = (event, id) => {
-    if (this.state.lastChecked == null) {
-      this.setState({
-        lastChecked: id
-      });
-    }
-
-    let selectedItems = Object.assign(
-      [],
-      this.props.surveyListApp.selectedItems
-    );
-    if (selectedItems.includes(id)) {
-      selectedItems = selectedItems.filter(x => x !== id);
-    } else {
-      selectedItems.push(id);
-    }
-    this.props.selectedSurveyItemsChange(selectedItems);
-
-    if (event.shiftKey) {
-      var items = this.props.surveyListApp.surveyItems;
-      var start = this.getIndex(id, items, "id");
-      var end = this.getIndex(this.state.lastChecked, items, "id");
-      items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
-      selectedItems.push(
-        ...items.map(item => {
-          return item.id;
-        })
-      );
-      selectedItems = Array.from(new Set(selectedItems));
-      this.props.selectedSurveyItemsChange(selectedItems);
-    }
-    return;
-  };
-  handleChangeSelectAll = () => {
-    if (this.props.surveyListApp.loading) {
-      if (
-        this.props.surveyListApp.selectedItems.length >=
-        this.props.surveyListApp.surveyItems.length
-      ) {
-        this.props.selectedSurveyItemsChange([]);
-      } else {
-        this.props.selectedSurveyItemsChange(
-          this.props.surveyListApp.surveyItems.map(x => x.id)
-        );
-      }
-    }
-  };
-
-  getIndex(value, arr, prop) {
-    for (var i = 0; i < arr.length; i++) {
-      if (arr[i][prop] === value) {
-        return i;
-      }
-    }
-    return -1;
   }
+
   render() {
-    const {
-      surveyItems,
-      searchKeyword,
-      loading,
-      orderColumn,
-      orderColumns,
-      selectedItems
-    } = this.props.surveyListApp;
-    const { messages } = this.props.intl;
-    const { modalOpen } = this.state;
+    const COUNTRY = this.state.countrylist
+    console.log(this.state.companyName)
     return (
-      <Fragment>
-         <CardBody className="wizard wizard-default">
-        <Wizard>
-            <TopNavigation className="justify-content-center" disableNav={true} />
-            <Steps>
-              <Step id="step1" name={"Description"}>
-                <div className="wizard-basic-step">
-                  <AvForm className="av-tooltip"
-                    onSubmit={this.handleSubmit}>
-                    <Row>
+      <Row className="h-100">
+        <Colxx xxs="12" md="10" className="mx-auto my-auto">
+          <Card className="auth-card">
 
-                      {/* -------- Company Name--------- */}
+            <div className="form-side">
 
-                      <Colxx sm={8} className="offset-2 mt-3">
-                        <AvGroup className="has-float-label tooltip-right-bottom">
-                          <Label>Company Name</Label>
-                          <AvField name="companyName"
-                            type="text"
-                            onChange={this.changeHandler2('companyName')}
-                            value={this.state.companyName}
-                            validate={{
-                              required: { value: true, errorMessage: 'Please enter your company name' },
-                              pattern: { value: '^[A-Za-z]+$', errorMessage: 'Your name must be composed only with letters' },
-                              minLength: { value: 2, errorMessage: 'Your name must be between 2 and 16 characters' },
-                              maxLength: { value: 30, errorMessage: 'Your name must be between 2 and 16 characters' }
-                            }} />
-                        </AvGroup>
-                      </Colxx>
+              <CardTitle className="mb-4">
+                <IntlMessages id="create.company" />
+              </CardTitle>
+              <Card>
+                <CardBody className="wizard wizard-default">
+                  <Wizard>
+                    <TopNavigation className="justify-content-center" disableNav={true} />
+            
+                      <Steps>
+                        <Step id="step1" name={"Create"}>
+                          <div className="wizard-basic-step">
+                            <AvForm className="av-tooltip"
+                              onSubmit={this.handleSubmit}>
+                              <Row>
 
-                      {/* -------- Description--------- */}
+                                {/* -------- Company Name--------- */}
 
-                      <Colxx sm={8} className="offset-2 mt-3">
-                        <AvGroup className="has-float-label tooltip-right-bottom">
-                          <Label>Desciption</Label>
-                          <AvInput
-                            name="Desciption"
-                            // onChange={this.changeHandler2}
-                            style={{ maxHeight: 130, minHeight: 130 }}
-                          />
-                        </AvGroup>
-                      </Colxx>
-                    </Row>
-                  </AvForm>
-                </div>
-              </Step>
+                                <Colxx sm={8} className="offset-2 mt-5">
+                                  <AvGroup className="has-float-label tooltip-right-bottom">
+                                    <Label>Company Name</Label>
+                                    <AvField name="companyName"
+                                      type="text"
+                                      onChange={this.changeHandler2('companyName')}
+                                      value={this.state.companyName}
+                                      validate={{
+                                        required: { value: true, errorMessage: 'Please enter your company name' },
+                                        minLength: { value: 2, errorMessage: 'Your name must be between 2 and 16 characters' },
+                                        maxLength: { value: 30, errorMessage: 'Your name must be between 2 and 16 characters' }
+                                      }} />
+                                  </AvGroup>
+                                </Colxx>
 
-              <Step id="step2" name={"Adress"}>
-                <div className="wizard-basic-step">
+                                {/* -------- Description--------- */}
 
-                  <AvForm>
-                    <Row>
-                      {/* ---------Adress-------- */}
+                                <Colxx sm={8} className="offset-2 mt-3">
+                                  <AvGroup className="has-float-label tooltip-right-bottom">
+                                    <Label>Desciption</Label>
+                                    <AvInput
+                                      name="Desciption"
+                                      onChange={this.changeHandler2('description')}
+                                      value={this.state.description}
+                                      style={{ maxHeight: 130, minHeight: 130 }}
+                                      validate={{
+                                        required: { value: true, errorMessage: 'Please enter your company description' },
+                                        minLength: { value: 10, errorMessage: 'Description must be between 20 and 100 characters' },
+                                        maxLength: { value: 100, errorMessage: 'Your name must be between 20 and 100 characters' }
+                                      }} />
+                                  </AvGroup>
+                                </Colxx>
 
-                      <Colxx sm={8} className="offset-2 mt-3">
-                        <AvGroup className="has-float-label tooltip-left-bottom">
-                          <Label>Adresse</Label>
-                          <AvField name="adress"
-                            type="text"
-                            onChange={this.changeHandler2('adress')}
-                            value={this.state.lastName}
-                            validate={{
-                              required: { value: true, errorMessage: 'Please enter your last name' },
-                              pattern: { value: '^[A-Za-z]+$', errorMessage: 'Your name must be composed only with letters' },
-                              minLength: { value: 2, errorMessage: 'Your name must be between 2 and 16 characters' },
-                              maxLength: { value: 16, errorMessage: 'Your name must be between 2 and 16 characters' }
-                            }} />
-                        </AvGroup>
-                      </Colxx>
+                                {/* ---------Adress-------- */}
 
-                      {/* ---------ZipCode--------- */}
+                                <Colxx sm={8} className="offset-2 mt-3">
+                                  <AvGroup className="has-float-label tooltip-left-bottom">
+                                    <Label>Adresse</Label>
+                                    <AvField name="adress"
+                                      type="text"
+                                      onChange={this.changeHandler2('adress')}
+                                      value={this.state.adress}
+                                      validate={{
+                                        required: { value: true, errorMessage: 'Please enter your adress' },
+                                      }} />
+                                  </AvGroup>
+                                </Colxx>
 
-                      <Colxx sm={3} className="offset-2">
-                        <AvGroup className="has-float-label tooltip-center-bottom">
-                          <Label>ZipCode</Label>
-                          <AvField name="zipCode"
-                            type="text"
-                            onChange={this.changeHandler2('email')}
-                            value={this.state.email}
-                            validate={{
-                              required: { value: true, errorMessage: 'Please enter your email address' },
-                              email: { value: true, errorMessage: 'Please enter a valid email address' },
-                            }} />
-                        </AvGroup>
-                      </Colxx>
+                                {/* ---------ZipCode--------- */}
 
-                      {/* ---------City--------- */}
+                                <Colxx sm={3} className="offset-2">
+                                  <AvGroup className="has-float-label tooltip-center-bottom">
+                                    <Label>ZipCode</Label>
+                                    <AvField name="zipCode"
+                                      type="text"
+                                      onChange={this.changeHandler2('zipCode')}
+                                      value={this.state.zipCode}
+                                      validate={{
+                                        required: { value: true, errorMessage: 'Please enter your zipCode' },
+                                      }} />
+                                  </AvGroup>
+                                </Colxx>
 
-                      <Colxx sm={5} className="">
-                        <AvGroup className="has-float-label error-l-100">
-                          <Label>City</Label>
-                          <AvField
-                            name="password"
-                            type="password"
-                            onChange={this.changeHandler2('password')}
-                            value={this.state.password}
-                            validate={{
-                              required: { value: true, errorMessage: 'Please enter your password' },
-                              minLength: { value: 6, errorMessage: 'Your password must be between 6 and 16 characters' },
-                              maxLength: { value: 16, errorMessage: 'Your password must be between 6 and 16 characters' }
-                            }} />
-                        </AvGroup>
-                      </Colxx>
-                      {/* ---------country--------- */}
-                      <Colxx sm={8} className="offset-2 mb-3">
-                        <AvGroup className="has-float-label error-l-100">
-                          <Label>Country</Label>
-                          <AvField
-                            name="password"
-                            type="password"
-                            onChange={this.changeHandler2('password')}
-                            value={this.state.password}
-                            validate={{
-                              required: { value: true, errorMessage: 'Please enter your password' },
-                              minLength: { value: 6, errorMessage: 'Your password must be between 6 and 16 characters' },
-                              maxLength: { value: 16, errorMessage: 'Your password must be between 6 and 16 characters' }
-                            }} />
-                        </AvGroup>
-                      </Colxx>
-                    </Row>
-                  </AvForm>
-                </div>
-              </Step>
-              <Step id="step3" name={"Registration"}>
-                <div className="wizard-basic-step">
-                  <AvForm className="av-tooltip"
-                    onSubmit={this.handleSubmit}>
-                    <Row>
+                                {/* ---------City--------- */}
 
-                      {/* -------- Company Name--------- */}
+                                <Colxx sm={5}>
+                                  <AvGroup className="has-float-label error-l-100">
+                                    <Label>City</Label>
+                                    <AvField
+                                      name="city"
+                                      onChange={this.changeHandler2('city')}
+                                      value={this.state.city}
+                                      validate={{
+                                        required: { value: true, errorMessage: 'Please enter your city' },
+                                      }} />
+                                  </AvGroup>
+                                </Colxx>
+                                {/* ---------country--------- */}
 
-                      <Colxx sm={8} className="offset-2 mt-3">
-                        <AvGroup className="has-float-label tooltip-right-bottom">
-                          <Label>Company Name</Label>
-                          <AvField name="companyName"
-                            type="text"
-                            onChange={this.changeHandler2('companyName')}
-                            value={this.state.companyName}
-                            validate={{
-                              required: { value: true, errorMessage: 'Please enter your company name' },
-                              pattern: { value: '^[A-Za-z]+$', errorMessage: 'Your name must be composed only with letters' },
-                              minLength: { value: 2, errorMessage: 'Your name must be between 2 and 16 characters' },
-                              maxLength: { value: 30, errorMessage: 'Your name must be between 2 and 16 characters' }
-                            }} />
-                        </AvGroup>
-                      </Colxx>
+                                <Colxx sm={8} className="offset-2">
+                                  <FormGroup className="mb-3 mt-0">
+                                    <Label className="form-group has-float-label size-1rem">
+                                      <IntlMessages id="user.country" />
+                                    </Label>
+                                    <Select
+                                      required
+                                      components={{ Input: CustomSelectInput }}
+                                      className="react-select"
+                                      classNamePrefix="react-select"
+                                      value={this.state.selectedCountry}
+                                      onChange={this.handleChangeCountry}
+                                      options={COUNTRY} />
+                                  </FormGroup>
+                                </Colxx>
+                              </Row>
+                            </AvForm>
+                          </div>
+                        </Step>
 
-                      {/* -------- Description--------- */}
+                        <Step id="step2" name={"Activate"}>
+                          <div className="wizard-basic-step">
+                            <AvForm>
+                              <div className='button-paiment'>
+                                <ButtonGroup className="mb-2 mr-1">
+                                  <Button color="primary">CB</Button>
+                                  <Button color="primary">Paypal</Button>
+                                  <Button color="primary">MobileMoney</Button>
+                                </ButtonGroup>
+                              </div>
 
-                      <Colxx sm={8} className="offset-2 mt-3">
-                        <AvGroup className="has-float-label tooltip-right-bottom">
-                          <Label>Desciption</Label>
-                          <AvInput
-                            name="Desciption"
-                            // onChange={this.changeHandler2}
-                            style={{ maxHeight: 130, minHeight: 130 }}
-                          />
-                        </AvGroup>
-                      </Colxx>
-                    </Row>
-                  </AvForm>
-                </div>
-              </Step>
-            </Steps>
-            <BottomNavigation onClickNext={this.onClickNext} onClickPrev={this.onClickPrev} className={"justify-content-center " + (this.state.bottomNavHidden && "invisible")} prevLabel={"Previous"} nextLabel={"Next"} />
-          </Wizard>
-          </CardBody>
-      </Fragment>
+                              {/* <Button type={'submit'}>Activate</Button> */}
+
+
+
+                            </AvForm>
+                          </div>
+                        </Step>
+                      </Steps>
+                      <BottomNavigationNext onClickNext={this.onClickNext} className={"justify-content-center mb-4" + (this.state.bottomNavHidden && "invisible")} nextLabel={"Create"} />
+                  </Wizard>
+                </CardBody>
+              </Card>
+            </div>
+          </Card>
+        </Colxx>
+      </Row>
     );
   }
 }
@@ -352,10 +270,7 @@ export default injectIntl(
   connect(
     mapStateToProps,
     {
-      getSurveyList,
-      getSurveyListWithOrder,
-      getSurveyListSearch,
-      selectedSurveyItemsChange
+
     }
   )(NewCompany)
 );

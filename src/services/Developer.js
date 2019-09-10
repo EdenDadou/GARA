@@ -21,13 +21,13 @@ export const VerifToken=(token)=>{
   return PromiseResponse
 }
 
-export const DeveloperInfo = (token) => {
+export const DeveloperInfo = (token,id) => {
   let config = {
     headers: {
       'Authorization': 'Bearer ' + token
     }
   }
-  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/developer/1', config)
+  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/developer/'+id, config)
   return PromiseResponse
 }
 

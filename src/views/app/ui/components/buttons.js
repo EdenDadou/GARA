@@ -269,6 +269,7 @@ export default class ButtonsUi extends Component {
                   <ButtonGroup size="lg" className="mb-2 mr-1">
                     <Button color="primary">1</Button>
                     <Button color="primary">2</Button>
+                    <Button color="primary">3</Button>
                   </ButtonGroup>
                   <ButtonGroup className="mb-2 mr-1">
                     <Button color="primary">1</Button>

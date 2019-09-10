@@ -1,6 +1,6 @@
 
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { LoginDeveloper, RegisterDeveloper, DeveloperInfo} from '../../services/Developer';
+import { LoginDeveloper, RegisterDeveloper, DeveloperInfo } from '../../services/Developer';
 import {
     LOGIN_USER,
     REGISTER_USER,
@@ -27,45 +27,55 @@ const loginWithEmailPasswordAsync = async (email, password) =>
 function* loginWithEmailPassword({ payload }) {
     const { email, password } = payload.user;
     const { history } = payload;
-    
-    if(localStorage.getItem('onProcess')==='false'){
-        localStorage.setItem('onProcess', true)
-    try {
 
-            
+    if (localStorage.getItem('onProcess') === 'false') {
+        localStorage.setItem('onProcess', true)
+        try {
+
+
             //Call of API
             const loginUser = yield call(loginWithEmailPasswordAsync, email, password);
-            
+            console.log(loginUser)
             //If response 200
             if (loginUser.status === 200) {
-                
-                //create a "cookies" to stock token
-                localStorage.setItem('token', loginUser.data)
+
+                //create a "cookies" to stock token and UserID
+                const UserID = loginUser.data.developerId;
+                const Token = loginUser.data.token;
+
+                localStorage.setItem('Token', Token)
+                localStorage.setItem('UserID', UserID)
+
                 yield put(loginUserSuccess(loginUser));
+               
+
                 //create a "cookie Allow" to keep connection to app
                 localStorage.setItem('Allow', true)
-                
-                console.log(localStorage.getItem('token'))
-                // DeveloperInfo(localStorage.getItem('token'))
-                // .then(res => console.log(res)
-                //     // localStorage.setItem('CurrentWorkingCompany', res.data.currentWorkingCompany.activated)
-                //     )
-                // .catch(error => console.log(error))
-                
-                console.log(localStorage.getItem('CurrentWorkingCompany'))
-                
+
+                console.log(localStorage.getItem('UserID'))
+                console.log(localStorage.getItem('Token'))
+                DeveloperInfo(localStorage.getItem('Token'), localStorage.getItem('UserID'))
+                    .then(res => {
+                        if(res.data.currentWorkingCompany === null){
+                            localStorage.setItem('CurrentWorkingCompany', null)
+                            history.push('/app/welcomepage');
+                        }else if(res.data.currentWorkingCompany.activated === false){
+                            localStorage.setItem('CurrentWorkingCompany', null)
+                            history.push('/app/company');
+                        }else if(res.data.currentWorkingCompany.activated===true){
+                            localStorage.setItem('CurrentWorkingCompany', true)
+                            history.push('/app');
+                        }})
+                    .catch(error => console.log(error))
+
                 localStorage.setItem('onProcess', false)
-                
-                //redirect to app
-                history.push('/app');
-                
             }
             else {
                 localStorage.setItem('Error', true);
                 yield put(loginUserSuccess(loginUser));
                 console.log('LOGIN failed :', loginUser);
                 localStorage.setItem('onProcess', false);
-                
+
             }
         } catch (error) {
             localStorage.setItem('Error', true);
@@ -74,8 +84,8 @@ function* loginWithEmailPassword({ payload }) {
             localStorage.setItem('onProcess', false);
         }
     }
-    }
-    
+}
+
 
 //---------------register User function---------------//
 

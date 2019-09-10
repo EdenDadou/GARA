@@ -156,18 +156,19 @@ class Company extends Component {
               <h1>
                 <IntlMessages id="menu.company" />
               </h1>
-
               {loading && (
                 <div className="text-zero top-right-button-container">
                   <Button
                     color="primary"
                     size="lg"
                     className="top-right-button mr-1"
-                    onClick={this.newCompany}>
-                    <IntlMessages id="add.company" />
+                    >
+                   <NavLink className="text-white" to="/app/newcompany"> <IntlMessages id="add.company" /></NavLink>
                   </Button>
-                    <NavLink to="/app/newcompany">About</NavLink>
-                  <ButtonDropdown
+                    
+
+                    
+                  {/* <ButtonDropdown
                     isOpen={this.state.dropdownSplitOpen}
                     toggle={this.toggleSplit}
                   >
@@ -204,7 +205,7 @@ class Company extends Component {
                         <IntlMessages id="survey.another-action" />
                       </DropdownItem>
                     </DropdownMenu>
-                  </ButtonDropdown>
+                  </ButtonDropdown> */}
                 </div>
               )}
 
@@ -220,7 +221,7 @@ class Company extends Component {
                 <i className="simple-icon-arrow-down align-middle" />
               </Button>
 
-              <Collapse
+              {/* <Collapse
                 id="displayOptions"
                 className="d-md-block mb-2"
                 isOpen={this.state.displayOptionsIsOpen}>
@@ -254,7 +255,7 @@ class Company extends Component {
                     />
                   </div>
                 </div>
-              </Collapse>
+              </Collapse> */}
             </div>
             <Separator className="mb-5" />
             <Row>
@@ -279,10 +280,6 @@ class Company extends Component {
         </Row>
 
         {loading && <SurveyApplicationMenu />}
-        <AddCompanyModal
-          toggleModal={this.toggleModal}
-          modalOpen={modalOpen}
-        />
       </Fragment>
     );
   }

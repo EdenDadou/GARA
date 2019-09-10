@@ -51,6 +51,8 @@ module.exports = {
 "message.wait": " Please wait a seconde",
 "menu.company": "Company",
 "add.company": "New Company",
+"create.company": "Create Company",
+"menu.welcomepage": "Welcome",
 
 
 
