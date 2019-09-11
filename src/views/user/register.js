@@ -161,7 +161,7 @@ class Register extends Component {
                 "phoneNumber": phoneNumber
             }
 
-
+            localStorage.setItem('onProcess', false);
             this.props.registerUser(developer, this.props.history)
             this.hideNavigation();
             goToNext();
@@ -179,6 +179,7 @@ class Register extends Component {
 
     Login=()=>{
         let user = { email: this.state.email, password: this.state.password }
+        localStorage.setItem('onProcess', false);
         this.props.loginUser(user, this.props.history)
     }
 
@@ -397,7 +398,7 @@ class Register extends Component {
                                                                 name="UsesTerms"
                                                                 style={{ maxHeight: 130, minHeight: 130 }}
                                                                 readOnly
-                                                                defaultValue="Qu'est-ce que le Lorem Ipsum?
+                                                                placeholder="Qu'est-ce que le Lorem Ipsum?
                                                                 Le Lorem Ipsum est simplement du faux texte employé dans la composition
                                                                 et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard
                                                                  de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla

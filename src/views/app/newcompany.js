@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import { Wizard, Steps, Step } from 'react-albus';
 import {
-  TabContent, TabPane,  Nav, NavItem, NavLink, CardTitle, CardText,  Col,
-  Row,Label,Button,CardBody, Card,ButtonGroup, FormGroup } from "reactstrap";
+  TabContent, TabPane, Nav, NavItem, NavLink, CardTitle, CardText, Col,
+  Row, Label, Button, CardBody, Card, ButtonGroup, FormGroup
+} from "reactstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import classnames from 'classnames';
 
@@ -71,6 +72,21 @@ class NewCompany extends Component {
       });
   }
 
+  /*Get country and store them*/
+  async getMobileMoneyOperator() {
+    await getCountries()
+      .then((array) => {
+        /*---Convert the list get from the back end to ahave the correct format with the index---*/
+        countrylist.push(...array.map(({ name }, index) => ({ label: name, value: name, key: index })));
+        array.forEach((country) => { APIcountrieslist.push(country) });
+
+        /*--Update the state to put the new format of the list---*/
+        this.setState({
+          countrylist: countrylist
+        });
+      });
+  }
+
 
 
   // -------Handle field change-----------//
@@ -107,6 +123,7 @@ class NewCompany extends Component {
       // && this.state.city!==''
       // && this.state.country!==''
     ) {
+      this.getMobileMoneyOperator();
       this.hideNavigation()
       goToNext();
     }
@@ -122,7 +139,9 @@ class NewCompany extends Component {
   }
 
   render() {
+
     const COUNTRY = this.state.countrylist
+    const MOBILEMONEYOPERATOR = this.state.countrylist
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
@@ -180,6 +199,24 @@ class NewCompany extends Component {
                                 </AvGroup>
                               </Colxx>
 
+                              {/* ---------country--------- */}
+
+                              <Colxx sm={8} className="offset-2">
+                                <FormGroup className="mb-3 mt-0">
+                                  <Label className="form-group has-float-label size-1rem">
+                                    <IntlMessages id="user.country" />
+                                  </Label>
+                                  <Select
+                                    required
+                                    components={{ Input: CustomSelectInput }}
+                                    className="react-select"
+                                    classNamePrefix="react-select"
+                                    value={this.state.selectedCountry}
+                                    onChange={this.handleChangeCountry}
+                                    options={COUNTRY} />
+                                </FormGroup>
+                              </Colxx>
+
                               {/* ---------Adress-------- */}
 
                               <Colxx sm={8} className="offset-2 mt-3">
@@ -224,23 +261,7 @@ class NewCompany extends Component {
                                     }} />
                                 </AvGroup>
                               </Colxx>
-                              {/* ---------country--------- */}
 
-                              <Colxx sm={8} className="offset-2">
-                                <FormGroup className="mb-3 mt-0">
-                                  <Label className="form-group has-float-label size-1rem">
-                                    <IntlMessages id="user.country" />
-                                  </Label>
-                                  <Select
-                                    required
-                                    components={{ Input: CustomSelectInput }}
-                                    className="react-select"
-                                    classNamePrefix="react-select"
-                                    value={this.state.selectedCountry}
-                                    onChange={this.handleChangeCountry}
-                                    options={COUNTRY} />
-                                </FormGroup>
-                              </Colxx>
                             </Row>
                           </AvForm>
                         </div>
@@ -249,17 +270,9 @@ class NewCompany extends Component {
                       <Step id="step2" name={"Activate"}>
                         <div className="wizard-basic-step">
                           <AvForm>
-                            {/* <div className='button-paiment'>
-                              <ButtonGroup className="mb-2 mr-1">
-                                <Button color="primary">MobileMoney</Button>
-                                <Button color="primary">Paypal</Button>
-                                <Button color="primary">CB</Button>
-                              </ButtonGroup>
-                            </div> */}
 
-                            {/* <Button type={'submit'}>Activate</Button> */}
                             <div>
-                              <Nav tabs>
+                              <Nav tabs className="button-paiment">
                                 <NavItem>
                                   <NavLink
                                     className={classnames({ active: this.state.activeTab === '1' })}
@@ -287,11 +300,32 @@ class NewCompany extends Component {
                                 <TabPane tabId="1">
                                   <Row>
                                     <Col sm="12">
-                                      <h4>Tab 1 Contents</h4>
+                                      <Card body>
+                                        <CardTitle>Mobile Money Paiment</CardTitle>
+                                        <CardText>This will take 22$ on you Mobile Money account at number: {localStorage.getItem('PhoneNumber')}</CardText>
+                                        <CardText>Please select your Mobile Money Operator.</CardText>
+                                        <Colxx sm={8} className="offset-2">
+                                          <FormGroup className="mb-3 mt-0">
+                                            <Label className="form-group has-float-label size-1rem">
+                                              <IntlMessages id="user.country" />
+                                            </Label>
+                                            <Select
+                                              required
+                                              components={{ Input: CustomSelectInput }}
+                                              className="react-select"
+                                              classNamePrefix="react-select"
+                                              value={this.state.selectedCountry}
+                                              onChange={this.handleChangeCountry}
+                                              options={MOBILEMONEYOPERATOR} />
+                                          </FormGroup>
+                                        </Colxx>
+
+                                        <Button>Activate</Button>
+                                      </Card>
                                     </Col>
                                   </Row>
                                 </TabPane>
-                                 {/* -----------PayPal--------- */}
+                                {/* -----------PayPal--------- */}
                                 <TabPane tabId="2">
                                   <Row>
                                     <Col sm="6">
@@ -310,7 +344,7 @@ class NewCompany extends Component {
                                     </Col>
                                   </Row>
                                 </TabPane>
-                                 {/* -----------CB--------- */}
+                                {/* -----------CB--------- */}
                                 <TabPane tabId="3">
                                   <Row>
                                     <Col sm="6">
@@ -331,16 +365,12 @@ class NewCompany extends Component {
                                 </TabPane>
                               </TabContent>
                             </div>
-                            );
-                          }
-                        }
-
-
-                            </AvForm>
+                          </AvForm>
                         </div>
                       </Step>
                     </Steps>
-                    <BottomNavigationNext onClickNext={this.onClickNext} className={"justify-content-center mb-4" + (this.state.bottomNavHidden && "invisible")} nextLabel={"Create"} />
+                    {this.state.bottomNavHidden ? (<div></div>) : (
+                      <BottomNavigationNext onClickNext={this.onClickNext} className={"justify-content-center mb-4" + (this.state.bottomNavHidden && "invisible")} nextLabel={"Create"} />)}
                   </Wizard>
                 </CardBody>
               </Card>

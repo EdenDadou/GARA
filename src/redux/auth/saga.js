@@ -41,16 +41,19 @@ function* loginWithEmailPassword({ payload }) {
 
             //Call of API
             const loginUser = yield call(loginWithEmailPasswordAsync, email, password);
-            console.log(loginUser)
             //If response 200
             if (loginUser.status === 200) {
-
-                //create a "cookies" to stock token and UserID
+                console.log(loginUser)
+                
+                //create a "cookies" to stock token, phoneNumber and UserID
                 const UserID = loginUser.data.developerId;
                 const Token = loginUser.data.token;
+                const PhoneNumber = loginUser.data.phoneNumber
+                
 
                 localStorage.setItem('Token', Token)
                 localStorage.setItem('UserID', UserID)
+                localStorage.setItem('PhoneNumber', PhoneNumber)
 
                 yield put(loginUserSuccess(loginUser));
 
@@ -77,14 +80,12 @@ function* loginWithEmailPassword({ payload }) {
 
             } else{
                 console.log('LOGIN failed :', loginUser);
-                localStorage.setItem('onProcess', false);
                 yield put(loginUserSuccess('Error'));
 
             }
         } catch (error) {
             console.log('login failed :', error);
             yield put(loginUserSuccess('Error'));
-            localStorage.setItem('onProcess', false);
         }
     }
 }
@@ -102,6 +103,8 @@ const registerWithEmailPasswordAsync = async (developer) =>
 function* registerWithEmailPassword({ payload }) {
     const developer = payload.developer;
     const { history } = payload
+    if (localStorage.getItem('onProcess') === 'false') {
+        localStorage.setItem('onProcess', true)
     try {
 
         //Call of API
@@ -124,6 +127,7 @@ function* registerWithEmailPassword({ payload }) {
         console.log('register error : ', error)
         yield put(registerUserSuccess('Error'));
     }
+}
 }
 
 
