@@ -85,17 +85,14 @@ class Login extends Component {
 
                         {/* If there is a Error, display Error message, else, display only the forget password part */}
 
-                        {(this.state.Error && this.props.loading === false) ? (
+                        {(this.state.Error && this.props.loading === false) &&
                           <div>
                             <p><IntlMessages id="register.error.mismatch" /></p>
                             <NavLink to={`/forgot-password`}>
                               <IntlMessages id="user.forgot-password-question" />
                             </NavLink>
                           </div>
-                        ) : (
-                            <NavLink to={`/forgot-password`}>
-                              <IntlMessages id="user.forgot-password-question" />
-                            </NavLink>)}
+                        }
 
                       </Row>
                     </div>
@@ -110,10 +107,16 @@ class Login extends Component {
                         </div>
                       ) : (<div>
                         <div>
-                          <Button onClick={this.handleSubmit}> Login </Button>
+                          <Button size="lg" className="mb-2" onClick={this.handleSubmit}> Login </Button>
                         </div>
                       </div>)}
                     </div>
+                    <div>
+                        <NavLink to={`/forgot-password`}>
+                                  <IntlMessages id="user.forgot-password-question" />
+                        </NavLink>
+                    </div>
+
                     <p>You don't have any account. Click <NavLink to={`/user/register`}>here</NavLink></p>
                   </Form>
                 </CardBody>
