@@ -37,15 +37,15 @@ class WelcomePage extends Component {
                     <IntlMessages id="jumbotron.lead-detail" />
                   </p>
                   <p className="lead mb-0">
+                    <NavLink className="text-white" to="/app/newcompany">
                     <Button
                       color="primary"
                       size="lg"
                       className="mt-3 mr-1"
                     >
-                      <NavLink className="text-white" to="/app/newcompany">
                         <IntlMessages id="create.company" />
-                      </NavLink>
                     </Button>
+                      </NavLink>
                   </p>
                 </Jumbotron>
               </CardBody>

@@ -256,7 +256,6 @@ class TopNav extends Component {
   }
 
   render() {
-    console.log(localStorage.getItem('CurrentWorkingCompany'))
     const { containerClassnames, menuClickCount, locale } = this.props;
     const { messages } = this.props.intl;
     return (

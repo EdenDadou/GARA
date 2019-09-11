@@ -1,15 +1,12 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import { Wizard, Steps, Step } from 'react-albus';
 import {
-  Row,
-  Label,
-  Button,
-  CardBody, Card,
-  ButtonGroup, FormGroup, CardTitle
-} from "reactstrap";
+  TabContent, TabPane,  Nav, NavItem, NavLink, CardTitle, CardText,  Col,
+  Row,Label,Button,CardBody, Card,ButtonGroup, FormGroup } from "reactstrap";
 import IntlMessages from "../../helpers/IntlMessages";
+import classnames from 'classnames';
 
 import { BottomNavigationNext } from "../../components/wizard/BottomNavigation";
 import { TopNavigation } from "../../components/wizard/TopNavigation";
@@ -29,14 +26,30 @@ let countrylist = []
 class NewCompany extends Component {
   constructor(props) {
     super(props);
+    this.toggle = this.toggle.bind(this);
+
+    this.onClickNext = this.onClickNext.bind(this);
+
     this.state = {
-      companyName: "",
-      description: "",
-      adress: "",
-      country: "",
-      zipCode: "",
-      city: "",
+      bottomNavHidden: false,
+      topNavDisabled: false,
+      companyName: '',
+      description: '',
+      adress: '',
+      country: '',
+      zipCode: '',
+      city: '',
+      activeTab: '1'
     };
+  }
+
+
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab
+      });
+    }
   }
 
   componentWillMount() {
@@ -82,23 +95,26 @@ class NewCompany extends Component {
   }
 
   onClickNext(goToNext, steps, step) {
+
     if (steps.length - 1 <= steps.indexOf(step)) {
       return;
     }
-    if (steps.indexOf(step) === 0) {
-      // this.hideNavigation()
+    if (steps.indexOf(step) === 0
+      // && this.state.companyName!==''
+      // && this.state.description!==''
+      // && this.state.adress!==''
+      // && this.state.zipCode!==''
+      // && this.state.city!==''
+      // && this.state.country!==''
+    ) {
+      this.hideNavigation()
       goToNext();
     }
     step.isDone = true;
     if (steps.length - 2 <= steps.indexOf(step)) {
     }
   }
-  onClickPrev(goToPrev, steps, step) {
-    if (steps.indexOf(step) <= 0) {
-      return;
-    }
-    goToPrev();
-  }
+
 
   //--------Submit Forms-------//
   handleSubmit() {
@@ -107,7 +123,6 @@ class NewCompany extends Component {
 
   render() {
     const COUNTRY = this.state.countrylist
-    console.log(this.state.companyName)
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
@@ -122,135 +137,210 @@ class NewCompany extends Component {
                 <CardBody className="wizard wizard-default">
                   <Wizard>
                     <TopNavigation className="justify-content-center" disableNav={true} />
-            
-                      <Steps>
-                        <Step id="step1" name={"Create"}>
-                          <div className="wizard-basic-step">
-                            <AvForm className="av-tooltip"
-                              onSubmit={this.handleSubmit}>
-                              <Row>
 
-                                {/* -------- Company Name--------- */}
+                    <Steps>
+                      <Step id="step1" name={"Create"}>
+                        <div className="wizard-basic-step">
+                          <AvForm className="av-tooltip"
+                            onSubmit={this.handleSubmit}>
+                            <Row>
 
-                                <Colxx sm={8} className="offset-2 mt-5">
-                                  <AvGroup className="has-float-label tooltip-right-bottom">
-                                    <Label>Company Name</Label>
-                                    <AvField name="companyName"
-                                      type="text"
-                                      onChange={this.changeHandler2('companyName')}
-                                      value={this.state.companyName}
-                                      validate={{
-                                        required: { value: true, errorMessage: 'Please enter your company name' },
-                                        minLength: { value: 2, errorMessage: 'Your name must be between 2 and 16 characters' },
-                                        maxLength: { value: 30, errorMessage: 'Your name must be between 2 and 16 characters' }
-                                      }} />
-                                  </AvGroup>
-                                </Colxx>
+                              {/* -------- Company Name--------- */}
 
-                                {/* -------- Description--------- */}
+                              <Colxx sm={8} className="offset-2 mt-5">
+                                <AvGroup className="has-float-label tooltip-right-bottom">
+                                  <Label>Company Name</Label>
+                                  <AvField name="companyName"
+                                    type="text"
+                                    onChange={this.changeHandler2('companyName')}
+                                    value={this.state.companyName}
+                                    validate={{
+                                      required: { value: true, errorMessage: 'Please enter your company name' },
+                                      minLength: { value: 2, errorMessage: 'Your name must be between 2 and 16 characters' },
+                                      maxLength: { value: 30, errorMessage: 'Your name must be between 2 and 16 characters' }
+                                    }} />
+                                </AvGroup>
+                              </Colxx>
 
-                                <Colxx sm={8} className="offset-2 mt-3">
-                                  <AvGroup className="has-float-label tooltip-right-bottom">
-                                    <Label>Desciption</Label>
-                                    <AvInput
-                                      name="Desciption"
-                                      onChange={this.changeHandler2('description')}
-                                      value={this.state.description}
-                                      style={{ maxHeight: 130, minHeight: 130 }}
-                                      validate={{
-                                        required: { value: true, errorMessage: 'Please enter your company description' },
-                                        minLength: { value: 10, errorMessage: 'Description must be between 20 and 100 characters' },
-                                        maxLength: { value: 100, errorMessage: 'Your name must be between 20 and 100 characters' }
-                                      }} />
-                                  </AvGroup>
-                                </Colxx>
+                              {/* -------- Description--------- */}
 
-                                {/* ---------Adress-------- */}
+                              <Colxx sm={8} className="offset-2 mt-3">
+                                <AvGroup className="has-float-label tooltip-right-bottom">
+                                  <Label>Desciption</Label>
+                                  <AvInput
+                                    name="Desciption"
+                                    onChange={this.changeHandler2('description')}
+                                    value={this.state.description}
+                                    style={{ maxHeight: 130, minHeight: 130 }}
+                                    validate={{
+                                      required: { value: true, errorMessage: 'Please enter your company description' },
+                                      minLength: { value: 10, errorMessage: 'Description must be between 20 and 100 characters' },
+                                      maxLength: { value: 100, errorMessage: 'Your name must be between 20 and 100 characters' }
+                                    }} />
+                                </AvGroup>
+                              </Colxx>
 
-                                <Colxx sm={8} className="offset-2 mt-3">
-                                  <AvGroup className="has-float-label tooltip-left-bottom">
-                                    <Label>Adresse</Label>
-                                    <AvField name="adress"
-                                      type="text"
-                                      onChange={this.changeHandler2('adress')}
-                                      value={this.state.adress}
-                                      validate={{
-                                        required: { value: true, errorMessage: 'Please enter your adress' },
-                                      }} />
-                                  </AvGroup>
-                                </Colxx>
+                              {/* ---------Adress-------- */}
 
-                                {/* ---------ZipCode--------- */}
+                              <Colxx sm={8} className="offset-2 mt-3">
+                                <AvGroup className="has-float-label tooltip-left-bottom">
+                                  <Label>Adresse</Label>
+                                  <AvField name="adress"
+                                    type="text"
+                                    onChange={this.changeHandler2('adress')}
+                                    value={this.state.adress}
+                                    validate={{
+                                      required: { value: true, errorMessage: 'Please enter your adress' },
+                                    }} />
+                                </AvGroup>
+                              </Colxx>
 
-                                <Colxx sm={3} className="offset-2">
-                                  <AvGroup className="has-float-label tooltip-center-bottom">
-                                    <Label>ZipCode</Label>
-                                    <AvField name="zipCode"
-                                      type="text"
-                                      onChange={this.changeHandler2('zipCode')}
-                                      value={this.state.zipCode}
-                                      validate={{
-                                        required: { value: true, errorMessage: 'Please enter your zipCode' },
-                                      }} />
-                                  </AvGroup>
-                                </Colxx>
+                              {/* ---------ZipCode--------- */}
 
-                                {/* ---------City--------- */}
+                              <Colxx sm={3} className="offset-2">
+                                <AvGroup className="has-float-label tooltip-center-bottom">
+                                  <Label>ZipCode</Label>
+                                  <AvField name="zipCode"
+                                    type="text"
+                                    onChange={this.changeHandler2('zipCode')}
+                                    value={this.state.zipCode}
+                                    validate={{
+                                      required: { value: true, errorMessage: 'Please enter your zipCode' },
+                                    }} />
+                                </AvGroup>
+                              </Colxx>
 
-                                <Colxx sm={5}>
-                                  <AvGroup className="has-float-label error-l-100">
-                                    <Label>City</Label>
-                                    <AvField
-                                      name="city"
-                                      onChange={this.changeHandler2('city')}
-                                      value={this.state.city}
-                                      validate={{
-                                        required: { value: true, errorMessage: 'Please enter your city' },
-                                      }} />
-                                  </AvGroup>
-                                </Colxx>
-                                {/* ---------country--------- */}
+                              {/* ---------City--------- */}
 
-                                <Colxx sm={8} className="offset-2">
-                                  <FormGroup className="mb-3 mt-0">
-                                    <Label className="form-group has-float-label size-1rem">
-                                      <IntlMessages id="user.country" />
-                                    </Label>
-                                    <Select
-                                      required
-                                      components={{ Input: CustomSelectInput }}
-                                      className="react-select"
-                                      classNamePrefix="react-select"
-                                      value={this.state.selectedCountry}
-                                      onChange={this.handleChangeCountry}
-                                      options={COUNTRY} />
-                                  </FormGroup>
-                                </Colxx>
-                              </Row>
+                              <Colxx sm={5}>
+                                <AvGroup className="has-float-label error-l-100">
+                                  <Label>City</Label>
+                                  <AvField
+                                    name="city"
+                                    onChange={this.changeHandler2('city')}
+                                    value={this.state.city}
+                                    validate={{
+                                      required: { value: true, errorMessage: 'Please enter your city' },
+                                    }} />
+                                </AvGroup>
+                              </Colxx>
+                              {/* ---------country--------- */}
+
+                              <Colxx sm={8} className="offset-2">
+                                <FormGroup className="mb-3 mt-0">
+                                  <Label className="form-group has-float-label size-1rem">
+                                    <IntlMessages id="user.country" />
+                                  </Label>
+                                  <Select
+                                    required
+                                    components={{ Input: CustomSelectInput }}
+                                    className="react-select"
+                                    classNamePrefix="react-select"
+                                    value={this.state.selectedCountry}
+                                    onChange={this.handleChangeCountry}
+                                    options={COUNTRY} />
+                                </FormGroup>
+                              </Colxx>
+                            </Row>
+                          </AvForm>
+                        </div>
+                      </Step>
+
+                      <Step id="step2" name={"Activate"}>
+                        <div className="wizard-basic-step">
+                          <AvForm>
+                            {/* <div className='button-paiment'>
+                              <ButtonGroup className="mb-2 mr-1">
+                                <Button color="primary">MobileMoney</Button>
+                                <Button color="primary">Paypal</Button>
+                                <Button color="primary">CB</Button>
+                              </ButtonGroup>
+                            </div> */}
+
+                            {/* <Button type={'submit'}>Activate</Button> */}
+                            <div>
+                              <Nav tabs>
+                                <NavItem>
+                                  <NavLink
+                                    className={classnames({ active: this.state.activeTab === '1' })}
+                                    onClick={() => { this.toggle('1'); }}>
+                                    MobileMoney
+                                  </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                  <NavLink
+                                    className={classnames({ active: this.state.activeTab === '2' })}
+                                    onClick={() => { this.toggle('2'); }}>
+                                    Paypal
+                                  </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                  <NavLink
+                                    className={classnames({ active: this.state.activeTab === '3' })}
+                                    onClick={() => { this.toggle('3'); }}>
+                                    CB
+                                  </NavLink>
+                                </NavItem>
+                              </Nav>
+                              <TabContent activeTab={this.state.activeTab}>
+                                {/* -----------Mobile Money--------- */}
+                                <TabPane tabId="1">
+                                  <Row>
+                                    <Col sm="12">
+                                      <h4>Tab 1 Contents</h4>
+                                    </Col>
+                                  </Row>
+                                </TabPane>
+                                 {/* -----------PayPal--------- */}
+                                <TabPane tabId="2">
+                                  <Row>
+                                    <Col sm="6">
+                                      <Card body>
+                                        <CardTitle>Special Title Treatment</CardTitle>
+                                        <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                                        <Button>Go somewhere</Button>
+                                      </Card>
+                                    </Col>
+                                    <Col sm="6">
+                                      <Card body>
+                                        <CardTitle>Special Title Treatment</CardTitle>
+                                        <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                                        <Button>Go somewhere</Button>
+                                      </Card>
+                                    </Col>
+                                  </Row>
+                                </TabPane>
+                                 {/* -----------CB--------- */}
+                                <TabPane tabId="3">
+                                  <Row>
+                                    <Col sm="6">
+                                      <Card body>
+                                        <CardTitle>Special Title Treatment</CardTitle>
+                                        <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                                        <Button>Go somewhere</Button>
+                                      </Card>
+                                    </Col>
+                                    <Col sm="6">
+                                      <Card body>
+                                        <CardTitle>Special Title Treatment</CardTitle>
+                                        <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                                        <Button>Go somewhere</Button>
+                                      </Card>
+                                    </Col>
+                                  </Row>
+                                </TabPane>
+                              </TabContent>
+                            </div>
+                            );
+                          }
+                        }
+
+
                             </AvForm>
-                          </div>
-                        </Step>
-
-                        <Step id="step2" name={"Activate"}>
-                          <div className="wizard-basic-step">
-                            <AvForm>
-                              <div className='button-paiment'>
-                                <ButtonGroup className="mb-2 mr-1">
-                                  <Button color="primary">CB</Button>
-                                  <Button color="primary">Paypal</Button>
-                                  <Button color="primary">MobileMoney</Button>
-                                </ButtonGroup>
-                              </div>
-
-                              {/* <Button type={'submit'}>Activate</Button> */}
-
-
-
-                            </AvForm>
-                          </div>
-                        </Step>
-                      </Steps>
-                      <BottomNavigationNext onClickNext={this.onClickNext} className={"justify-content-center mb-4" + (this.state.bottomNavHidden && "invisible")} nextLabel={"Create"} />
+                        </div>
+                      </Step>
+                    </Steps>
+                    <BottomNavigationNext onClickNext={this.onClickNext} className={"justify-content-center mb-4" + (this.state.bottomNavHidden && "invisible")} nextLabel={"Create"} />
                   </Wizard>
                 </CardBody>
               </Card>

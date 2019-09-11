@@ -10,7 +10,7 @@ import {
 import {
     loginUserSuccess,
     registerUserSuccess,
-    loginUserFail, registerUserFail
+    registerUserFail
 } from './actions';
 
 
@@ -23,6 +23,12 @@ const loginWithEmailPasswordAsync = async (email, password) =>
         .then(authUser => authUser)
         .catch(error => error);
 
+//fonction to call API to get info user
+const DeveloperInfoAsync = async (token, id) =>
+    await DeveloperInfo(token, id)
+        .then(authUser => authUser)
+        .catch(error => error);
+
 
 function* loginWithEmailPassword({ payload }) {
     const { email, password } = payload.user;
@@ -31,7 +37,7 @@ function* loginWithEmailPassword({ payload }) {
     if (localStorage.getItem('onProcess') === 'false') {
         localStorage.setItem('onProcess', true)
         try {
-
+            localStorage.setItem('Error', null);
 
             //Call of API
             const loginUser = yield call(loginWithEmailPasswordAsync, email, password);
@@ -47,40 +53,37 @@ function* loginWithEmailPassword({ payload }) {
                 localStorage.setItem('UserID', UserID)
 
                 yield put(loginUserSuccess(loginUser));
-               
 
-                //create a "cookie Allow" to keep connection to app
-                localStorage.setItem('Allow', true)
 
-                console.log(localStorage.getItem('UserID'))
-                console.log(localStorage.getItem('Token'))
-                DeveloperInfo(localStorage.getItem('Token'), localStorage.getItem('UserID'))
-                    .then(res => {
-                        if(res.data.currentWorkingCompany === null){
-                            localStorage.setItem('CurrentWorkingCompany', null)
-                            history.push('/app/welcomepage');
-                        }else if(res.data.currentWorkingCompany.activated === false){
-                            localStorage.setItem('CurrentWorkingCompany', null)
-                            history.push('/app/company');
-                        }else if(res.data.currentWorkingCompany.activated===true){
-                            localStorage.setItem('CurrentWorkingCompany', true)
-                            history.push('/app');
-                        }})
-                    .catch(error => console.log(error))
+                // console.log(localStorage.getItem('UserID'))
+                // console.log(localStorage.getItem('Token'))
+                const infoUser = yield call(DeveloperInfoAsync, Token, UserID);
 
-                localStorage.setItem('onProcess', false)
-            }
-            else {
-                localStorage.setItem('Error', true);
-                yield put(loginUserSuccess(loginUser));
+                if (infoUser.status === 200) {
+                    //create a "cookie Allow" to keep connection to app
+                    localStorage.setItem('onProcess', false)
+                    localStorage.setItem('Allow', true)
+                    if (infoUser.data.currentWorkingCompany === null) {
+                        localStorage.setItem('CurrentWorkingCompany', null)
+                        history.push('/app/welcomepage');
+                    } else if (infoUser.data.currentWorkingCompany.activated === false) {
+                        localStorage.setItem('CurrentWorkingCompany', null)
+                        history.push('/app/company');
+                    } else if (infoUser.data.currentWorkingCompany.activated === true) {
+                        localStorage.setItem('CurrentWorkingCompany', true)
+                        history.push('/app');
+                    }
+                }
+
+            } else{
                 console.log('LOGIN failed :', loginUser);
                 localStorage.setItem('onProcess', false);
+                yield put(loginUserSuccess('Error'));
 
             }
         } catch (error) {
-            localStorage.setItem('Error', true);
-            yield put(loginUserSuccess(error));
             console.log('login failed :', error);
+            yield put(loginUserSuccess('Error'));
             localStorage.setItem('onProcess', false);
         }
     }
@@ -115,11 +118,11 @@ function* registerWithEmailPassword({ payload }) {
             history.push('/app')
         } else if (registerUser.status !== 200) {
             console.log('register failed :', registerUser)
-            yield put(registerUserFail(registerUser));
+            yield put(registerUserSuccess('Error'));
         }
     } catch (error) {
         console.log('register error : ', error)
-        yield put(registerUserFail(error));
+        yield put(registerUserSuccess('Error'));
     }
 }
 

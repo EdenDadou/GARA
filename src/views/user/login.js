@@ -15,7 +15,7 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
-      Error: ""
+      Error: '',
     };
   }
 
@@ -25,7 +25,7 @@ class Login extends Component {
     //If Allow that we initialize on App.js ComponentWillMount/VerifToken function its true, redirect to app 
     if (localStorage.getItem('Allow')) {
       this.props.history.push('/app')
-    } 
+    }
     // else if (localStorage.getItem('Allow') && localStorage.getItem('CurrentWorkingCompany') === null) {
     //   this.props.history.push('/app/company')
     // }
@@ -44,14 +44,11 @@ class Login extends Component {
 
       let user = { email: this.state.email, password: this.state.password }
 
+      localStorage.setItem('onProcess', 'false')
 
-      localStorage.setItem('onProcess', false)
       //Call Redux from props
       this.props.loginUser(user, this.props.history)
     }
-
-    //if there is error set State of Error, to display error message
-    this.setState({ Error: localStorage.getItem('Error') })
   }
 
 
@@ -85,7 +82,7 @@ class Login extends Component {
 
                         {/* If there is a Error, display Error message, else, display only the forget password part */}
 
-                        {(this.state.Error && this.props.loading === false) ? (
+                        {this.props.user === 'Error' ? (
                           <div>
                             <p><IntlMessages id="register.error.mismatch" /></p>
                             <NavLink to={`/forgot-password`}>
@@ -95,7 +92,8 @@ class Login extends Component {
                         ) : (
                             <NavLink to={`/forgot-password`}>
                               <IntlMessages id="user.forgot-password-question" />
-                            </NavLink>)}
+                            </NavLink>
+                          )}
 
                       </Row>
                     </div>
