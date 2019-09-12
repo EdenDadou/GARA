@@ -4,6 +4,20 @@ export const LOGIN_USER_FAIL = "LOGIN_USER_FAIL";
 export const REGISTER_USER_FAIL = "REGISTER_USER_FAIL";
 
 
+
+/* COMPANY */
+export const COMPANY_ADD_COMPANY = "COMPANY_ADD_COMPANY";
+export const COMPANY_DELETE_COMPANY = "COMPANY_DELETE_COMPANY";
+export const COMPANY_GET_LIST = "COMPANY_GET_LIST";
+export const COMPANY_GET_LIST_SUCCESS = "COMPANY_GET_LIST_SUCCESS";
+export const COMPANY_GET_LIST_ERROR = "COMPANY_GET_LIST_ERROR";
+export const COMPANY_ADD_ITEM_SUCCESS = "COMPANY_ADD_ITEM_SUCCESS";
+export const COMPANY_ADD_ITEM_ERROR = "COMPANY_ADD_ITEM_ERROR";
+export const COMPANY_SELECTED_ITEMS_CHANGE = "COMPANY_SELECTED_ITEMS_CHANGE";
+
+
+
+
 /* SETTINGS */
 export const CHANGE_LOCALE = "CHANGE_LOCALE";
 
@@ -70,6 +84,7 @@ export const SURVEY_DELETE_QUESTION = "SURVEY_DELETE_QUESTION";
 export const SURVEY_SAVE = "SURVEY_SAVE";
 
 export * from "./menu/actions";
+export * from "./company/actions";
 export * from "./settings/actions";
 export * from "./auth/actions";
 export * from "./todo/actions";

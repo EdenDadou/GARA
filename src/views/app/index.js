@@ -13,6 +13,24 @@ const Company = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './
 const NewCompany = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './newcompany'));
 const WelcomePage = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './welcomepage'));
 
+
+const AuthRoute = ({ component: Component, CurrentWorkingCompany, authUser, ...rest }) => (
+  
+  <Route
+  {...rest}
+  render={props =>
+
+  
+    CurrentWorkingCompany === 'null' ?
+    (<Redirect to={{ pathname: '/app/welcomepage', state: { from: props.location } }} />)
+    :(CurrentWorkingCompany === 'false'?
+    (<Redirect to={{ pathname: '/app/company', state: { from: props.location } }} />)
+    :(<Component {...props} />))
+    
+  }
+  />
+  );
+
 class App extends Component {
   render() {
     const { match } = this.props;
@@ -22,30 +40,35 @@ class App extends Component {
         <div className="dashboard-wrapper">
           <Suspense fallback={<div className="loading" />}>
             <Switch>
-              <Redirect
-                exact
-                from={`${match.url}/`}
-                to={`${match.url}/dashboards`}
-              />
-              <Route
+              <AuthRoute
                 path={`${match.url}/dashboards`}
-                render={props => <Dashboards {...props} />}
+                component={Dashboards}
+                CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                history={this.props.history}
               />
-              <Route
+              <AuthRoute
                 path={`${match.url}/applications`}
-                render={props => <Applications {...props} />}
+                component={Applications}
+                CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                history={this.props.history}
               />
-              <Route
+              <AuthRoute
                 path={`${match.url}/pages`}
-                render={props => <Pages {...props} />}
+                component={Pages}
+                CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                history={this.props.history}
               />
-              <Route
+              <AuthRoute
                 path={`${match.url}/ui`}
-                render={props => <Ui {...props} />}
+                component={Ui}
+                CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                history={this.props.history}
               />
-              <Route
+              <AuthRoute
                 path={`${match.url}/menu`}
-                render={props => <Menu {...props} />}
+                component={Menu}
+                CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                history={this.props.history}
               />
               <Route
                 path={`${match.url}/company`}

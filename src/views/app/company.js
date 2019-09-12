@@ -27,7 +27,6 @@ import {
 } from "../../redux/actions";
 
 import SurveyListItem from "../../components/applications/SurveyListItem";
-import AddCompanyModal from "../../containers/applications/AddCompanyModal";
 import SurveyApplicationMenu from "../../containers/applications/SurveyApplicationMenu";
 
 class Company extends Component {

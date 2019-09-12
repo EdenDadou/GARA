@@ -11,17 +11,24 @@ import classnames from 'classnames';
 
 import { BottomNavigationNext } from "../../components/wizard/BottomNavigation";
 import { TopNavigation } from "../../components/wizard/TopNavigation";
-
-import { Colxx } from "../../components/common/CustomBootstrap";
-import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
+import { addCompany } from "../../redux/actions";
+import { Colxx, Separator } from "../../components/common/CustomBootstrap";
+import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
+import { AgencyCountry, MobileMoneyOperator } from "../../services/MobileMoney";
 
 
 
 let APIcountrieslist = []
 let countrylist = []
+
+let APIAgencyCountrieslist = []
+let AgencyCountrylist = []
+
+let APIOperatorlist = []
+let Operatorlist = []
 
 
 class NewCompany extends Component {
@@ -37,10 +44,11 @@ class NewCompany extends Component {
       companyName: '',
       description: '',
       adress: '',
+      PhoneNumber: '',
       country: '',
       zipCode: '',
       city: '',
-      activeTab: '1'
+      activeTab: '1',
     };
   }
 
@@ -54,7 +62,9 @@ class NewCompany extends Component {
   }
 
   componentWillMount() {
+    localStorage.removeItem('Code')
     this.getCountrylistFromAPI();
+    this.getMobileMoneyCountry()
   }
 
   /*Get country and store them*/
@@ -72,20 +82,39 @@ class NewCompany extends Component {
       });
   }
 
-  /*Get country and store them*/
-  async getMobileMoneyOperator() {
-    await getCountries()
+  /*Get Mobil Money Country and store them*/
+  async getMobileMoneyCountry() {
+    await AgencyCountry(localStorage.getItem('Token'))
+      .then(res => res.data)
       .then((array) => {
         /*---Convert the list get from the back end to ahave the correct format with the index---*/
-        countrylist.push(...array.map(({ name }, index) => ({ label: name, value: name, key: index })));
-        array.forEach((country) => { APIcountrieslist.push(country) });
+        AgencyCountrylist.push(...array.map(({ name }, index) => ({ label: name, value: name, key: index })));
+        array.forEach((country) => { APIAgencyCountrieslist.push(country) });
+        /*--Update the state to put the new format of the list---*/
+        this.setState({ AgencyCountrylist: AgencyCountrylist });
+      });
+  }
+
+  /*Get Mobil Money Operator and store them*/
+  async getMobileMoneyOperator() {
+    let Token = localStorage.getItem('Token')
+    let CountryCode = localStorage.getItem('Code')
+    Operatorlist = [];
+    APIOperatorlist = [];
+    await MobileMoneyOperator(Token, CountryCode)
+      .then(res => res.data)
+      .then((array) => {
+        /*---Convert the list get from the back end to ahave the correct format with the index---*/
+        Operatorlist.push(...array.map(({ telecom }, index) => ({ label: telecom, value: telecom, key: index })));
+        array.forEach((country) => { APIOperatorlist.push(country) });
 
         /*--Update the state to put the new format of the list---*/
         this.setState({
-          countrylist: countrylist
+          Operatorlist: Operatorlist
         });
       });
   }
+
 
 
 
@@ -103,6 +132,13 @@ class NewCompany extends Component {
     this.setState({ country: APIcountrieslist[country.key] });
   };
 
+  handleChangeOperatorCountry = agencyCountry => {
+    this.setState({ selectedAgencyCountry: agencyCountry });
+    localStorage.setItem('Code', APIAgencyCountrieslist[agencyCountry.key].countryCode)
+    this.getMobileMoneyOperator()
+
+  };
+
 
   //---------Navigation------//
 
@@ -116,15 +152,22 @@ class NewCompany extends Component {
       return;
     }
     if (steps.indexOf(step) === 0
-      // && this.state.companyName!==''
-      // && this.state.description!==''
-      // && this.state.adress!==''
-      // && this.state.zipCode!==''
-      // && this.state.city!==''
-      // && this.state.country!==''
+      && this.state.companyName !== ''
+      && this.state.description !== ''
+      && this.state.adress !== ''
+      && this.state.zipCode !== ''
+      && this.state.city !== ''
+      && this.state.country !== ''
     ) {
-      this.getMobileMoneyOperator();
+      let company = { 
+        adress: this.state.adress, 
+        city: this.state.city, 
+        country: this.state.country, 
+        description: this.state.description, 
+        name: this.state.companyName }
+        console.log(company)
       this.hideNavigation()
+      this.props.addCompany(company)
       goToNext();
     }
     step.isDone = true;
@@ -132,16 +175,11 @@ class NewCompany extends Component {
     }
   }
 
-
-  //--------Submit Forms-------//
-  handleSubmit() {
-
-  }
-
   render() {
 
     const COUNTRY = this.state.countrylist
-    const MOBILEMONEYOPERATOR = this.state.countrylist
+    const MOBILEMONEYCOUNTRY = this.state.AgencyCountrylist
+    const MOBILEMONEYOPERATOR = this.state.Operatorlist
     return (
       <Row className="h-100">
         <Colxx xxs="12" md="10" className="mx-auto my-auto">
@@ -186,10 +224,9 @@ class NewCompany extends Component {
                               <Colxx sm={8} className="offset-2 mt-3">
                                 <AvGroup className="has-float-label tooltip-right-bottom">
                                   <Label>Desciption</Label>
-                                  <AvInput
+                                  <AvField
                                     name="Desciption"
                                     onChange={this.changeHandler2('description')}
-                                    value={this.state.description}
                                     style={{ maxHeight: 130, minHeight: 130 }}
                                     validate={{
                                       required: { value: true, errorMessage: 'Please enter your company description' },
@@ -302,25 +339,80 @@ class NewCompany extends Component {
                                     <Col sm="12">
                                       <Card body>
                                         <CardTitle>Mobile Money Paiment</CardTitle>
-                                        <CardText>This will take 22$ on you Mobile Money account at number: {localStorage.getItem('PhoneNumber')}</CardText>
-                                        <CardText>Please select your Mobile Money Operator.</CardText>
-                                        <Colxx sm={8} className="offset-2">
-                                          <FormGroup className="mb-3 mt-0">
-                                            <Label className="form-group has-float-label size-1rem">
-                                              <IntlMessages id="user.country" />
-                                            </Label>
-                                            <Select
-                                              required
-                                              components={{ Input: CustomSelectInput }}
-                                              className="react-select"
-                                              classNamePrefix="react-select"
-                                              value={this.state.selectedCountry}
-                                              onChange={this.handleChangeCountry}
-                                              options={MOBILEMONEYOPERATOR} />
-                                          </FormGroup>
-                                        </Colxx>
+                                        {/* <CardText>This will take 22$ on you Mobile Money account at number: {localStorage.getItem('PhoneNumber')}</CardText>
+                                        <CardText>Please select your Mobile Money Operator.</CardText> */}
 
-                                        <Button>Activate</Button>
+                                        {/* ------------Select MM Country-------- */}
+                                        <Row>
+                                          <Colxx sm={5} className="offset-1">
+                                            <FormGroup className="mb-3 mt-0">
+                                              <Label className="form-group has-float-label size-1rem">
+                                                <IntlMessages id="user.country" />
+                                              </Label>
+                                              <Select
+                                                required
+                                                components={{ Input: CustomSelectInput }}
+                                                className="react-select"
+                                                classNamePrefix="react-select"
+                                                value={this.state.selectedAgencyCountry}
+                                                onChange={this.handleChangeOperatorCountry}
+                                                options={MOBILEMONEYCOUNTRY} />
+                                            </FormGroup>
+                                          </Colxx>
+
+                                          {/* ------------Select MM Operator-------- */}
+
+                                          <Colxx sm={5} className="">
+                                            <FormGroup className="mb-3 mt-0">
+                                              <Label className="form-group has-float-label size-1rem">
+                                                <IntlMessages id="user.operator" />
+                                              </Label>
+                                              <Select
+                                                required
+                                                components={{ Input: CustomSelectInput }}
+                                                className="react-select"
+                                                classNamePrefix="react-select"
+                                                value={this.state.selectedOperator}
+                                                onChange={this.handleChangeOperator}
+                                                options={MOBILEMONEYOPERATOR} />
+                                            </FormGroup>
+                                          </Colxx>
+
+                                          {/* -------- Phone Number--------- */}
+
+                                          <Colxx sm={5} className="offset-1">
+                                            <AvGroup className="has-float-label tooltip-right-bottom">
+                                              <Label>Phone Number</Label>
+                                              <AvField name="PhoneNumber"
+                                                type="text"
+                                                onChange={this.changeHandler2('PhoneNumber')}
+                                                defaultValue={localStorage.getItem('PhoneNumber')}
+                                                validate={{
+                                                  required: { value: true, errorMessage: 'Please enter your phone number' },
+                                                  minLength: { value: 5, errorMessage: 'Your name must be between 5 and 18 characters' },
+                                                  maxLength: { value: 18, errorMessage: 'Your name must be between 5 and 18 characters' }
+                                                }} />
+                                            </AvGroup>
+                                          </Colxx>
+                                        </Row>
+                                        <Row>
+
+                                          <Colxx sm={5} className="offset-1">
+                                            <Card body>
+                                              <CardText>Amount : 20€</CardText>
+                                              <CardText>Frais : 1.2%</CardText>
+                                              <Separator className="mb-5" />
+                                              <CardText>Total: 20€10</CardText>
+                                            </Card>
+                                          </Colxx>
+                                          <Colxx sm={5} className="">
+                                            <Card body>
+                                              <CardText>Your account will be activated, just after that paiment will be validate by your operator</CardText>
+                                              <Button>Paid</Button>
+                                            </Card>
+                                          </Colxx>
+                                        </Row>
+
                                       </Card>
                                     </Col>
                                   </Row>
@@ -381,16 +473,15 @@ class NewCompany extends Component {
     );
   }
 }
-const mapStateToProps = ({ surveyListApp }) => {
-  return {
-    surveyListApp
-  };
+const mapStateToProps = ({ company }) => {
+const item = company;
+return {item}
 };
 export default injectIntl(
   connect(
     mapStateToProps,
     {
-
+      addCompany
     }
   )(NewCompany)
 );

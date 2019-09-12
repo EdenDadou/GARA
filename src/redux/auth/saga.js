@@ -9,8 +9,7 @@ import {
 
 import {
     loginUserSuccess,
-    registerUserSuccess,
-    registerUserFail
+    registerUserSuccess
 } from './actions';
 
 
@@ -55,7 +54,7 @@ function* loginWithEmailPassword({ payload }) {
                 localStorage.setItem('UserID', UserID)
                 localStorage.setItem('PhoneNumber', PhoneNumber)
 
-                yield put(loginUserSuccess(loginUser));
+                yield put(loginUserSuccess(loginUser, true));
 
 
                 // console.log(localStorage.getItem('UserID'))
@@ -65,27 +64,33 @@ function* loginWithEmailPassword({ payload }) {
                 if (infoUser.status === 200) {
                     //create a "cookie Allow" to keep connection to app
                     localStorage.setItem('onProcess', false)
-                    localStorage.setItem('Allow', true)
+                    
                     if (infoUser.data.currentWorkingCompany === null) {
-                        localStorage.setItem('CurrentWorkingCompany', null)
-                        history.push('/app/welcomepage');
+                        localStorage.setItem('CurrentWorkingCompany', null);
+                        localStorage.setItem('Allow', true);
+                        window.location.reload()
+                        // this.props.history.push('/app/welcomepage');
                     } else if (infoUser.data.currentWorkingCompany.activated === false) {
-                        localStorage.setItem('CurrentWorkingCompany', null)
-                        history.push('/app/company');
+                        localStorage.setItem('CurrentWorkingCompany', false);
+                        localStorage.setItem('Allow', true);
+                        window.location.reload()
+                        // this.props.history.push('/app/company');
                     } else if (infoUser.data.currentWorkingCompany.activated === true) {
-                        localStorage.setItem('CurrentWorkingCompany', true)
-                        history.push('/app');
+                        localStorage.setItem('CurrentWorkingCompany', true);
+                        localStorage.setItem('Allow', true);
+                        window.location.reload()
+                        // this.props.history.push('/app');
                     }
                 }
 
             } else{
                 console.log('LOGIN failed :', loginUser);
-                yield put(loginUserSuccess('Error'));
+                yield put(loginUserSuccess('Error', false));
 
             }
         } catch (error) {
             console.log('login failed :', error);
-            yield put(loginUserSuccess('Error'));
+            yield put(loginUserSuccess('Error', false));
         }
     }
 }
@@ -137,7 +142,7 @@ const logoutAsync = async (history) => {
 
 
     //redirect to login page
-    history.push('/user/login')
+    window.location.reload()
 }
 
 function* logout({ payload }) {

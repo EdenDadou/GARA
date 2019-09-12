@@ -14,9 +14,9 @@ export const loginUser = (user, history) => ({
   payload: { user, history }
 });
 
-export const loginUserSuccess = (user) => ({
+export const loginUserSuccess = (user, allow) => ({
   type: LOGIN_USER_SUCCESS,
-  payload: user
+  payload: user, allow
 });
 
 
