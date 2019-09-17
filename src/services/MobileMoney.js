@@ -23,3 +23,16 @@ export const AgencyCountry = (token) => {
   return PromiseResponse
 }
 
+
+export const PaidMobileMoney = (token, paymentInfo) => {
+  let config = {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  }
+  const PromiseResponse = axios.post(GET_ROOT_URL + 'secure/developer/cashout', paymentInfo, config)
+  return PromiseResponse
+}
+
+
+

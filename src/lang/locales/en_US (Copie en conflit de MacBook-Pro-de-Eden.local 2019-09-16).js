@@ -42,23 +42,13 @@ module.exports = {
 "user.gender" : "Gender",
 "user.phone" : "Phone Number",
 "user.country" : "Country",
-"user.operator" : "Operator",
 "user.agrement" : "Accept the Terms of Uses",
-"register.error.text": "Your informations already exist in our data base",
-"register.error.title": "Oups, there is a problems",
+"register.error.title": "Please try again later",
+"register.error.text": "Oups, there is a problems",
 "register.error.mismatch": "It's seem that your informations are incorrect",
 "register.error.contact": "Please contact the client service",
 "register.error.tryagain": "Please try again to connect",
 "message.wait": " Please wait a seconde",
-"menu.company": "Company",
-"add.company": "New Company",
-"create.company": "Create Company",
-"menu.welcomepage": "Welcome",
-"button.paid": "Paid",
-"none.none": "    ",
-
-
-
 
   /* 01.General */
   "general.copyright": "Gogo React © 2018 All Rights Reserved.",

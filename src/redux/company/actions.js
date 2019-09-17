@@ -10,8 +10,9 @@ import {
 
 
 
-export const getCompanyList = () => ({
-    type: COMPANY_GET_LIST
+export const getCompaniesList = (items) => ({
+    type: COMPANY_GET_LIST,
+    payload : items
 });
 
 export const getCompanyListSuccess = (items) => ({

@@ -249,7 +249,7 @@ class TopNav extends Component {
 
   //--------Component mount-----//
   componentDidMount(){
-    if(localStorage.getItem('CurrentWorkingCompany')==='null' ){
+    if(localStorage.getItem('CurrentWorkingCompany')==='null' || localStorage.getItem('CurrentWorkingCompany')==='false' ){
       this.changeDefaultMenuType( "menu-hidden")
     }
   }

@@ -150,12 +150,13 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, companyAdded, settings }) => {
+const mapStateToProps = ({ authUser, companyList, mobileMoney, settings }) => {
   const { user: loginUser } = authUser;
-  // const { item: addCompany } = companyAdded
+  const { item: addCompany } = companyList
+  const { payment: MobileMoneyPaid } = mobileMoney
   const { locale } = settings;
   return { loginUser, locale, 
-    // addCompany 
+    addCompany, MobileMoneyPaid
   };
 };
 const mapActionsToProps = {};

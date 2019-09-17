@@ -12,3 +12,16 @@ export const RegisterCompany = (token, company) => {
   return PromiseResponse
 }
 
+
+export const GetAllCompanies = (token) => {
+  let config = {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  }
+  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/listcompanies/',config)
+  return PromiseResponse
+}
+
+
+
