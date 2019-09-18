@@ -11,9 +11,9 @@ import Breadcrumb from "../../containers/navs/Breadcrumb";
 import {
   getCompaniesList
 } from "../../redux/actions";
-import { GetAllCompanies} from "../../services/Company"
 import CompanyListItems from "../../components/applications/CompanyListItems";
 import SurveyApplicationMenu from "../../containers/applications/SurveyApplicationMenu";
+import {DeveloperInfo} from "../../services/Developer";
 
 class Company extends Component {
   constructor(props) {
@@ -21,13 +21,8 @@ class Company extends Component {
 
     this.state = {
       dropdownSplitOpen: false,
-      modalOpen: false,
       lastChecked: null,
 
-      title: "",
-      label: {},
-      category: {},
-      status: "ACTIVE",
       displayOptionsIsOpen: false,
       token: localStorage.getItem('Token'),
       allCompanies :''
@@ -36,6 +31,19 @@ class Company extends Component {
   componentDidMount() {
     localStorage.setItem('onProcess', false)
     this.props.getCompaniesList()
+    let ID = localStorage.getItem('UserID');
+    let token = localStorage.getItem('Token');
+    DeveloperInfo(token, ID)
+    .then(res => {
+      for(let i = 0; i<res.data.companyList.length; i++){
+        if(res.data.companyList[i].activated === true){
+          localStorage.setItem('CurrentWorkingCompany', true)
+        }
+      }
+    
+    })
+    .catch(err =>{console.log(err)})
+
   }
   
 
@@ -55,13 +63,9 @@ class Company extends Component {
 
 
   render() {
-    console.log(this.props.companyList)
+    console.log(localStorage.getItem('Token'))
     let allCompanies = this.props.companyList.allCompanyItems
-
-
-    const {
-      loading,
-    } = this.props.companyList;
+    const {loading} = this.props.companyList;
     return (
       <Fragment>
         <Row className="app-row survey-app">
@@ -97,24 +101,6 @@ class Company extends Component {
               </Button>
             </div>
             <Separator className="mb-5" />
-            {/* <Row>
-              {loading ? (
-                surveyItems.map((item, index) => {
-                  return (
-                    <SurveyListItem
-                      key={`${index}`}
-                      item={item}
-                      handleCheckChange={this.handleCheckChange}
-                      isSelected={
-                        loading ? selectedItems.includes(item.id) : false
-                      }
-                    />
-                  );
-                })
-              ) : (
-                  <div className="loading" />
-                )}
-            </Row> */}
             <Row>
               {!loading && allCompanies !==undefined ? (
                 allCompanies.map((item, index) => {
@@ -141,9 +127,9 @@ class Company extends Component {
     );
   }
 }
-const mapStateToProps = ({ surveyListApp, companyList }) => {
+const mapStateToProps = ({  companyList }) => {
   return {
-    surveyListApp, companyList
+     companyList
   };
 };
 export default injectIntl(

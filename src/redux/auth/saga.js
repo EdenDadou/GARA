@@ -1,16 +1,8 @@
 
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import { LoginDeveloper, RegisterDeveloper, DeveloperInfo } from '../../services/Developer';
-import {
-    LOGIN_USER,
-    REGISTER_USER,
-    LOGOUT_USER
-} from '../actions';
-
-import {
-    loginUserSuccess,
-    registerUserSuccess
-} from './actions';
+import { LOGIN_USER,REGISTER_USER, LOGOUT_USER} from '../actions';
+import {  loginUserSuccess,registerUserSuccess} from './actions';
 
 
 //--------------Login User function-------------------//
@@ -35,7 +27,6 @@ function* loginWithEmailPassword({ payload }) {
         localStorage.setItem('onProcess', true)
 
         const { email, password } = payload.user;
-        const { history } = payload;
 
         try {
             localStorage.setItem('Error', null);
@@ -107,7 +98,6 @@ const registerWithEmailPasswordAsync = async (developer) =>
 
 function* registerWithEmailPassword({ payload }) {
     const developer = payload.developer;
-    const { history } = payload
     const password = payload.developer.password
     const email = payload.developer.email
     if (localStorage.getItem('onProcess') === 'false') {
@@ -116,7 +106,7 @@ function* registerWithEmailPassword({ payload }) {
 
             //Call of API
             const registerUser = yield call(registerWithEmailPasswordAsync, developer);
-
+            console.log(registerUser)
             //If response 200
             if (registerUser.status === 200) {
                 yield put(registerUserSuccess(registerUser.data));
@@ -129,9 +119,12 @@ function* registerWithEmailPassword({ payload }) {
 
                 const loginUser = yield call(loginWithEmailPasswordAsync, email, password);
                 if (loginUser.status === 200) {
+                    console.log(loginUser)
                     const Token = loginUser.data.token;
+                    const UserID = loginUser.data.developerId;
                     localStorage.setItem('Token', Token)
-                    console.log(Token)
+                    localStorage.setItem('UserID', UserID)
+            
                     //redirect to app
                     window.location.reload()
                 }

@@ -102,12 +102,26 @@ $error-color: #c43d4b;
 
 
 /*ADD*/
-.button-paiment{
+.center{
  display : flex;
  justify-content: center;
  align-items: center;
 }
 
+.space-between{
+  display:flex;
+  justify-content: space-between; 
+}
+
+.height700{
+  height: 700px;
+}
+
+.EbookStyle{
+  // height: 550px;
+  display: flex;
+  justify-content: center;
+}
 
 
 

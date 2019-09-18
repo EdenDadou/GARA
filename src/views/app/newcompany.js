@@ -353,10 +353,10 @@ class NewCompany extends Component {
                             <div>
 
                               {/* Tab navigation Items */}
-                              <Nav tabs className="button-paiment">
+                              <Nav tabs className="center">
                                 <NavItem>
                                   <NavLink
-                                    className={classnames({ active: this.state.activeTab === '1' })}
+                                    className={classnames({ active: this.state.activeTab === '1' }) }
                                     onClick={() => { this.toggle('1'); }}>
                                     MobileMoney
                                   </NavLink>

@@ -1,5 +1,4 @@
-import { all, call, fork, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { getDateWithFormat } from "../../helpers/Utils";
+import { all, call, fork, put, takeEvery } from "redux-saga/effects";
 import { RegisterCompany, GetAllCompanies } from '../../services/Company';
 
 import {
@@ -77,8 +76,6 @@ function* CompanyList({ payload }) {
     }
   }
 }
-
-
 
 
 export function* watchAddCompany() {

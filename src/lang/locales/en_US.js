@@ -56,6 +56,14 @@ module.exports = {
 "menu.welcomepage": "Welcome",
 "button.paid": "Paid",
 "none.none": "    ",
+"menu.ebooks": "Ebooks",
+"menu.ebooks.myebook": "My Ebooks",
+"menu.ebooks.add": "Add Ebook",
+"user.languague": "Language",
+"button.upload": "Upload",
+"menu.ebooks.preview": "Preview",
+
+
 
 
 

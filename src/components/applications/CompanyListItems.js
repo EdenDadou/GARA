@@ -17,7 +17,7 @@ const CompanyListItems = ({ item, handleCheckChange, isSelected }) => {
             >
               <i
                 className={`${
-                  item.activated === "true"
+                  item.activated === true
                     ? "simple-icon-check heading-icon"
                     : "simple-icon-refresh heading-icon"
                 }`}
@@ -31,12 +31,12 @@ const CompanyListItems = ({ item, handleCheckChange, isSelected }) => {
               {moment(item.createDate).format('DD.MM.YYYY')}
             </p> 
             <div className="w-15 w-xs-100">
-              <Badge color={item.activated === "true"
+              <Badge color={item.activated === true
                     ? "primary"
                     : "secondary"} pill>
-                {item.activated === "true"
-                    ? "Activated"
-                    : "Waiting for Activation"}
+                {item.activated === true
+                    ? "ACTIVATED"
+                    : "WAITING FOR ACTIVATION"}
               </Badge>
             </div>
           </CardBody>

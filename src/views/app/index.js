@@ -12,6 +12,7 @@ const Menu = React.lazy(() => import(/* webpackChunkName: "menu" */ './menu'));
 const Company = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './company'));
 const NewCompany = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './newcompany'));
 const WelcomePage = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './welcomepage'));
+const Ebooks = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './ebooks'));
 
 
 const AuthRoute = ({ component: Component, CurrentWorkingCompany, authUser, ...rest }) => (
@@ -67,6 +68,12 @@ class App extends Component {
               <AuthRoute
                 path={`${match.url}/menu`}
                 component={Menu}
+                CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                history={this.props.history}
+              />
+              <AuthRoute
+                path={`${match.url}/ebooks`}
+                component={Ebooks}
                 CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
                 history={this.props.history}
               />

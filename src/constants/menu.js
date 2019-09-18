@@ -166,6 +166,23 @@ const data = [{
     ]
   },
   {
+    id: "ebooks",
+    icon: "iconsminds-book",
+    label: "menu.ebooks",
+    to: "/app/ebooks",
+    subs: [{
+        icon: "iconsminds-library",
+        label: "menu.ebooks.myebook",
+        to: "/app/ebooks/myebooks"
+      },
+      {
+        icon: "iconsminds-add",
+        label: "menu.ebooks.add",
+        to: "/app/ebooks/addbook"
+      },
+    ]
+  },
+  {
     id: "applications",
     icon: "iconsminds-air-balloon-1",
     label: "menu.applications",

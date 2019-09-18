@@ -1,14 +1,9 @@
 
-import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
+import { call, fork, put, takeEvery } from 'redux-saga/effects';
 import { PaidMobileMoney } from '../../services/MobileMoney';
-import {
-    MOBILE_MONEY_PAID, MOBILE_MONEY_PAID_SUCESS, MOBILE_MONEY_PAID_FAIL
-} from '../actions';
+import {MOBILE_MONEY_PAID} from '../actions';
 
-import {
-    MobileMoneyPaidSucess,
-    MobileMoneyPaidFail
-} from './actions';
+import {MobileMoneyPaidSucess} from './actions';
 
 
 //--------------Mobile money Paid fonction-------------------//
@@ -28,12 +23,12 @@ function* PaymentMobileMoney({ payload }) {
         localStorage.setItem('onProcess', true)
         const payment = payload.payment;
         const token = localStorage.getItem('Token')
-        console.log(payment)
-        console.log(token)
+
 
         try {
             //Call of API
             const resultPayment = yield call (MobileMoneyPaymentAsync, token, payment);
+            localStorage.setItem('Payment', resultPayment)
           console.log(resultPayment)
             if(resultPayment.status ===200){
                 yield put(MobileMoneyPaidSucess(resultPayment));

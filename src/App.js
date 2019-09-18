@@ -77,7 +77,7 @@ class App extends Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // this.AuthorizationAllow()
     //On mounting, after verification that we stock a token
     if (localStorage.getItem('token') !== null) {
