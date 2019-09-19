@@ -19,7 +19,7 @@ export default (state = INIT_STATE, action) => {
         case LOGIN_USER:
             return { ...state, loading: true };
         case LOGIN_USER_SUCCESS:
-            return { ...state, loading: false, user: action.payload };
+            return { ...state, loading: false, user: action.payload, allow : action.payload };
         case LOGIN_USER_FAIL:
             return { ...state, loading: false };
         case REGISTER_USER:
@@ -29,7 +29,7 @@ export default (state = INIT_STATE, action) => {
         case REGISTER_USER_FAIL:
             return { ...state, loading: false };
         case LOGOUT_USER:
-            return { ...state ,user:null};
+            return { ...state ,user:null, allow : action.payload};
         default: return { ...state };
     }
 }

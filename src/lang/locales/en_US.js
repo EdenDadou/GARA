@@ -42,6 +42,7 @@ module.exports = {
 "user.gender" : "Gender",
 "user.phone" : "Phone Number",
 "user.country" : "Country",
+"user.operator" : "Operator",
 "user.agrement" : "Accept the Terms of Uses",
 "register.error.text": "Your informations already exist in our data base",
 "register.error.title": "Oups, there is a problems",
@@ -53,6 +54,17 @@ module.exports = {
 "add.company": "New Company",
 "create.company": "Create Company",
 "menu.welcomepage": "Welcome",
+"button.paid": "Paid",
+"none.none": "    ",
+"menu.ebooks": "Ebooks",
+"menu.ebooks.myebook": "My Ebooks",
+"menu.ebooks.add": "Add Ebook",
+"user.languague": "Language",
+"button.upload": "Upload",
+"menu.ebooks.preview": "Preview",
+
+
+
 
 
 

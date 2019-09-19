@@ -12,8 +12,7 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { VerifToken} from './services/Developer';
-import { withRouter } from "react-router";
+import { VerifToken } from './services/Developer';
 
 
 
@@ -35,17 +34,35 @@ const ViewError = React.lazy(() =>
 
 
 
-//if localStorage.getItem('Allow')  is true, display component, else redirect to login
+
 const AuthRoute = ({ component: Component, authUser, ...rest }) => (
 
   <Route
     {...rest}
     render={props =>
-      localStorage.getItem('Allow') ? 
-      ( <Component {...props} />):(<Redirect to={{pathname: '/user/login', state: { from: props.location }}}/>)
+      //if localStorage.getItem('Allow')  is true, display component, else redirect to login
+      authUser ?
+        (<Component {...props} />) : (<Redirect to={{ pathname: '/user/login', state: { from: props.location } }} />)
     }
   />
 );
+
+
+const LoginRoute = ({ component: Component, authUser, CurrentWorkingCompany, ...rest }) => (
+
+  <Route
+    {...rest}
+    render={props =>
+
+      authUser === false || authUser === null ?
+        (<Component {...props} />)
+        : (CurrentWorkingCompany === null ? (<Redirect to={{ pathname: '/app/welcomepage', state: { from: props.location } }} />)
+          : (CurrentWorkingCompany === false ? (<Redirect to={{ pathname: '/app/company', state: { from: props.location } }} />)
+            : (<Redirect to={{ pathname: '/app/dashboards', state: { from: props.location } }} />)))
+    }
+  />
+);
+
 
 class App extends Component {
   constructor(props) {
@@ -58,31 +75,32 @@ class App extends Component {
       document.body.classList.add('ltr');
       document.body.classList.remove('rtl');
     }
-  }  
+  }
 
-  componentWillMount(){
-
-  //On mounting, after verification that we stock a token
-    if(localStorage.getItem('token')!==null){
+  UNSAFE_componentWillMount() {
+    // this.AuthorizationAllow()
+    //On mounting, after verification that we stock a token
+    if (localStorage.getItem('token') !== null) {
       //Send it to API for validity verification
       VerifToken(localStorage.getItem('token'))
-      .then(res => {
-        if(res.status === 200){
-          //If res.status === 200, then change Allow value to true
-          localStorage.setItem('Allow', true)
-        }else{
+        .then(res => {
+          if (res.status === 200) {
+            //If res.status === 200, then change Allow value to true
+            localStorage.setItem('Allow', true)
+          } else {
+            localStorage.setItem('Allow', false)
+          }
+        })
+        .then(error => {
           localStorage.setItem('Allow', false)
-        }
-      })
-      .then(error => {
-        localStorage.setItem('Allow', false)
-      })
+        })
     }
   }
-  
+
 
 
   render() {
+
     const { locale } = this.props;
     const currentAppLocale = AppLocale[locale];
     return (
@@ -101,11 +119,15 @@ class App extends Component {
                   <AuthRoute
                     path="/app"
                     component={ViewApp}
+                    authUser={localStorage.getItem('Allow')}
                     history={this.props.history}
                   />
-                  <Route
+                  <LoginRoute
                     path="/user"
-                    render={props => <ViewUser {...props} />}
+                    component={ViewUser}
+                    authUser={localStorage.getItem('Allow')}
+                    CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                    history={this.props.history}
                   />
                   <Route
                     path="/error"
@@ -128,10 +150,14 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, settings }) => {
+const mapStateToProps = ({ authUser, companyList, mobileMoney, settings }) => {
   const { user: loginUser } = authUser;
+  const { item: addCompany } = companyList
+  const { payment: MobileMoneyPaid } = mobileMoney
   const { locale } = settings;
-  return { loginUser, locale };
+  return { loginUser, locale, 
+    addCompany, MobileMoneyPaid
+  };
 };
 const mapActionsToProps = {};
 
