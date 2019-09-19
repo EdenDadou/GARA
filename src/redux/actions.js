@@ -1,7 +1,21 @@
-/* ADD */
-export const ALLOW_CONNECTION = "ALLOW_CONNECTION";
-export const LOGIN_USER_FAIL = "LOGIN_USER_FAIL";
-export const REGISTER_USER_FAIL = "REGISTER_USER_FAIL";
+
+
+
+
+/* COMPANY */
+export const COMPANY_ADD_COMPANY = "COMPANY_ADD_COMPANY";
+export const COMPANY_DELETE_COMPANY = "COMPANY_DELETE_COMPANY";
+export const COMPANY_GET_LIST = "COMPANY_GET_LIST";
+export const COMPANY_GET_LIST_SUCCESS = "COMPANY_GET_LIST_SUCCESS";
+export const COMPANY_GET_LIST_ERROR = "COMPANY_GET_LIST_ERROR";
+export const COMPANY_ADD_ITEM_SUCCESS = "COMPANY_ADD_ITEM_SUCCESS";
+export const COMPANY_ADD_ITEM_ERROR = "COMPANY_ADD_ITEM_ERROR";
+export const COMPANY_SELECTED_ITEMS_CHANGE = "COMPANY_SELECTED_ITEMS_CHANGE";
+
+/* MOBILE MONEY */
+export const MOBILE_MONEY_PAID = "MOBILE_MONEY_PAID";
+export const MOBILE_MONEY_PAID_SUCESS = "MOBILE_MONEY_PAID_SUCESS";
+export const MOBILE_MONEY_PAID_FAIL = "MOBILE_MONEY_PAID_FAIL";
 
 
 /* SETTINGS */
@@ -12,7 +26,10 @@ export const LOGIN_USER = "LOGIN_USER";
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
 export const REGISTER_USER = "REGISTER_USER";
 export const REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS";
+export const REGISTER_USER_FAIL = "REGISTER_USER_FAIL";
 export const LOGOUT_USER = "LOGOUT_USER";
+export const LOGIN_USER_FAIL = "LOGIN_USER_FAIL";
+
 
 /* MENU */
 export const MENU_SET_CLASSNAMES = "MENU_SET_CLASSNAMES";
@@ -70,6 +87,8 @@ export const SURVEY_DELETE_QUESTION = "SURVEY_DELETE_QUESTION";
 export const SURVEY_SAVE = "SURVEY_SAVE";
 
 export * from "./menu/actions";
+export * from "./company/actions";
+export * from "./mobileMoney/actions";
 export * from "./settings/actions";
 export * from "./auth/actions";
 export * from "./todo/actions";

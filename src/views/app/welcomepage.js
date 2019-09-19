@@ -8,11 +8,9 @@ import Breadcrumb from "../../containers/navs/Breadcrumb";
 import { NavLink } from 'react-router-dom'
 
 class WelcomePage extends Component {
-  constructor(props) {
-    super(props);
-  }
+
   render() {
-   
+   console.log(localStorage.getItem('Token'))
     return (
       <Fragment>
         <Row>
@@ -56,14 +54,10 @@ class WelcomePage extends Component {
     );
   }
 }
-const mapStateToProps = ({  }) => {
-  return {
-    
-  };
-};
+
 export default injectIntl(
   connect(
-    mapStateToProps,
+    null,
     null
   )(WelcomePage)
 );

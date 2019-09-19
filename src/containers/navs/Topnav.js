@@ -11,7 +11,6 @@ import {
 
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import IntlMessages from "../../helpers/IntlMessages";
 import {
   setContainerClassnames,
   changeDefaultClassnames,
@@ -250,8 +249,10 @@ class TopNav extends Component {
 
   //--------Component mount-----//
   componentDidMount(){
-    if(localStorage.getItem('CurrentWorkingCompany')==='null' ){
+    if(localStorage.getItem('CurrentWorkingCompany')==='null' || localStorage.getItem('CurrentWorkingCompany')==='false' ){
       this.changeDefaultMenuType( "menu-hidden")
+    }else if(localStorage.getItem('CurrentWorkingCompany') === 'true'){
+      this.changeDefaultMenuType( "menu-default")
     }
   }
 

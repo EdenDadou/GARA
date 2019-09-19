@@ -7,7 +7,6 @@ import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 
 
-
 class Login extends Component {
 
   constructor(props) {
@@ -19,17 +18,6 @@ class Login extends Component {
     };
   }
 
-
-
-  componentDidMount() {
-    //If Allow that we initialize on App.js ComponentWillMount/VerifToken function its true, redirect to app 
-    if (localStorage.getItem('Allow')) {
-      this.props.history.push('/app')
-    }
-    // else if (localStorage.getItem('Allow') && localStorage.getItem('CurrentWorkingCompany') === null) {
-    //   this.props.history.push('/app/company')
-    // }
-  }
 
 
   /*Handle field change*/
@@ -53,6 +41,7 @@ class Login extends Component {
 
 
   render() {
+    console.log(this.props.user)
     return (
       <Row className="h-100">
         <Colxx xxs="8" md="6" className="mx-auto my-auto">
