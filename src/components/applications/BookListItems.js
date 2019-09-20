@@ -6,12 +6,10 @@ import { Colxx } from "../common/CustomBootstrap";
 import * as moment from 'moment'
 
 
-const CompanyListItems = ({ item, CWC, handleCheckChange, isSelected }) => {
+const BookListItems = ({ item, CWC, handleCheckChange, isSelected }) => {
   return (
     <Colxx xxs="12">
-      <Card
-        className="card d-flex flex-row mb-3"
-      >
+      <Card className="card d-flex flex-row mb-3">
         <div className="d-flex flex-grow-1 min-width-zero">
           <CardBody className={"align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center"}>
             <NavLink
@@ -55,19 +53,10 @@ const CompanyListItems = ({ item, CWC, handleCheckChange, isSelected }) => {
             />
 
           </div>
-          <Badge
-            className="selectedLight"
-            color={item.companyId == CWC
-              ? "secondary"
-              : "warning"} pill>
-            {item.companyId == CWC
-              ? " "
-              : " "}
-          </Badge>
         </div>
       </Card>
     </Colxx >
   );
 };
 
-export default React.memo(CompanyListItems);
+export default React.memo(BookListItems);

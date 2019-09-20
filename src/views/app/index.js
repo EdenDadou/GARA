@@ -13,6 +13,7 @@ const Company = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './
 const NewCompany = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './newcompany'));
 const WelcomePage = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './welcomepage'));
 const Ebooks = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './ebooks'));
+const EditCompany = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './editcompany'));
 
 
 const AuthRoute = ({ component: Component, CurrentWorkingCompany, authUser, ...rest }) => (
@@ -88,6 +89,10 @@ class App extends Component {
               <Route
                 path={`${match.url}/welcomepage`}
                 render={props => <WelcomePage {...props} />}
+              />
+              <Route
+                path={`${match.url}/editcompany`}
+                render={props => <EditCompany {...props} />}
               />
               <Redirect to="/error" />
             </Switch>

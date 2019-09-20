@@ -139,6 +139,7 @@ class SurveyApp extends Component {
       orderColumns,
       selectedItems
     } = this.props.surveyListApp;
+    console.log(this.props.surveyListApp)
     const { messages } = this.props.intl;
     const { modalOpen } = this.state;
     return (

@@ -11,7 +11,7 @@ class AppLayout extends Component {
     return (
       <div id="app-container" className={containerClassnames}>
         <TopNav hidden history={this.props.history} />
-        {localStorage.getItem('CurrentWorkingCompany')==='null' || localStorage.getItem('CurrentWorkingCompany')==='false'? (<div></div>):(
+        {localStorage.getItem('CurrentWorkingCompany')==='null' || localStorage.getItem('CurrentWorkingCompany')==='false'? (null):(
         <Sidebar />
         )} 
         

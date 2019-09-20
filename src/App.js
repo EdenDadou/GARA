@@ -13,7 +13,7 @@ import NotificationContainer from './components/common/react-notifications/Notif
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 import { VerifToken } from './services/Developer';
-
+import {logoutUser} from "./redux/actions";
 
 
 
@@ -77,22 +77,23 @@ class App extends Component {
     }
   }
 
-  UNSAFE_componentWillMount() {
-    // this.AuthorizationAllow()
+  componentWillMount() {
     //On mounting, after verification that we stock a token
-    if (localStorage.getItem('token') !== null) {
+    if (localStorage.getItem('Token') !== null) {
       //Send it to API for validity verification
-      VerifToken(localStorage.getItem('token'))
+      VerifToken(localStorage.getItem('Token'))
         .then(res => {
           if (res.status === 200) {
             //If res.status === 200, then change Allow value to true
             localStorage.setItem('Allow', true)
           } else {
             localStorage.setItem('Allow', false)
+            this.props.logoutUser()
           }
         })
-        .then(error => {
+        .catch(error => {
           localStorage.setItem('Allow', false)
+          this.props.logoutUser()
         })
     }
   }
@@ -100,7 +101,6 @@ class App extends Component {
 
 
   render() {
-
     const { locale } = this.props;
     const currentAppLocale = AppLocale[locale];
     return (
@@ -155,11 +155,12 @@ const mapStateToProps = ({ authUser, companyList, mobileMoney, settings }) => {
   const { item: addCompany } = companyList
   const { payment: MobileMoneyPaid } = mobileMoney
   const { locale } = settings;
-  return { loginUser, locale, 
+  return {
+    loginUser, locale,
     addCompany, MobileMoneyPaid
   };
 };
-const mapActionsToProps = {};
+const mapActionsToProps = {logoutUser};
 
 export default connect(
   mapStateToProps,

@@ -204,13 +204,14 @@ class NewCompany extends Component {
       this.props.addCompany(company)
 
       setTimeout(() => {
+        console.log(localStorage.getItem('companyAdded') )
         if (localStorage.getItem('companyAdded') === 'true') {
         this.setState({phoneNumber:localStorage.getItem('PhoneNumber')})
         goToNext();
         } else if (localStorage.getItem('companyAdded') === 'false') {
           window.location.reload()
         }
-      }, this.props.loading === false && 800);
+      }, this.props.loading === false && 1200);
 
 
     }

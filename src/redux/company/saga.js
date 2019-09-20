@@ -30,6 +30,7 @@ function* registerDeveloperCompany({ payload }) {
     try {
       const addCompany = yield call(postCompany, token, company);
       if (addCompany.status === 200) {
+        console.log(addCompany)
         localStorage.setItem('companyAdded', true)
         yield put(addCompanyItemSuccess(addCompany.data));
 
@@ -55,7 +56,7 @@ const getCompanies = async (token) =>{
   .catch(err => {console.log(err)})
 }
 
-function* CompanyList({ payload }) {
+function* CompanyList() {
 
   if (localStorage.getItem('onProcess') === 'false') {
     localStorage.setItem('onProcess', true)
