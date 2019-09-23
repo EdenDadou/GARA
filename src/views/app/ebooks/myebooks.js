@@ -6,6 +6,7 @@ import IntlMessages from "../../../helpers/IntlMessages";
 import { Colxx } from "../../../components/common/CustomBootstrap";
 import { pdfjs, Document, Page } from 'react-pdf';
 import BookListItems from "../../../components/applications/BookListItems";
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -18,9 +19,16 @@ class MyEbooks extends Component {
         };
     }
 
-    componentWillMount(){
 
+    changeHandler2 = input => e => {
+        this.setState({ [input]: e.target.value });
     }
+
+
+    handleChangelanguage = language => {
+        this.setState({ language: language });
+    };
+
 
     render() {
 

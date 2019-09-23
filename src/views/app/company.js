@@ -1,26 +1,27 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
+
 import {
-  Row, Button, UncontrolledDropdown,
+  Row, Button, 
   DropdownToggle,
   DropdownItem,
   DropdownMenu,
-  Collapse,
   ButtonDropdown,
   CustomInput
 } from "reactstrap";
+
 import { NavLink } from 'react-router-dom'
 
 import IntlMessages from "../../helpers/IntlMessages";
 import { Colxx, Separator } from "../../components/common/CustomBootstrap";
 import Breadcrumb from "../../containers/navs/Breadcrumb";
-
 import {getCompaniesList, selectedCompanyItemsChange} from "../../redux/actions";
 import CompanyListItems from "../../components/applications/CompanyListItems";
 import SurveyApplicationMenu from "../../containers/applications/SurveyApplicationMenu";
 import { DeveloperInfo } from "../../services/Developer";
 import { UpdateCurrentCompany, DeleteCompany } from "../../services/Company";
+
 
 class Company extends Component {
   constructor(props) {
@@ -147,6 +148,7 @@ class Company extends Component {
   render() {
     const { loading, allCompanyItems, selectedItems } = this.props.companyList;
 console.log(this.props)
+
     return (
       <Fragment>
         <Row className="app-row survey-app">
@@ -210,6 +212,7 @@ console.log(this.props)
                       </DropdownItem>
                     </DropdownMenu>
                   </ButtonDropdown>
+
                 </div>
               )}
 
@@ -237,6 +240,7 @@ console.log(this.props)
                       handleCheckChange={this.handleCheckChange}
                       isSelected={!loading ? selectedItems.includes(item.companyId) : false}
                     />
+
                   );
                 })
               ) : (
@@ -251,6 +255,7 @@ console.log(this.props)
     );
   }
 }
+
 const mapStateToProps = ({ companyList }) => {
   return {
     companyList
