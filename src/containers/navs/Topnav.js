@@ -194,16 +194,21 @@ class TopNav extends Component {
   menuButtonClick = (e, menuClickCount, containerClassnames) => {
     e.preventDefault();
 
-    setTimeout(() => {
-      var event = document.createEvent("HTMLEvents");
-      event.initEvent("resize", false, false);
-      window.dispatchEvent(event);
-    }, 350);
-    this.props.setContainerClassnames(
-      ++menuClickCount,
-      containerClassnames,
-      this.props.selectedMenuHasSubItems
-    );
+    if(localStorage.getItem('CurrentWorkingCompany')==='null' || localStorage.getItem('CurrentWorkingCompany')==='false' ){
+      return
+    }else if(localStorage.getItem('CurrentWorkingCompany') === 'true'){
+      setTimeout(() => {
+        var event = document.createEvent("HTMLEvents");
+        event.initEvent("resize", false, false);
+        window.dispatchEvent(event);
+      }, 350);
+      this.props.setContainerClassnames(
+        ++menuClickCount,
+        containerClassnames,
+        this.props.selectedMenuHasSubItems
+      );
+    }
+
   };
 
   mobileMenuButtonClick = (e, containerClassnames) => {

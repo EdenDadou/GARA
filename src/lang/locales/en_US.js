@@ -62,6 +62,10 @@ module.exports = {
 "user.languague": "Language",
 "button.upload": "Upload",
 "menu.ebooks.preview": "Preview",
+"company.edit": "Edit",
+"edit.company": "Edit Company",
+"company.use": "Use that company",
+"company.delete": "Delete",
 
 
 

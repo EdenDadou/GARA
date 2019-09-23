@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import { CardTitle, InputGroup, InputGroupAddon, CustomInput, Row, Label, Button, CardBody, Card } from "reactstrap";
+import { CardTitle, Row, CardBody, Card } from "reactstrap";
 import IntlMessages from "../../../helpers/IntlMessages";
 import { Colxx } from "../../../components/common/CustomBootstrap";
-import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
-import Select from "react-select";
-import CustomSelectInput from "../../../components/common/CustomSelectInput";
 import { pdfjs, Document, Page } from 'react-pdf';
+import BookListItems from "../../../components/applications/BookListItems";
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
@@ -19,6 +18,7 @@ class MyEbooks extends Component {
         this.state = {
         };
     }
+
 
     changeHandler2 = input => e => {
         this.setState({ [input]: e.target.value });
@@ -44,7 +44,22 @@ class MyEbooks extends Component {
                             </CardTitle>
                             <Card>
                                 <CardBody className="wizard wizard-default">
-                                    <Button>ok</Button>
+                                    <Row>
+                                        {/* {!loading && this.props.companyList !== undefined ? (
+                                            allBooksItems.map((item, index) => {
+                                                return (
+                                                    <BookListItems
+                                                        key={index}
+                                                        item={item}
+                                                        handleCheckChange={this.handleCheckChange}
+                                                        // isSelected={!loading ? selectedItems.includes(item.companyId) : false}
+                                                    />
+                                                );
+                                            })
+                                        ) : (
+                                                <div className="loading" />
+                                            )} */}
+                                    </Row>
 
                                 </CardBody>
                             </Card>

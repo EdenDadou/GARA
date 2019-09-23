@@ -155,7 +155,7 @@ function* registerWithEmailPassword({ payload }) {
         try {
             //delete token, and authorization
             localStorage.removeItem('Allow');
-            localStorage.removeItem('token');
+            localStorage.removeItem('Token');
             localStorage.removeItem('CurrentWorkingCompany');
 
             yield call(logoutAsync, history);

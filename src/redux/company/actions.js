@@ -5,7 +5,9 @@ import {
     COMPANY_GET_LIST_ERROR,
     COMPANY_ADD_ITEM_SUCCESS,
     COMPANY_ADD_ITEM_ERROR,
-    COMPANY_SELECTED_ITEMS_CHANGE
+    COMPANY_SELECTED_ITEMS_CHANGE,
+    COMPANY_CHANGE_ITEM_SUCCESS,
+    COMPANY_CHANGE_ITEM
 } from '../actions';
 
 
@@ -43,4 +45,12 @@ export const addCompanyItemError = (error) => ({
 export const selectedCompanyItemsChange = (selectedItems) => ({
     type: COMPANY_SELECTED_ITEMS_CHANGE,
     payload: selectedItems
+});
+export const CompanyItemsChange = (item) => ({
+    type: COMPANY_CHANGE_ITEM,
+    payload: item
+});
+export const CompanyItemsChangeSucess = (item) => ({
+    type: COMPANY_CHANGE_ITEM_SUCCESS,
+    payload: item
 });
