@@ -1,14 +1,18 @@
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-import { RegisterCompany, GetAllCompanies } from '../../services/Company';
+import { RegisterCompany, GetAllCompanies, SaveChangedCompany } from '../../services/Company';
 
 import {
   COMPANY_ADD_COMPANY,
-  COMPANY_GET_LIST
+  COMPANY_GET_LIST,
+  COMPANY_CHANGE_ITEM_SUCCESS,
+  COMPANY_CHANGE_ITEM
 } from "../actions";
 
 import {
   addCompanyItemSuccess,
+  CompanyItemsChangeSucess,
   getCompaniesList,
+  CompanyItemsChange
 } from "./actions";
 
 
@@ -78,6 +82,37 @@ function* CompanyList() {
   }
 }
 
+//------------EDIT COMPANY--------------//
+
+
+const ChangeCompanyValues = async (token, IDCompany, changedCompanyItem) =>{
+  return await  SaveChangedCompany(token, IDCompany, changedCompanyItem)
+  .then(res => res)
+  .catch(err => err)
+}
+
+function* EditCompany({ payload }) {
+
+  if (localStorage.getItem('onProcess') === 'false') {
+    localStorage.setItem('onProcess', true)
+    let token = localStorage.getItem('Token')
+    let IDCompany = localStorage.getItem('IDCompanyToEdit')
+    const changedCompanyItem = payload
+    try {
+  
+      const changedCompany = yield call(ChangeCompanyValues, token, IDCompany, changedCompanyItem);
+      console.log(changedCompany)
+      if (changedCompany.status === 200) {
+        yield put(CompanyItemsChangeSucess(changedCompany));
+      } else {
+        yield put(CompanyItemsChangeSucess('Error'));
+      }
+    } catch (error) {
+      yield put(CompanyItemsChangeSucess('Error'));
+      console.log(error)
+    }
+  }
+}
 
 export function* watchAddCompany() {
   yield takeEvery(COMPANY_ADD_COMPANY, registerDeveloperCompany);
@@ -87,9 +122,14 @@ export function* watchCompanyList() {
   yield takeEvery(COMPANY_GET_LIST, CompanyList);
 }
 
+export function* watchChangedCompany() {
+  yield takeEvery(COMPANY_CHANGE_ITEM, EditCompany);
+}
+
 export default function* rootSaga() {
   yield all([
     fork(watchAddCompany),
-    fork(watchCompanyList)
+    fork(watchCompanyList),
+    fork(watchChangedCompany)
   ]);
 }

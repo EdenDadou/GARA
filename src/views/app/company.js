@@ -16,14 +16,11 @@ import IntlMessages from "../../helpers/IntlMessages";
 import { Colxx, Separator } from "../../components/common/CustomBootstrap";
 import Breadcrumb from "../../containers/navs/Breadcrumb";
 
-import {
-  getCompaniesList, selectedCompanyItemsChange
-} from "../../redux/actions";
+import {getCompaniesList, selectedCompanyItemsChange} from "../../redux/actions";
 import CompanyListItems from "../../components/applications/CompanyListItems";
 import SurveyApplicationMenu from "../../containers/applications/SurveyApplicationMenu";
 import { DeveloperInfo } from "../../services/Developer";
 import { UpdateCurrentCompany, DeleteCompany } from "../../services/Company";
-import { VerifToken } from "../../services/Developer";
 
 class Company extends Component {
   constructor(props) {
@@ -41,7 +38,7 @@ class Company extends Component {
       activated: ''
     };
   }
-  componentDidMount() {
+  componentWillMount() {
     localStorage.setItem('onProcess', false)
     this.props.getCompaniesList()
 
@@ -149,11 +146,7 @@ class Company extends Component {
 
   render() {
     const { loading, allCompanyItems, selectedItems } = this.props.companyList;
-    if (allCompanyItems !== undefined) {
-      console.log('activated', this.state.activated)
-      console.log('valur of CurrentworkingCompany', localStorage.getItem('CurrentWorkingCompany'))
-
-    }
+console.log(this.props)
     return (
       <Fragment>
         <Row className="app-row survey-app">

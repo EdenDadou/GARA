@@ -9,8 +9,8 @@ import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
-import { GetCompanyById, SaveChangedCompany } from "../../services/Company";
-
+import { GetCompanyById } from "../../services/Company";
+import { CompanyItemsChange, getCompaniesList } from "../../redux/actions";
 
 
 
@@ -19,43 +19,35 @@ import { GetCompanyById, SaveChangedCompany } from "../../services/Company";
 let APIcountrieslist = []
 let countrylist = []
 
-let APIAgencyCountrieslist = []
-let AgencyCountrylist = []
-
-let APIOperatorlist = []
-let Operatorlist = []
-let token = localStorage.getItem('Token')
-let IDCompany = localStorage.getItem('IDCompanyToEdit')
-
 
 class EditCompany extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            bottomNavHidden: false,
-            topNavDisabled: false,
             companyName: '',
             description: '',
             adress: '',
+            country: '',
             phoneNumber: localStorage.getItem('PhoneNumber'),
             country: '',
             zipCode: '',
             city: '',
-            activeTab: '1',
-            status: "default",
-            message: "",
-            messageShow: false
         };
     }
 
     componentWillMount() {
+        let token = localStorage.getItem('Token')
+        let IDCompany = localStorage.getItem('IDCompanyToEdit')
+        console.log(IDCompany)
+        let IDCompamy2 = localStorage.getItem('IDCompany')
+        console.log(IDCompamy2)
         this.getCountrylistFromAPI()
         GetCompanyById(token, IDCompany)
             .then(res => {
                 // console.log(res)
-                 this.setState({ companyName: res.data.name, description: res.data.description, adress: res.data.adress, city: res.data.city }) 
-                })
+                this.setState({ companyName: res.data.name, description: res.data.description, adress: res.data.adress, city: res.data.city })
+            })
             .catch(err => { console.log(err) })
 
     }
@@ -94,18 +86,35 @@ class EditCompany extends Component {
         this.setState({ country: APIcountrieslist[country.key] });
     };
 
-    SaveCompany=()=>{
-        let changedCompany =
-        {
-            "adress": this.state.adress,
-            "city": this.state.city,
-            "country": this.state.country,
-            "description": this.state.description,
-            "name": this.state.companyName
-          }
-          SaveChangedCompany(token, IDCompany, changedCompany)
-          .then(res => {console.log(res)})
-          .catch(err =>{console.log(err)})
+    SaveCompany = () => {
+        if (this.state.companyName !== ''
+            && this.state.description !== ''
+            && this.state.adress !== ''
+            && this.state.zipCode !== ''
+            && this.state.city !== ''
+            && this.state.country !== '') {
+
+            let changedCompany =
+            {
+                "adress": this.state.adress,
+                "city": this.state.city,
+                "country": this.state.country,
+                "description": this.state.description,
+                "name": this.state.companyName
+            }
+            console.log(changedCompany)
+            localStorage.setItem('onProcess', false)
+            this.props.CompanyItemsChange(changedCompany)
+            localStorage.setItem('onProcess', false)
+            this.props.getCompaniesList()
+            localStorage.removeItem('IDCompanyToEdit')
+
+            setTimeout(() => {
+                this.props.history.push('/app/company')
+            }, (this.props.loading === false && 1000))
+        }
+
+
 
     }
 
@@ -227,9 +236,9 @@ class EditCompany extends Component {
                                                             }} />
                                                     </AvGroup>
                                                 </Colxx>
-                                         
-                                                    <Button  className="button-center mt-3" onClick={this.SaveCompany}> Save changement</Button>
-                               
+
+                                                <Button className="button-center mt-3" onClick={this.SaveCompany}> Save changement</Button>
+
 
                                             </Row>
                                         </AvForm>
@@ -248,4 +257,4 @@ const mapStateToProps = ({ companyList }) => {
     const { item, loading } = companyList;
     return { item, loading, companyList }
 };
-export default injectIntl(connect(mapStateToProps, null)(EditCompany));
+export default injectIntl(connect(mapStateToProps, { CompanyItemsChange, getCompaniesList })(EditCompany));
