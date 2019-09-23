@@ -1,19 +1,27 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import {Row,Button,} from "reactstrap";
+
+import {
+  Row, Button, 
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu,
+  ButtonDropdown,
+  CustomInput
+} from "reactstrap";
+
 import { NavLink } from 'react-router-dom'
 
 import IntlMessages from "../../helpers/IntlMessages";
 import { Colxx, Separator } from "../../components/common/CustomBootstrap";
 import Breadcrumb from "../../containers/navs/Breadcrumb";
-
-import {
-  getCompaniesList
-} from "../../redux/actions";
+import {getCompaniesList, selectedCompanyItemsChange} from "../../redux/actions";
 import CompanyListItems from "../../components/applications/CompanyListItems";
 import SurveyApplicationMenu from "../../containers/applications/SurveyApplicationMenu";
-import {DeveloperInfo} from "../../services/Developer";
+import { DeveloperInfo } from "../../services/Developer";
+import { UpdateCurrentCompany, DeleteCompany } from "../../services/Company";
+
 
 class Company extends Component {
   constructor(props) {
@@ -25,47 +33,122 @@ class Company extends Component {
 
       displayOptionsIsOpen: false,
       token: localStorage.getItem('Token'),
-      allCompanies :''
+      allCompanies: '',
+      IDCompaniesArray: [],
+      IDcurrentWorkingCompany: '',
+      activated: ''
     };
   }
-  componentDidMount() {
+  componentWillMount() {
     localStorage.setItem('onProcess', false)
     this.props.getCompaniesList()
-    let ID = localStorage.getItem('UserID');
+
     let token = localStorage.getItem('Token');
-    DeveloperInfo(token, ID)
-    .then(res => {
-      for(let i = 0; i<res.data.companyList.length; i++){
-        if(res.data.companyList[i].activated === true){
+    let UserID = localStorage.getItem('UserID');
+    DeveloperInfo(token, UserID)
+      .then(res => {
+        this.setState({ IDcurrentWorkingCompany: res.data.currentWorkingCompany.companyId, activated: res.data.currentWorkingCompany.activated })
+        if (this.state.activated === true) {
           localStorage.setItem('CurrentWorkingCompany', true)
+        } else if (this.state.activated === false) {
+          localStorage.setItem('CurrentWorkingCompany', false)
         }
-      }
-    
-    })
-    .catch(err =>{console.log(err)})
+      })
+      .catch(err => { console.log(err) })
 
   }
-  
 
-  handleCheckChange = (event, id) => {
-    if (this.state.lastChecked == null) {
-      this.setState({
-        lastChecked: id
-      });
+  useThatCompany = () => {
+    let token = localStorage.getItem('Token');
+    let id = this.state.lastChecked;
+    UpdateCurrentCompany(token, id)
+      .then(res => {
+        window.location.reload()
+      })
+      .catch(err => { console.log(err) })
+  }
+
+  deleteThatCompany = () => {
+    if (this.props.companyList.selectedItems.length < 2) {
+      let token = localStorage.getItem('Token');
+      let id = this.state.lastChecked;
+      DeleteCompany(token, id)
+        .then(res => { window.location.reload() })
+        .catch(err => { console.log(err) })
     }
   }
 
- 
+  editCompany = ()=>{
+    localStorage.setItem('IDCompanyToEdit', this.props.companyList.selectedItems[0])
+    this.props.history.push('/app/editcompany')
+
+  }
+
+
+  handleCheckChange = (event, companyId) => {
+    if (this.state.lastChecked == null) {
+      this.setState({
+        lastChecked: companyId
+      });
+    }
+    let selectedItems = Object.assign(
+      [],
+      this.props.companyList.selectedItems
+    );
+    if (selectedItems.includes(companyId)) {
+      selectedItems = selectedItems.filter(x => x !== companyId);
+    } else {
+      selectedItems.push(companyId);
+    }
+    this.props.selectedCompanyItemsChange(selectedItems);
+
+    if (event.shiftKey) {
+      var items = this.props.companyList.allCompanyItems;
+      var start = this.getIndex(companyId, items, "companyId");
+      var end = this.getIndex(this.state.lastChecked, items, "companyId");
+      items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
+      selectedItems.push(
+        ...items.map(item => {
+          return item.companyId;
+        })
+      );
+      selectedItems = Array.from(new Set(selectedItems));
+      this.props.selectedCompanyItemsChange(selectedItems);
+    }
+    return;
+  };
+
+  handleChangeSelectAll = () => {
+    if (!this.props.companyList.loading) {
+      if (
+        this.props.companyList.selectedItems.length >=
+        this.props.companyList.allCompanyItems.length
+      ) {
+        this.props.selectedCompanyItemsChange([]);
+      } else {
+        this.props.selectedCompanyItemsChange(
+          this.props.companyList.allCompanyItems.map(x => x.companyId)
+        );
+      }
+    }
+  };
 
   toggleDisplayOptions = () => {
     this.setState({ displayOptionsIsOpen: !this.state.displayOptionsIsOpen });
   };
 
+  toggleSplit = () => {
+    this.setState(prevState => ({
+      dropdownSplitOpen: !prevState.dropdownSplitOpen
+    }));
+  };
+
+
 
   render() {
-    console.log(localStorage.getItem('Token'))
-    let allCompanies = this.props.companyList.allCompanyItems
-    const {loading} = this.props.companyList;
+    const { loading, allCompanyItems, selectedItems } = this.props.companyList;
+console.log(this.props)
+
     return (
       <Fragment>
         <Row className="app-row survey-app">
@@ -74,7 +157,7 @@ class Company extends Component {
               <h1>
                 <IntlMessages id="menu.company" />
               </h1>
-              {!loading && (
+              {!loading && allCompanyItems !== undefined && (
                 <div className="text-zero top-right-button-container">
                   <NavLink className="text-white" to="/app/newcompany">
                     <Button
@@ -85,6 +168,51 @@ class Company extends Component {
                       <IntlMessages id="add.company" />
                     </Button>
                   </NavLink>
+                  <ButtonDropdown
+                    isOpen={this.state.dropdownSplitOpen}
+                    toggle={this.toggleSplit}
+                  >
+                    <div className="btn btn-primary btn-lg pl-4 pr-0 check-button check-all">
+                      <CustomInput
+                        className="custom-checkbox mb-0 d-inline-block"
+                        type="checkbox"
+                        id="checkAll"
+                        checked={selectedItems.length >= allCompanyItems.length}
+                        onClick={() => this.handleChangeSelectAll()}
+                        onChange={() => this.handleChangeSelectAll()}
+                        label={
+                          <span
+                            className={`custom-control-label ${
+                              selectedItems.length > 0 &&
+                                selectedItems.length < allCompanyItems.length
+                                ? "indeterminate"
+                                : ""
+                              }`}
+                          />
+                        }
+                      />
+                    </div>
+                    <DropdownToggle
+                      caret
+                      color="primary"
+                      className="dropdown-toggle-split btn-lg"
+                    />
+                    <DropdownMenu right>
+                      <DropdownItem
+                        onClick={this.useThatCompany}>
+                        <IntlMessages id="company.use" />
+                      </DropdownItem>
+                        <DropdownItem
+                        onClick={this.editCompany}>
+                          <IntlMessages id="company.edit" />
+                        </DropdownItem>
+                      <DropdownItem
+                        onClick={this.deleteThatCompany}>
+                        <IntlMessages id="company.delete" />
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
+
                 </div>
               )}
 
@@ -102,17 +230,17 @@ class Company extends Component {
             </div>
             <Separator className="mb-5" />
             <Row>
-              {!loading && allCompanies !==undefined ? (
-                allCompanies.map((item, index) => {
+              {!loading && this.props.companyList.allCompanyItems !== undefined ? (
+                allCompanyItems.map((item, index) => {
                   return (
                     <CompanyListItems
-                    key={`${index}`}
-                    item={item}
-                    handleCheckChange={this.handleCheckChange}
-                    isSelected={
-                      !loading ? allCompanies.includes(item.companyId) : false
-                    }
-                  />
+                      key={index}
+                      item={item}
+                      CWC={this.state.IDcurrentWorkingCompany}
+                      handleCheckChange={this.handleCheckChange}
+                      isSelected={!loading ? selectedItems.includes(item.companyId) : false}
+                    />
+
                   );
                 })
               ) : (
@@ -127,9 +255,10 @@ class Company extends Component {
     );
   }
 }
-const mapStateToProps = ({  companyList }) => {
+
+const mapStateToProps = ({ companyList }) => {
   return {
-     companyList
+    companyList
   };
 };
 export default injectIntl(
@@ -137,6 +266,7 @@ export default injectIntl(
     mapStateToProps,
     {
       getCompaniesList,
+      selectedCompanyItemsChange
     }
   )(Company)
 );
