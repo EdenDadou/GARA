@@ -66,6 +66,50 @@ export const SaveChangedCompany = (token, id, data) => {
 }
 
 
+export const UpdateCurrentCompany = (token, id) => {
+  let config = {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  }
+  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/developer/updatecompany/'+ id ,config)
+  return PromiseResponse
+}
+
+
+export const DeleteCompany = (token, id) => {
+  let config = {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  }
+  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/company/desactivate/'+ id ,config)
+  return PromiseResponse
+}
+
+export const GetCompanyById = (token, id) => {
+  let config = {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  }
+  const PromiseResponse = axios.get(GET_ROOT_URL + 'secure/company/'+ id ,config)
+  return PromiseResponse
+}
+
+export const SaveChangedCompany = (token, id, data) => {
+  let config = {
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
+  }
+  const PromiseResponse = axios.put(GET_ROOT_URL + 'secure/company/'+ id, data ,config)
+  return PromiseResponse
+}
+
+
+
+
 
 
 
