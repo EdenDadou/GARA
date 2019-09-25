@@ -40,7 +40,7 @@ const CompanyListItems = ({ item, CWC, handleCheckChange, isSelected }) => {
                 : (item.deleted === true? ("info") : ("secondary"))} pill>
                 {item.activated === true
                   ? "ACTIVATED"
-                  : (item.deleted === true? ("DELETED") : ("WAITING FOR ACTIVATION"))}
+                  : (item.deleted === true? ("DELETED") : ("INITIATED"))}
               </Badge>
             </div>
           </CardBody>
@@ -56,7 +56,7 @@ const CompanyListItems = ({ item, CWC, handleCheckChange, isSelected }) => {
 
           </div>
           <Badge
-            className="selectedLight"
+            className={"badge-middle-flat"}
             color={item.companyId == CWC
               ? "secondary"
               : ""} pill>

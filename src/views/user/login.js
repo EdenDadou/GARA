@@ -50,7 +50,7 @@ class Login extends Component {
               <NavLink to={`/`} className="white">
                 <span className="logo-single" />
               </NavLink>
-              <CardTitle className="mb-4">
+              <CardTitle className="mb-3 mt-4">
                 <IntlMessages id="user.login-title" />
               </CardTitle>
               <Card>

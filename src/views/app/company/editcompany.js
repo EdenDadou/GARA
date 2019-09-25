@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import { TabContent, TabPane, Nav, NavItem, NavLink, CardTitle, CardText, Col, Row, Label, Button, CardBody, Card, FormGroup, Popover, PopoverBody } from "reactstrap";
-import IntlMessages from "../../helpers/IntlMessages";
-import classnames from 'classnames';
-import { Colxx, Separator } from "../../components/common/CustomBootstrap";
+import {CardTitle,Row, Label, Button, CardBody, Card, FormGroup } from "reactstrap";
+import IntlMessages from "../../../helpers/IntlMessages";
+import { Colxx, Separator } from "../../../components/common/CustomBootstrap";
 import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import Select from "react-select";
-import CustomSelectInput from "../../components/common/CustomSelectInput";
-import { getCountries } from "../../services/Country";
-import { GetCompanyById } from "../../services/Company";
-import { CompanyItemsChange, getCompaniesList } from "../../redux/actions";
+import CustomSelectInput from "../../../components/common/CustomSelectInput";
+import { getCountries } from "../../../services/Country";
+import { GetCompanyById } from "../../../services/Company";
+import { CompanyItemsChange, getCompaniesList } from "../../../redux/actions";
 
 
 
@@ -110,7 +109,7 @@ class EditCompany extends Component {
             localStorage.removeItem('IDCompanyToEdit')
 
             setTimeout(() => {
-                this.props.history.push('/app/company')
+                this.props.history.push('/app/company/mycompany')
             }, (this.props.loading === false && 1000))
         }
 

@@ -4,14 +4,14 @@ import { injectIntl } from "react-intl";
 import { CardTitle, Row, CardBody, Card } from "reactstrap";
 import IntlMessages from "../../../helpers/IntlMessages";
 import { Colxx } from "../../../components/common/CustomBootstrap";
-import { pdfjs, Document, Page } from 'react-pdf';
-import BookListItems from "../../../components/applications/BookListItems";
+import { pdfjs } from 'react-pdf';
+// import BookListItems from "../../../components/applications/BookListItems";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
 
-class MyEbooks extends Component {
+class MyVideo extends Component {
     constructor(props) {
         super(props);
 
@@ -41,7 +41,7 @@ class MyEbooks extends Component {
                         <div className="form-side">
 
                             <CardTitle className="mb-4">
-                                <IntlMessages id="menu.ebooks.myebook" />
+                                <IntlMessages id="menu.video.myvideo" />
                             </CardTitle>
                             <Card>
                                 <CardBody className="wizard wizard-default">
@@ -82,5 +82,5 @@ export default injectIntl(
         mapStateToProps,
         {
         }
-    )(MyEbooks)
+    )(MyVideo)
 );

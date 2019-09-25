@@ -11,15 +11,6 @@ export const LoginDeveloper = (email, password) => {
   return PromiseResponse
 }
 
-export const VerifToken=(token)=>{
-  let config = {
-    headers: {
-      'Authorization': 'Bearer ' + token
-    }
-  }
-  const PromiseResponse =  axios.get(GET_ROOT_URL + 'secure/mobilemoneyoperator', config)
-  return PromiseResponse
-}
 
 export const DeveloperInfo = (token,id) => {
   let config = {

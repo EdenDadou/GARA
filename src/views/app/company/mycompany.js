@@ -13,14 +13,14 @@ import {
 
 import { NavLink } from 'react-router-dom'
 
-import IntlMessages from "../../helpers/IntlMessages";
-import { Colxx, Separator } from "../../components/common/CustomBootstrap";
-import Breadcrumb from "../../containers/navs/Breadcrumb";
-import {getCompaniesList, selectedCompanyItemsChange} from "../../redux/actions";
-import CompanyListItems from "../../components/applications/CompanyListItems";
-import SurveyApplicationMenu from "../../containers/applications/SurveyApplicationMenu";
-import { DeveloperInfo } from "../../services/Developer";
-import { UpdateCurrentCompany, DeleteCompany } from "../../services/Company";
+import IntlMessages from "../../../helpers/IntlMessages";
+import { Colxx, Separator } from "../../../components/common/CustomBootstrap";
+import Breadcrumb from "../../../containers/navs/Breadcrumb";
+import {getCompaniesList, selectedCompanyItemsChange} from "../../../redux/actions";
+import CompanyListItems from "../../../components/applications/CompanyListItems";
+import SurveyApplicationMenu from "../../../containers/applications/SurveyApplicationMenu";
+import { DeveloperInfo } from "../../../services/Developer";
+import { UpdateCurrentCompany, DeleteCompany } from "../../../services/Company";
 
 
 class Company extends Component {
@@ -80,7 +80,7 @@ class Company extends Component {
 
   editCompany = ()=>{
     localStorage.setItem('IDCompanyToEdit', this.props.companyList.selectedItems[0])
-    this.props.history.push('/app/editcompany')
+    this.props.history.push('/app/company/editcompany')
 
   }
 
@@ -159,7 +159,7 @@ console.log(this.props)
               </h1>
               {!loading && allCompanyItems !== undefined && (
                 <div className="text-zero top-right-button-container">
-                  <NavLink className="text-white" to="/app/newcompany">
+                  <NavLink className="text-white" to="/app/company/newcompany">
                     <Button
                       color="primary"
                       size="lg"

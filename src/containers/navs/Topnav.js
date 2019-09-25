@@ -33,7 +33,6 @@ import TopnavNotifications from "./Topnav.Notifications";
 import TopnavDarkSwitch from "./Topnav.DarkSwitch";
 
 import { getDirection, setDirection } from "../../helpers/Utils";
-const store = configureStore()
 
 
 class TopNav extends Component {
@@ -182,10 +181,16 @@ class TopNav extends Component {
     );
   };
 
+  //---------User ---------//
+
+  OpenUserAccount = () =>{
+    this.props.history.push('/app/useraccount')
+  }
+
 
   //--------Logout------//
   handleLogout = () => {
-    store.dispatch(logoutUser(this.props.history))
+    this.props.logoutUser(this.props.history)
 
   };
 
@@ -262,6 +267,7 @@ class TopNav extends Component {
   }
 
   render() {
+    const UserName = localStorage.getItem('UserFullName')
     const { containerClassnames, menuClickCount, locale } = this.props;
     const { messages } = this.props.intl;
     return (
@@ -367,13 +373,14 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">Sarah Kortney</span>
+                <span className="name mr-1 text-white">{UserName}</span>
                 <span>
                   <img alt="Profile" src="/assets/img/profile-pic-l.jpg" />
                 </span>
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
-                <DropdownItem>Account</DropdownItem>
+                <DropdownItem
+                onClick={()=> this.OpenUserAccount()}>Account</DropdownItem>
                 <DropdownItem>Features</DropdownItem>
                 <DropdownItem>History</DropdownItem>
                 <DropdownItem>Support</DropdownItem>

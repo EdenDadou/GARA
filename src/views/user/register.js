@@ -177,13 +177,13 @@ class Register extends Component {
         goToPrev();
     }
 
-    Login=()=>{
+    Login = () => {
         let user = { email: this.state.email, password: this.state.password }
         localStorage.setItem('onProcess', false);
         this.props.loginUser(user, this.props.history)
     }
 
-    RedirectToRegister=()=>{
+    RedirectToRegister = () => {
         window.location.reload();
     }
 
@@ -195,17 +195,18 @@ class Register extends Component {
             { value: 'Woman', label: 'Woman', key: 1 },
             { value: 'Man', label: 'Man', key: 2 },
         ];
+        const TermsOfUses = "Qu'est-ce que le Lorem Ipsum ? Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l 'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker."
 
         return (
             <Row className="h-100">
-                <Colxx xxs="12" md="10" className="mx-auto my-auto">
+                <Colxx xxs="12" md="8" className="mx-auto my-auto">
                     <Card className="auth-card">
 
                         <div className="form-side">
                             <NavLink to={`/`} className="white">
-                                <span className="logo-single" />
+                                <span className="logo-single-register" />
                             </NavLink>
-                            <CardTitle className="mb-4">
+                            <CardTitle className="mb-3 mt-2">
                                 <IntlMessages id="user.register" />
                             </CardTitle>
                             <Card>
@@ -398,16 +399,7 @@ class Register extends Component {
                                                                 name="UsesTerms"
                                                                 style={{ maxHeight: 130, minHeight: 130 }}
                                                                 readOnly
-                                                                placeholder="Qu'est-ce que le Lorem Ipsum?
-                                                                Le Lorem Ipsum est simplement du faux texte employé dans la composition
-                                                                et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard
-                                                                 de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla
-                                                                  ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte.
-                                                                   Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique
-                                                                   informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans
-                                                                   les années 1960 grâce à la vente de feuilles Letraset contenant des passages
-                                                                   du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications
-                                                                   de mise en page de texte, comme Aldus PageMaker."
+                                                                placeholder={TermsOfUses}
                                                             />
                                                         </AvGroup>
                                                     </AvForm>
@@ -436,33 +428,33 @@ class Register extends Component {
                                                             <p><IntlMessages id="message.wait" /></p>
                                                         </div>
                                                     ) : (
-                                                        this.props.user === 'Error' ? (
-                                                            <div>
-                                                            <div>
-                                                                <h2 className="mb-2"><IntlMessages id="register.error.title" /></h2>
-                                                                <p><IntlMessages id="register.error.text" /></p>
-                                                            </div>
-                                                            <Button onClick={this.RedirectToRegister}>
-                                                                Retry
-                                                            </Button>
-                                                            <NavLink to="/user/login">
-                                                                <Button>
-                                                                    Login
-                                                            </Button>
-                                                            </NavLink>
-                                                        </div>
-
-                                                    ) : (
-                                                            <div>
+                                                            this.props.user === 'Error' ? (
                                                                 <div>
-                                                                    <h2 className="mb-2"><IntlMessages id="wizard.content-thanks" /></h2>
-                                                                    <p><IntlMessages id="wizard.registered" /></p>
-
+                                                                    <div>
+                                                                        <h2 className="mb-2"><IntlMessages id="register.error.title" /></h2>
+                                                                        <p><IntlMessages id="register.error.text" /></p>
+                                                                    </div>
+                                                                    <Button onClick={this.RedirectToRegister}>
+                                                                        Retry
+                                                            </Button>
+                                                                    <NavLink to="/user/login">
+                                                                        <Button>
+                                                                            Login
+                                                            </Button>
+                                                                    </NavLink>
                                                                 </div>
-                                                                <Button onClick={this.Login}>Login</Button>
-                                                            </div>
 
-                                                        ))}
+                                                            ) : (
+                                                                    <div>
+                                                                        <div>
+                                                                            <h2 className="mb-2"><IntlMessages id="wizard.content-thanks" /></h2>
+                                                                            <p><IntlMessages id="wizard.registered" /></p>
+
+                                                                        </div>
+                                                                        <Button onClick={this.Login}>Login</Button>
+                                                                    </div>
+
+                                                                ))}
                                                 </div>
                                             </Step>
                                         </Steps>
