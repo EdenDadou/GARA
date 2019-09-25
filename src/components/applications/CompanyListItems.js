@@ -57,10 +57,10 @@ const CompanyListItems = ({ item, CWC, handleCheckChange, isSelected }) => {
           </div>
           <Badge
             className={"badge-middle-flat"}
-            color={item.companyId == CWC
+            color={item.companyId === CWC
               ? "secondary"
               : ""} pill>
-            {item.companyId == CWC
+            {item.companyId === CWC
               ? " "
               : " "}
           </Badge>

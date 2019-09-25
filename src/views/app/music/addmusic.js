@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import { CardTitle, InputGroup, InputGroupAddon, CustomInput, Row, Label, Button, CardBody, Card } from "reactstrap";
+import { CardTitle, InputGroup, CustomInput, Row, Label, Button, CardBody, Card } from "reactstrap";
 import IntlMessages from "../../../helpers/IntlMessages";
 import { Colxx } from "../../../components/common/CustomBootstrap";
 import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
-import Select from "react-select";
-import CustomSelectInput from "../../../components/common/CustomSelectInput";
+
 
 
 

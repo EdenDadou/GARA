@@ -18,7 +18,6 @@ import {
   logoutUser,
   changeLocale
 } from "../../redux/actions";
-import { configureStore } from "../../redux/store";
 
 import {
   menuHiddenBreakpoint,

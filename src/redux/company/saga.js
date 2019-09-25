@@ -4,15 +4,13 @@ import { RegisterCompany, GetAllCompanies, SaveChangedCompany } from '../../serv
 import {
   COMPANY_ADD_COMPANY,
   COMPANY_GET_LIST,
-  COMPANY_CHANGE_ITEM_SUCCESS,
   COMPANY_CHANGE_ITEM
 } from "../actions";
 
 import {
   addCompanyItemSuccess,
   CompanyItemsChangeSucess,
-  getCompaniesList,
-  CompanyItemsChange
+  getCompaniesList
 } from "./actions";
 
 

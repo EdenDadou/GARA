@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import {CardTitle,Row, Label, Button, CardBody, Card, FormGroup } from "reactstrap";
 import IntlMessages from "../../../helpers/IntlMessages";
-import { Colxx, Separator } from "../../../components/common/CustomBootstrap";
+import { Colxx } from "../../../components/common/CustomBootstrap";
 import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import Select from "react-select";
 import CustomSelectInput from "../../../components/common/CustomSelectInput";
@@ -29,7 +29,6 @@ class EditCompany extends Component {
             adress: '',
             country: '',
             phoneNumber: localStorage.getItem('PhoneNumber'),
-            country: '',
             zipCode: '',
             city: '',
         };

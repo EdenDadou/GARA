@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import { Wizard, Steps, Step } from 'react-albus';
-import { TabContent, TabPane, Nav, NavItem, NavLink, CardTitle, CardText, Col, Row, Label, Input, CardBody, Card, FormGroup, Popover, PopoverBody } from "reactstrap";
+
+import { CardTitle, Row, Label, Input, CardBody, Card, FormGroup,  } from "reactstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import { addCompany, MobileMoneyPaid } from "../../redux/actions";
 import { Colxx, Separator } from "../../components/common/CustomBootstrap";
