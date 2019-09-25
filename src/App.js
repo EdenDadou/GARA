@@ -12,7 +12,7 @@ import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
 import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
-import { VerifToken } from './services/Developer';
+import { DeveloperInfo } from './services/Developer';
 import {logoutUser} from "./redux/actions";
 
 
@@ -56,8 +56,8 @@ const LoginRoute = ({ component: Component, authUser, CurrentWorkingCompany, ...
 
       authUser === false || authUser === null ?
         (<Component {...props} />)
-        : (CurrentWorkingCompany === null ? (<Redirect to={{ pathname: '/app/welcomepage', state: { from: props.location } }} />)
-          : (CurrentWorkingCompany === false ? (<Redirect to={{ pathname: '/app/company', state: { from: props.location } }} />)
+        : (CurrentWorkingCompany === null ? (<Redirect to={{ pathname: '/app/company/welcomepage', state: { from: props.location } }} />)
+          : (CurrentWorkingCompany === false ? (<Redirect to={{ pathname: '/app/company/company', state: { from: props.location } }} />)
             : (<Redirect to={{ pathname: '/app/dashboards', state: { from: props.location } }} />)))
     }
   />
@@ -81,11 +81,13 @@ class App extends Component {
     //On mounting, after verification that we stock a token
     if (localStorage.getItem('Token') !== null) {
       //Send it to API for validity verification
-      VerifToken(localStorage.getItem('Token'))
+      DeveloperInfo(localStorage.getItem('Token'), localStorage.getItem('UserID'))
         .then(res => {
           if (res.status === 200) {
+            console.log(res)
             //If res.status === 200, then change Allow value to true
             localStorage.setItem('Allow', true)
+            localStorage.setItem('UserFullName', res.data.firstName + " " + res.data.lastName)
           } else {
             localStorage.setItem('Allow', false)
             this.props.logoutUser()

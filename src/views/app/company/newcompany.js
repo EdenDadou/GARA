@@ -3,17 +3,17 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import { Wizard, Steps, Step } from 'react-albus';
 import { TabContent, TabPane, Nav, NavItem, NavLink, CardTitle, CardText, Col, Row, Label, Button, CardBody, Card, FormGroup, Popover, PopoverBody } from "reactstrap";
-import IntlMessages from "../../helpers/IntlMessages";
+import IntlMessages from "../../../helpers/IntlMessages";
 import classnames from 'classnames';
-import { BottomNavigationNext } from "../../components/wizard/BottomNavigation";
-import { TopNavigation } from "../../components/wizard/TopNavigation";
-import { addCompany, MobileMoneyPaid } from "../../redux/actions";
-import { Colxx, Separator } from "../../components/common/CustomBootstrap";
+import { BottomNavigationNext } from "../../../components/wizard/BottomNavigation";
+import { TopNavigation } from "../../../components/wizard/TopNavigation";
+import { addCompany, MobileMoneyPaid } from "../../../redux/actions";
+import { Colxx, Separator } from "../../../components/common/CustomBootstrap";
 import { AvForm, AvField, AvGroup } from 'availity-reactstrap-validation';
 import Select from "react-select";
-import CustomSelectInput from "../../components/common/CustomSelectInput";
-import { getCountries } from "../../services/Country";
-import { AgencyCountry, MobileMoneyOperator } from "../../services/MobileMoney";
+import CustomSelectInput from "../../../components/common/CustomSelectInput";
+import { getCountries } from "../../../services/Country";
+import { AgencyCountry, MobileMoneyOperator } from "../../../services/MobileMoney";
 
 
 

@@ -66,6 +66,7 @@ export const SaveChangedCompany = (token, id, data) => {
 }
 
 
+<<<<<<< HEAD
 export const UpdateCurrentCompany = (token, id) => {
   let config = {
     headers: {
@@ -110,6 +111,8 @@ export const SaveChangedCompany = (token, id, data) => {
 
 
 
+=======
+>>>>>>> register
 
 
 

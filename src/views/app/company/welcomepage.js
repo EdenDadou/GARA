@@ -2,9 +2,9 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import {Row, Card, Jumbotron,Button, CardBody} from "reactstrap";
-import { Colxx, Separator } from "../../components/common/CustomBootstrap";
-import IntlMessages from "../../helpers/IntlMessages";
-import Breadcrumb from "../../containers/navs/Breadcrumb";
+import { Colxx, Separator } from "../../../components/common/CustomBootstrap";
+import IntlMessages from "../../../helpers/IntlMessages";
+import Breadcrumb from "../../../containers/navs/Breadcrumb";
 import { NavLink } from 'react-router-dom'
 
 class WelcomePage extends Component {
@@ -35,7 +35,7 @@ class WelcomePage extends Component {
                     <IntlMessages id="jumbotron.lead-detail" />
                   </p>
                   <p className="lead mb-0">
-                    <NavLink className="text-white" to="/app/newcompany">
+                    <NavLink className="text-white" to="/app/company/newcompany">
                     <Button
                       color="primary"
                       size="lg"

@@ -4,14 +4,11 @@ import { injectIntl } from "react-intl";
 import { CardTitle, Row, CardBody, Card } from "reactstrap";
 import IntlMessages from "../../../helpers/IntlMessages";
 import { Colxx } from "../../../components/common/CustomBootstrap";
-import { pdfjs, Document, Page } from 'react-pdf';
-import BookListItems from "../../../components/applications/BookListItems";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 
 
-class MyEbooks extends Component {
+
+class MyMusic extends Component {
     constructor(props) {
         super(props);
 
@@ -41,13 +38,13 @@ class MyEbooks extends Component {
                         <div className="form-side">
 
                             <CardTitle className="mb-4">
-                                <IntlMessages id="menu.ebooks.myebook" />
+                                <IntlMessages id="menu.music.mymusic" />
                             </CardTitle>
                             <Card>
                                 <CardBody className="wizard wizard-default">
                                     <Row>
                                         {/* {!loading && this.props.companyList !== undefined ? (
-                                            allBooksItems.map((item, index) => {
+                                            allMusicItems.map((item, index) => {
                                                 return (
                                                     <BookListItems
                                                         key={index}
@@ -82,5 +79,5 @@ export default injectIntl(
         mapStateToProps,
         {
         }
-    )(MyEbooks)
+    )(MyMusic)
 );

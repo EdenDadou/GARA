@@ -183,6 +183,40 @@ const data = [{
     ]
   },
   {
+    id: "music",
+    icon: "iconsminds-headphones",
+    label: "menu.mymusic",
+    to: "/app/music",
+    subs: [{
+        icon: "iconsminds-electric-guitar",
+        label: "menu.music.mymusic",
+        to: "/app/music/mymusic"
+      },
+      {
+        icon: "iconsminds-add",
+        label: "menu.music.add",
+        to: "/app/music/addmusic"
+      },
+    ]
+  },
+  {
+    id: "video",
+    icon: "iconsminds-video-5",
+    label: "menu.myvideo",
+    to: "/app/video",
+    subs: [{
+        icon: "iconsminds-video-tripod",
+        label: "menu.video.myvideo",
+        to: "/app/video/myvideo"
+      },
+      {
+        icon: "iconsminds-add",
+        label: "menu.video.add",
+        to: "/app/video/addvideo"
+      },
+    ]
+  },
+  {
     id: "applications",
     icon: "iconsminds-air-balloon-1",
     label: "menu.applications",
@@ -373,7 +407,7 @@ const data = [{
     id: "company",
     icon: "iconsminds-bucket",
     label: "menu.company",
-    to: "/app/company",
+    to: "/app/company/mycompany",
   },
   {
     id: "docs",

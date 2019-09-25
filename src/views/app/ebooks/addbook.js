@@ -189,9 +189,9 @@ class AddEbook extends Component {
                                                         }} />
                                                 </AvGroup>
                                             </Colxx>
-                                            <Button
-                                            onClick={this.onClickUploadEbook}>Upload Ebook</Button>
                                         </Row>
+                                        <Button className="button-center space-between"
+                                            onClick={this.onClickUploadEbook}>Upload Ebook</Button>
                                     </AvForm>
                                 </CardBody>
                             </Card>

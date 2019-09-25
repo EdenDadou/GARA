@@ -10,10 +10,10 @@ const Applications = React.lazy(() => import(/* webpackChunkName: "applications"
 const Ui = React.lazy(() => import(/* webpackChunkName: "ui" */ './ui'));
 const Menu = React.lazy(() => import(/* webpackChunkName: "menu" */ './menu'));
 const Company = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './company'));
-const NewCompany = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './newcompany'));
-const WelcomePage = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './welcomepage'));
 const Ebooks = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './ebooks'));
-const EditCompany = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './editcompany'));
+const Music = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './music'));
+const Video = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './video'));
+const UserAccount = React.lazy(() => import(/* webpackChunkName: "blank-page" */ './useraccount'));
 
 
 const AuthRoute = ({ component: Component, CurrentWorkingCompany, authUser, ...rest }) => (
@@ -23,10 +23,10 @@ const AuthRoute = ({ component: Component, CurrentWorkingCompany, authUser, ...r
   render={props =>
 
   
-    CurrentWorkingCompany === 'null' ?
-    (<Redirect to={{ pathname: '/app/welcomepage', state: { from: props.location } }} />)
+    CurrentWorkingCompany === 'null' || false?
+    (<Redirect to={{ pathname: '/app/company/welcomepage', state: { from: props.location } }} />)
     :(CurrentWorkingCompany === 'false'?
-    (<Redirect to={{ pathname: '/app/company', state: { from: props.location } }} />)
+    (<Redirect to={{ pathname: '/app/company/mycompany', state: { from: props.location } }} />)
     :(<Component {...props} />))
     
   }
@@ -78,21 +78,25 @@ class App extends Component {
                 CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
                 history={this.props.history}
               />
+              <AuthRoute
+                path={`${match.url}/music`}
+                component={Music}
+                CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                history={this.props.history}
+              />
+              <AuthRoute
+                path={`${match.url}/video`}
+                component={Video}
+                CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                history={this.props.history}
+              />
               <Route
                 path={`${match.url}/company`}
                 render={props => <Company {...props} />}
               />
               <Route
-                path={`${match.url}/newcompany`}
-                render={props => <NewCompany {...props} />}
-              />
-              <Route
-                path={`${match.url}/welcomepage`}
-                render={props => <WelcomePage {...props} />}
-              />
-              <Route
-                path={`${match.url}/editcompany`}
-                render={props => <EditCompany {...props} />}
+                path={`${match.url}/useraccount`}
+                render={props => <UserAccount {...props} />}
               />
               <Redirect to="/error" />
             </Switch>
