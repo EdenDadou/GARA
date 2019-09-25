@@ -247,10 +247,11 @@ class Sidebar extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.handleWindowResize);
-    this.handleWindowResize();
-    this.handleProps();
-    this.setSelectedLiActive(this.setHasSubItemStatus);
+      window.addEventListener('resize', this.handleWindowResize);
+      this.handleWindowResize();
+      this.handleProps();
+      this.setSelectedLiActive(this.setHasSubItemStatus);
+
   }
 
   componentWillUnmount() {
@@ -336,17 +337,15 @@ class Sidebar extends Component {
             <PerfectScrollbar
               options={{ suppressScrollX: true, wheelPropagation: false }}
             >
-              <Nav vertical className="list-unstyled">
+              <Nav vertical className="list-unstyled" >
                 {menuItems &&
                   menuItems.map(item => {
                     return (
-                      <NavItem
+                      <NavItem 
                         key={item.id}
                         className={classnames({
                           active:
-                            (selectedParentMenu === item.id &&
-                              viewingParentMenu === '') ||
-                            viewingParentMenu === item.id
+                            (selectedParentMenu === item.id && viewingParentMenu === '') || viewingParentMenu === item.id
                         })}
                       >
                         {item.newWindow ? (

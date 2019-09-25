@@ -1,40 +1,43 @@
 import React, { Component } from "react";
-import { Row, CardTitle, Card, CardBody,CustomInput, FormGroup, Label, Input, Spinner, Form, Button } from "reactstrap";
+import { Row, CardTitle, Card, CardBody, CustomInput, FormGroup, Label, Input, Spinner, Form, Button } from "reactstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import { Wizard, Steps, Step } from 'react-albus';
 import { injectIntl } from 'react-intl';
 import { BottomNavigation } from "../../components/wizard/BottomNavigation";
 import { TopNavigation } from "../../components/wizard/TopNavigation";
 import { Colxx } from "../../components/common/CustomBootstrap";
-import { NavLink } from "react-router-dom";
-import { AvForm, AvField, AvGroup, AvInput} from 'availity-reactstrap-validation';
+import { NavLink, withRouter } from "react-router-dom";
+import { AvForm, AvField, AvGroup, AvInput } from 'availity-reactstrap-validation';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { getCountries } from "../../services/Country";
-import { postDeveloper, APIstatus} from "../../services/Developer";
+import { connect } from "react-redux";
+import { loginUser, registerUser } from "../../redux/actions";
 
-let APIcountries = getCountries()
+
 let APIcountrieslist = []
 let countrylist = []
 
-console.log(APIstatus)
+
 
 class Register extends Component {
     constructor(props) {
         super(props);
+
         this.onClickNext = this.onClickNext.bind(this);
         this.onClickPrev = this.onClickPrev.bind(this);
-        
+
+
         this.form0 = React.createRef();
         this.form1 = React.createRef();
         this.form2 = React.createRef();
-        
+
         this.state = {
             bottomNavHidden: false,
+            loading: true,
             topNavDisabled: false,
-            loading: false,
             firstName: '',
             lastName: '',
             email: '',
@@ -45,23 +48,21 @@ class Register extends Component {
             password: '',
             passwordConfirm: '',
             gender: 'Man',
-            male : '',
+            male: '',
             agreeToTermsOfUse: '',
             phoneNumber: '',
-            statusPostDev: ''
+            statusPostDev: null,
+            ResStatusOnLogin: null,
+            token: null
         }
     }
-    
+
     componentWillMount() {
         this.getCountrylistFromAPI();
         this.setState({ agreeToTermsOfUse: false });
     }
 
-    /*componentWillUnMount() {
-    }*/
-
- 
-/*Terms of Use change handler*/
+    /*Terms of Use change handler*/
     _onChange = () => {
         if (this.state.agreeToTermsOfUse === false) {
             this.setState({ agreeToTermsOfUse: true });
@@ -74,23 +75,23 @@ class Register extends Component {
     /*handle change Date*/
     handleChangeDate = (date) => {
         this.setState({ selectedDate: date });
-        this.setState({ birthday: date.format()});
+        this.setState({ birthday: date.toISOString() });
     }
 
- /*Handle change Gender  */ 
+    /*Handle change Gender  */
     handleChangeGender = gender => {
-        this.setState({ gender: gender});
-        if(gender === 'Man'){
-            this.setState({male: true})
-        }else {
-            this.setState({male : false})
+        this.setState({ gender: gender });
+        if (gender === 'Man') {
+            this.setState({ male: true })
+        } else {
+            this.setState({ male: false })
         }
     };
 
-/*Handle change Country*/
+    /*Handle change Country*/
     handleChangeCountry = country => {
         this.setState({ selectedCountry: country });
-        this.setState({ country: APIcountrieslist[country.key]});
+        this.setState({ country: APIcountrieslist[country.key] });
     };
 
     /*Handle field change*/
@@ -103,77 +104,71 @@ class Register extends Component {
         this.setState({ [input]: e.target.value });
     }
 
-    async postDeveloperOnAPI(){
-        let developer = 
-        {
-            "agreeToTermsOfUse": true,
-            "birthday": "2019-08-03T22:58:16.315Z",
-            "country": this.state.country,
-            "createDate": "2019-08-03T22:58:16.315Z",
-            "email": this.state.email,
-            "firstName": this.state.firstName,
-            "language": "English",
-            "lastName": this.state.lastName,
-            "male": this.state.male,
-            "modifiedDate": "2019-08-03T22:58:16.315Z",
-            "password":this.state.password,
-            "phoneNumber": this.state.phoneNumber
-          }
-         await postDeveloper(developer)
-        }
-        
-
-        
-        /*Get country and store them*/
-        async getCountrylistFromAPI() {
-            await APIcountries
+    /*Get country and store them*/
+    async getCountrylistFromAPI() {
+        await getCountries()
             .then((array) => {
                 /*---Convert the list get from the back end to ahave the correct format with the index---*/
                 countrylist.push(...array.map(({ name }, index) => ({ label: name, value: name, key: index })));
                 array.forEach((country) => { APIcountrieslist.push(country) });
-                
+
                 /*--Update the state to put the new format of the list---*/
                 this.setState({
                     countrylist: countrylist
                 });
             });
+    }
+
+    hideNavigation() {
+        this.setState({ bottomNavHidden: true, topNavDisabled: true });
+    }
+
+    /*Go Next*/
+    onClickNext(goToNext, steps, step) {
+        if (steps.length - 1 <= steps.indexOf(step)) {
+            return;
         }
-        
-        hideNavigation() {
-            this.setState({ bottomNavHidden: true, topNavDisabled: true });
-        }
-        
-        /*Go Next*/
-        onClickNext(goToNext, steps, step) {
-            if (steps.length - 1 <= steps.indexOf(step)) {
-                return;
-            }
-            if (steps.indexOf(step)=== 0 
+        if (steps.indexOf(step) === 0
             && this.state.firstName !== ''
             && this.state.lastName !== ''
             && this.state.email !== ''
             && this.state.password !== ''
             && this.state.passwordConfirm !== ''
             && this.state.passwordConfirm === this.state.password) {
-                goToNext(2);
-            }
-            if (steps.indexOf(step)=== 1 
+            goToNext();
+        }
+        if (steps.indexOf(step) === 1
             && this.state.birthday !== ''
             && this.state.gender !== ''
             && this.state.phoneNumber !== ''
-            && this.state.country!=='') {
-                goToNext();
-            }
-            if(steps.indexOf(step)=== 2 && this.state.agreeToTermsOfUse===true){
-               this.postDeveloperOnAPI().then(res => {
-                console.log(res)
-                // axiosResponse = res;
-                })
-                this.hideNavigation();
-                goToNext();
-            }
+            && this.state.country !== '') {
+            goToNext();
         }
-        
+        if (steps.indexOf(step) === 2 && this.state.agreeToTermsOfUse === true) {
+            let { agreeToTermsOfUse, birthday, country, email, firstName, lastName, male, password, phoneNumber } = this.state
+            let developer = {
+                "agreeToTermsOfUse": agreeToTermsOfUse,
+                "birthday": birthday,
+                "country": country,
+                "createDate": "2019-08-03T22:58:16.315Z",
+                "email": email,
+                "firstName": firstName,
+                "language": "English",
+                "lastName": lastName,
+                "male": male,
+                "modifiedDate": "2019-08-03T22:58:16.315Z",
+                "password": password,
+                "phoneNumber": phoneNumber
+            }
+
+            localStorage.setItem('onProcess', false);
+            this.props.registerUser(developer, this.props.history)
+            this.hideNavigation();
+            goToNext();
+
+        }
+    }
+
     /*Go Previous*/
     onClickPrev(goToPrev, steps, step) {
         if (steps.indexOf(step) <= 0) {
@@ -182,6 +177,17 @@ class Register extends Component {
         goToPrev();
     }
 
+    Login = () => {
+        let user = { email: this.state.email, password: this.state.password }
+        localStorage.setItem('onProcess', false);
+        this.props.loginUser(user, this.props.history)
+    }
+
+    RedirectToRegister = () => {
+        window.location.reload();
+    }
+
+
     render() {
         const { messages } = this.props.intl;
         const COUNTRY = this.state.countrylist
@@ -189,23 +195,18 @@ class Register extends Component {
             { value: 'Woman', label: 'Woman', key: 1 },
             { value: 'Man', label: 'Man', key: 2 },
         ];
+        const TermsOfUses = "Qu'est-ce que le Lorem Ipsum ? Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l 'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte. Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans les années 1960 grâce à la vente de feuilles Letraset contenant des passages du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications de mise en page de texte, comme Aldus PageMaker."
 
         return (
             <Row className="h-100">
-                <Colxx xxs="12" md="10" className="mx-auto my-auto">
+                <Colxx xxs="12" md="8" className="mx-auto my-auto">
                     <Card className="auth-card">
-                        <div className="position-relative image-side ">
-                            <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
-                            <p className="white mb-0">
-                                Please use this form to register. <br />
-                                If you are a member, please{" "}
-                                <NavLink to={`/login`} className="white">login</NavLink>.</p>
-                        </div>
+
                         <div className="form-side">
                             <NavLink to={`/`} className="white">
-                                <span className="logo-single" />
+                                <span className="logo-single-register" />
                             </NavLink>
-                            <CardTitle className="mb-4">
+                            <CardTitle className="mb-3 mt-2">
                                 <IntlMessages id="user.register" />
                             </CardTitle>
                             <Card>
@@ -356,7 +357,7 @@ class Register extends Component {
                                                                         <Label className="form-group has-float-label size-1rem">
                                                                             <IntlMessages id="user.phone" />
                                                                         </Label>
-                                                                        <Input type="text"
+                                                                        <Input type="number"
                                                                             required
                                                                             name="phoneNumber"
                                                                             value={this.state.phoneNumber}
@@ -390,25 +391,17 @@ class Register extends Component {
                                             </Step>
                                             <Step id="step3" name={messages["wizard.step-name-3"]} desc={messages["wizard.step-desc-3"]}>
                                                 <div className="wizard-basic-step">
-                                                <AvForm>
-                                                    <AvGroup>
-                                                        <Label>Terms of Uses</Label>
-                                                        <AvInput
-                                                            type="textarea"
-                                                            name="UsesTerms"
-                                                            style={{maxHeight: 130, minHeight: 130}}
-                                                            readOnly
-                                                            placeholder="Qu'est-ce que le Lorem Ipsum?
-                                                            Le Lorem Ipsum est simplement du faux texte employé dans la composition
-                                                            et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard
-                                                             de l'imprimerie depuis les années 1500, quand un imprimeur anonyme assembla
-                                                              ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte.
-                                                               Il n'a pas fait que survivre cinq siècles, mais s'est aussi adapté à la bureautique
-                                                               informatique, sans que son contenu n'en soit modifié. Il a été popularisé dans
-                                                               les années 1960 grâce à la vente de feuilles Letraset contenant des passages
-                                                               du Lorem Ipsum, et, plus récemment, par son inclusion dans des applications
-                                                               de mise en page de texte, comme Aldus PageMaker." />
-                                                    </AvGroup>
+                                                    <AvForm>
+                                                        <AvGroup>
+                                                            <Label>Terms of Uses</Label>
+                                                            <AvInput
+                                                                type="textarea"
+                                                                name="UsesTerms"
+                                                                style={{ maxHeight: 130, minHeight: 130 }}
+                                                                readOnly
+                                                                placeholder={TermsOfUses}
+                                                            />
+                                                        </AvGroup>
                                                     </AvForm>
                                                     {/* -------User agrement */}
 
@@ -429,24 +422,39 @@ class Register extends Component {
                                             </Step>
                                             <Step id="step4" hideTopNav={true}>
                                                 <div className="wizard-basic-step text-center pt-3">
-                                                    {
-                                                        this.state.loading ? (
-                                                            <div>
-                                                                <Spinner color="primary" className="mb-1" />
-                                                                <p><IntlMessages id="wizard.async" /></p>
-                                                            </div>
-                                                        ) : (
-                                                            <div>
+                                                    {this.props.loading ? (
+                                                        <div>
+                                                            <Spinner color="primary" className="mb-1" />
+                                                            <p><IntlMessages id="message.wait" /></p>
+                                                        </div>
+                                                    ) : (
+                                                            this.props.user === 'Error' ? (
                                                                 <div>
-                                                                    <h2 className="mb-2"><IntlMessages id="wizard.content-thanks" /></h2>
-                                                                    <p><IntlMessages id="wizard.registered" /></p>
+                                                                    <div>
+                                                                        <h2 className="mb-2"><IntlMessages id="register.error.title" /></h2>
+                                                                        <p><IntlMessages id="register.error.text" /></p>
+                                                                    </div>
+                                                                    <Button onClick={this.RedirectToRegister}>
+                                                                        Retry
+                                                            </Button>
+                                                                    <NavLink to="/user/login">
+                                                                        <Button>
+                                                                            Login
+                                                            </Button>
+                                                                    </NavLink>
                                                                 </div>
-                                                                <Button /*onClick={}*/ >
-                                                                    Se connecter
-                                                                    </Button>
-                                                                </div>
-                                                            )
-                                                    }
+
+                                                            ) : (
+                                                                    <div>
+                                                                        <div>
+                                                                            <h2 className="mb-2"><IntlMessages id="wizard.content-thanks" /></h2>
+                                                                            <p><IntlMessages id="wizard.registered" /></p>
+
+                                                                        </div>
+                                                                        <Button onClick={this.Login}>Login</Button>
+                                                                    </div>
+
+                                                                ))}
                                                 </div>
                                             </Step>
                                         </Steps>
@@ -461,4 +469,17 @@ class Register extends Component {
         );
     }
 }
-export default injectIntl(Register)
+
+
+const mapStateToProps = ({ authUser }) => {
+    const { user, loading } = authUser;
+    return { user, loading };
+};
+
+
+export default withRouter(injectIntl(connect(
+    mapStateToProps,
+    {
+        registerUser, loginUser
+    }
+)(Register)));

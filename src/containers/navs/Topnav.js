@@ -11,10 +11,9 @@ import {
 
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-
-import IntlMessages from "../../helpers/IntlMessages";
 import {
   setContainerClassnames,
+  changeDefaultClassnames,
   clickOnMobileMenu,
   logoutUser,
   changeLocale
@@ -33,6 +32,8 @@ import TopnavNotifications from "./Topnav.Notifications";
 import TopnavDarkSwitch from "./Topnav.DarkSwitch";
 
 import { getDirection, setDirection } from "../../helpers/Utils";
+
+
 class TopNav extends Component {
   constructor(props) {
     super(props);
@@ -43,6 +44,7 @@ class TopNav extends Component {
     };
   }
 
+  //--------Language---------//
   handleChangeLocale = (locale, direction) => {
     this.props.changeLocale(locale);
 
@@ -54,16 +56,9 @@ class TopNav extends Component {
       }, 500);
     }
   };
-  isInFullScreen = () => {
-    return (
-      (document.fullscreenElement && document.fullscreenElement !== null) ||
-      (document.webkitFullscreenElement &&
-        document.webkitFullscreenElement !== null) ||
-      (document.mozFullScreenElement &&
-        document.mozFullScreenElement !== null) ||
-      (document.msFullscreenElement && document.msFullscreenElement !== null)
-    );
-  };
+
+
+  //-------Search------//
   handleSearchIconClick = e => {
     if (window.innerWidth < menuHiddenBreakpoint) {
       let elem = e.target;
@@ -143,6 +138,7 @@ class TopNav extends Component {
     });
   };
 
+  //---------FullScreen------//
   toggleFullScreen = () => {
     const isInFullScreen = this.isInFullScreen();
 
@@ -173,51 +169,140 @@ class TopNav extends Component {
     });
   };
 
-  handleLogout = () => {
-    this.props.logoutUser(this.props.history);
+  isInFullScreen = () => {
+    return (
+      (document.fullscreenElement && document.fullscreenElement !== null) ||
+      (document.webkitFullscreenElement &&
+        document.webkitFullscreenElement !== null) ||
+      (document.mozFullScreenElement &&
+        document.mozFullScreenElement !== null) ||
+      (document.msFullscreenElement && document.msFullscreenElement !== null)
+    );
   };
 
+  //---------User ---------//
+
+  OpenUserAccount = () =>{
+    this.props.history.push('/app/useraccount')
+  }
+
+
+  //--------Logout------//
+  handleLogout = () => {
+    this.props.logoutUser(this.props.history)
+
+  };
+
+
+  //---------Menu-------//
   menuButtonClick = (e, menuClickCount, containerClassnames) => {
     e.preventDefault();
 
-    setTimeout(() => {
-      var event = document.createEvent("HTMLEvents");
-      event.initEvent("resize", false, false);
-      window.dispatchEvent(event);
-    }, 350);
-    this.props.setContainerClassnames(
-      ++menuClickCount,
-      containerClassnames,
-      this.props.selectedMenuHasSubItems
-    );
+    if(localStorage.getItem('CurrentWorkingCompany')==='null' || localStorage.getItem('CurrentWorkingCompany')==='false' ){
+      return
+    }else if(localStorage.getItem('CurrentWorkingCompany') === 'true'){
+      setTimeout(() => {
+        var event = document.createEvent("HTMLEvents");
+        event.initEvent("resize", false, false);
+        window.dispatchEvent(event);
+      }, 350);
+      this.props.setContainerClassnames(
+        ++menuClickCount,
+        containerClassnames,
+        this.props.selectedMenuHasSubItems
+      );
+    }
+
   };
+
   mobileMenuButtonClick = (e, containerClassnames) => {
     e.preventDefault();
     this.props.clickOnMobileMenu(containerClassnames);
   };
 
+    changeDefaultMenuType = (containerClassnames) => {
+    let nextClasses = this.getMenuClassesForResize(containerClassnames);
+    this.props.setContainerClassnames(
+      0,
+      nextClasses.join(" "),
+      this.props.selectedMenuHasSubItems
+    );
+  };
+  
+  getMenuClassesForResize = classes => {
+    const { menuHiddenBreakpoint, subHiddenBreakpoint } = this.props;
+    let nextClasses = classes.split(" ").filter(x => x !== "");
+    const windowWidth = window.innerWidth;
+    if (windowWidth < menuHiddenBreakpoint) {
+      nextClasses.push("menu-mobile");
+    } else if (windowWidth < subHiddenBreakpoint) {
+      nextClasses = nextClasses.filter(x => x !== "menu-mobile");
+      if (
+        nextClasses.includes("menu-default") &&
+        !nextClasses.includes("menu-sub-hidden")
+      ) {
+        nextClasses.push("menu-sub-hidden");
+      }
+    } else {
+      nextClasses = nextClasses.filter(x => x !== "menu-mobile");
+      if (
+        nextClasses.includes("menu-default") &&
+        nextClasses.includes("menu-sub-hidden")
+      ) {
+        nextClasses = nextClasses.filter(x => x !== "menu-sub-hidden");
+      }
+    }
+    return nextClasses;
+  };
+
+
+  //--------Component mount-----//
+  componentDidMount(){
+    if(localStorage.getItem('CurrentWorkingCompany')==='null' || localStorage.getItem('CurrentWorkingCompany')==='false' ){
+      this.changeDefaultMenuType( "menu-hidden")
+    }else if(localStorage.getItem('CurrentWorkingCompany') === 'true'){
+      this.changeDefaultMenuType( "menu-default")
+    }
+  }
+
   render() {
+    const UserName = localStorage.getItem('UserFullName')
     const { containerClassnames, menuClickCount, locale } = this.props;
     const { messages } = this.props.intl;
     return (
       <nav className="navbar fixed-top">
         <div className="d-flex align-items-center navbar-left">
-          <NavLink
-            to="#"
-            className="menu-button d-none d-md-block"
-            onClick={e =>
-              this.menuButtonClick(e, menuClickCount, containerClassnames)
-            }
-          >
-            <MenuIcon />
-          </NavLink>
-          <NavLink
-            to="#"
-            className="menu-button-mobile d-xs-block d-sm-block d-md-none"
-            onClick={e => this.mobileMenuButtonClick(e, containerClassnames)}
-          >
-            <MobileMenuIcon />
-          </NavLink>
+          {localStorage.getItem('CurrentWorkingCompany') === 'null' ? (
+            <div>
+              <NavLink
+                to="#"
+                className="menu-button d-none d-md-block">
+                <MenuIcon />
+              </NavLink>
+              <NavLink
+                to="#"
+                className="menu-button-mobile d-xs-block d-sm-block d-md-none"
+              >
+                <MobileMenuIcon />
+              </NavLink>
+            </div>
+          ) : (
+              <div>
+                <NavLink
+                  to="#"
+                  className="menu-button d-none d-md-block"
+                  onClick={e => this.menuButtonClick(e, menuClickCount, containerClassnames)}>
+                  <MenuIcon />
+                </NavLink>
+                <NavLink
+                  to="#"
+                  className="menu-button-mobile d-xs-block d-sm-block d-md-none"
+                  onClick={e => this.mobileMenuButtonClick(e, containerClassnames)}
+                >
+                  <MobileMenuIcon />
+                </NavLink>
+              </div>
+            )}
 
           <div className="search" data-search-path="/app/pages/search">
             <Input
@@ -259,15 +344,7 @@ class TopNav extends Component {
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
-          <div className="position-relative d-none d-none d-lg-inline-block">
-            <a
-              className="btn btn-outline-primary btn-sm ml-2"
-              target="_top"
-              href="https://themeforest.net/cart/configure_before_adding/22544383?license=regular&ref=ColoredStrategies&size=source"
-            >
-              <IntlMessages id="user.buy" />
-            </a>
-          </div>
+
         </div>
         <a className="navbar-logo" href="/">
           <span className="logo d-none d-xs-block" />
@@ -275,7 +352,7 @@ class TopNav extends Component {
         </a>
 
         <div className="navbar-right">
-          {isDarkSwitchActive && <TopnavDarkSwitch/>}
+          {isDarkSwitchActive && <TopnavDarkSwitch />}
           <div className="header-icons d-inline-block align-middle">
             <TopnavEasyAccess />
             <TopnavNotifications />
@@ -288,20 +365,21 @@ class TopNav extends Component {
               {this.state.isInFullScreen ? (
                 <i className="simple-icon-size-actual d-block" />
               ) : (
-                <i className="simple-icon-size-fullscreen d-block" />
-              )}
+                  <i className="simple-icon-size-fullscreen d-block" />
+                )}
             </button>
           </div>
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">Sarah Kortney</span>
+                <span className="name mr-1 text-white">{UserName}</span>
                 <span>
                   <img alt="Profile" src="/assets/img/profile-pic-l.jpg" />
                 </span>
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
-                <DropdownItem>Account</DropdownItem>
+                <DropdownItem
+                onClick={()=> this.OpenUserAccount()}>Account</DropdownItem>
                 <DropdownItem>Features</DropdownItem>
                 <DropdownItem>History</DropdownItem>
                 <DropdownItem>Support</DropdownItem>
@@ -319,10 +397,16 @@ class TopNav extends Component {
 }
 
 const mapStateToProps = ({ menu, settings }) => {
-  const { containerClassnames, menuClickCount, selectedMenuHasSubItems } = menu;
+  const { containerClassnames,
+    subHiddenBreakpoint,
+    menuHiddenBreakpoint,
+    menuClickCount,
+    selectedMenuHasSubItems } = menu;
   const { locale } = settings;
   return {
     containerClassnames,
+    subHiddenBreakpoint,
+    menuHiddenBreakpoint,
     menuClickCount,
     selectedMenuHasSubItems,
     locale
@@ -331,6 +415,6 @@ const mapStateToProps = ({ menu, settings }) => {
 export default injectIntl(
   connect(
     mapStateToProps,
-    { setContainerClassnames, clickOnMobileMenu, logoutUser, changeLocale }
+    { setContainerClassnames, changeDefaultClassnames, clickOnMobileMenu, logoutUser, changeLocale }
   )(TopNav)
 );

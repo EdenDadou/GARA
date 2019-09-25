@@ -7,12 +7,16 @@ import {
   Redirect
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import './helpers/Firebase';
 import AppLocale from './lang';
 import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
-import { isMultiColorActive, isDemo } from './constants/defaultValues';
+import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
+import { DeveloperInfo } from './services/Developer';
+import {logoutUser} from "./redux/actions";
+
+
+
 
 const ViewMain = React.lazy(() =>
   import(/* webpackChunkName: "views" */ './views')
@@ -27,23 +31,38 @@ const ViewError = React.lazy(() =>
   import(/* webpackChunkName: "views-error" */ './views/error')
 );
 
+
+
+
+
 const AuthRoute = ({ component: Component, authUser, ...rest }) => (
+
   <Route
     {...rest}
     render={props =>
-      authUser || isDemo ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-          to={{
-            pathname: '/user/login',
-            state: { from: props.location }
-          }}
-        />
-      )
+      //if localStorage.getItem('Allow')  is true, display component, else redirect to login
+      authUser ?
+        (<Component {...props} />) : (<Redirect to={{ pathname: '/user/login', state: { from: props.location } }} />)
     }
   />
 );
+
+
+const LoginRoute = ({ component: Component, authUser, CurrentWorkingCompany, ...rest }) => (
+
+  <Route
+    {...rest}
+    render={props =>
+
+      authUser === false || authUser === null ?
+        (<Component {...props} />)
+        : (CurrentWorkingCompany === null ? (<Redirect to={{ pathname: '/app/company/welcomepage', state: { from: props.location } }} />)
+          : (CurrentWorkingCompany === false ? (<Redirect to={{ pathname: '/app/company/company', state: { from: props.location } }} />)
+            : (<Redirect to={{ pathname: '/app/dashboards', state: { from: props.location } }} />)))
+    }
+  />
+);
+
 
 class App extends Component {
   constructor(props) {
@@ -58,11 +77,37 @@ class App extends Component {
     }
   }
 
-  render() {
-    const { locale, loginUser } = this.props;
-    const currentAppLocale = AppLocale[locale];
+  componentWillMount() {
+    //On mounting, after verification that we stock a token
+    if (localStorage.getItem('Token') !== null) {
+      //Send it to API for validity verification
+      DeveloperInfo(localStorage.getItem('Token'), localStorage.getItem('UserID'))
+        .then(res => {
+          if (res.status === 200) {
+            console.log(res)
+            //If res.status === 200, then change Allow value to true
+            localStorage.setItem('Allow', true)
+            localStorage.setItem('UserFullName', res.data.firstName + " " + res.data.lastName)
+          } else {
+            localStorage.setItem('Allow', false)
+            this.props.logoutUser()
+          }
+        })
+        .catch(error => {
+          localStorage.setItem('Allow', false)
+          this.props.logoutUser()
+        })
+    }
+  }
 
+
+
+  render() {
+
+    const { locale } = this.props;
+    const currentAppLocale = AppLocale[locale];
     return (
+
       <div className="h-100">
         <IntlProvider
           locale={currentAppLocale.locale}
@@ -76,12 +121,16 @@ class App extends Component {
                 <Switch>
                   <AuthRoute
                     path="/app"
-                    authUser={loginUser}
                     component={ViewApp}
+                    authUser={localStorage.getItem('Allow')}
+                    history={this.props.history}
                   />
-                  <Route
+                  <LoginRoute
                     path="/user"
-                    render={props => <ViewUser {...props} />}
+                    component={ViewUser}
+                    authUser={localStorage.getItem('Allow')}
+                    CurrentWorkingCompany={localStorage.getItem('CurrentWorkingCompany')}
+                    history={this.props.history}
                   />
                   <Route
                     path="/error"
@@ -104,12 +153,17 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, settings }) => {
+const mapStateToProps = ({ authUser, companyList, mobileMoney, settings }) => {
   const { user: loginUser } = authUser;
+  const { item: addCompany } = companyList
+  const { payment: MobileMoneyPaid } = mobileMoney
   const { locale } = settings;
-  return { loginUser, locale };
+  return {
+    loginUser, locale,
+    addCompany, MobileMoneyPaid
+  };
 };
-const mapActionsToProps = {};
+const mapActionsToProps = {logoutUser};
 
 export default connect(
   mapStateToProps,

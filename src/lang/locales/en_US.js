@@ -42,7 +42,52 @@ module.exports = {
 "user.gender" : "Gender",
 "user.phone" : "Phone Number",
 "user.country" : "Country",
+"user.operator" : "Operator",
 "user.agrement" : "Accept the Terms of Uses",
+"user.languague": "Language",
+"user.account": "Account",
+
+"register.error.text": "Your informations already exist in our data base",
+"register.error.title": "Oups, there is a problems",
+"register.error.mismatch": "It's seem that your informations are incorrect",
+"register.error.contact": "Please contact the client service",
+"register.error.tryagain": "Please try again to connect",
+"message.wait": " Please wait a seconde",
+
+"menu.company": "Company",
+"menu.mycompany": "Company",
+"add.company": "New Company",
+"create.company": "Create Company",
+"menu.welcomepage": "Welcome",
+"company.edit": "Edit",
+"edit.company": "Edit Company",
+"company.use": "Use that company",
+"company.delete": "Delete",
+
+"menu.mymusic": "Music",
+"menu.music.mymusic": "My Music",
+"menu.music.add": "Add Music",
+
+"menu.myvideo": "Video",
+"menu.video.myvideo": "My Video",
+"menu.video.add": "Add Video",
+
+"menu.ebooks": "Ebooks",
+"menu.ebooks.myebook": "My Ebooks",
+"menu.ebooks.add": "Add Ebook",
+
+"button.paid": "Paid",
+"none.none": "    ",
+"button.upload": "Upload",
+"menu.preview": "Preview",
+
+
+
+
+
+
+
+
 
   /* 01.General */
   "general.copyright": "Gogo React © 2018 All Rights Reserved.",

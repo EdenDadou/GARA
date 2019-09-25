@@ -10,8 +10,11 @@ class AppLayout extends Component {
     const { containerClassnames } = this.props;
     return (
       <div id="app-container" className={containerClassnames}>
-        <TopNav history={this.props.history} />
+        <TopNav hidden history={this.props.history} />
+        {localStorage.getItem('CurrentWorkingCompany')==='null' || localStorage.getItem('CurrentWorkingCompany')==='false'? (null):(
         <Sidebar />
+        )} 
+        
         <main>
           <div className="container-fluid">
           {this.props.children}

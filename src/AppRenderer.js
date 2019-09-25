@@ -7,6 +7,7 @@ import { configureStore } from './redux/store';
 const App = React.lazy(() => import(/* webpackChunkName: "App" */'./App' ));
 
 ReactDOM.render(
+ 
   <Provider store={configureStore()}>
     <Suspense fallback={<div className="loading" />}>
       <App />

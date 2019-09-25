@@ -50,6 +50,9 @@ Table of Contents
 
 */
 
+
+
+
 /* 00.Variables and Imports */
 @import url("https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700");
 
@@ -95,6 +98,41 @@ $info-color: #3195a5;
 $success-color: #3e884f;
 $warning-color: #b69329;
 $error-color: #c43d4b;
+
+
+
+/*ADD*/
+.center{
+ display : flex;
+ justify-content: center;
+ align-items: center;
+}
+
+.space-between{
+  display:flex;
+  justify-content: space-between; 
+}
+
+.height700{
+  height: 700px;
+}
+
+.EbookStyle{
+  // height: 550px;
+  display: flex;
+  justify-content: center;
+}
+
+.selectedLight{
+  padding-right: 0
+}
+
+.button-center{
+  margin:auto;
+}
+
+
+
 
 /* 01.Base */
 html {
@@ -152,7 +190,7 @@ body {
 }
 
 .fixed-background {
-  background: url("/assets/img/balloon.jpg") no-repeat center center fixed;
+  //background: url("/assets/img/balloon.jpg") no-repeat center center fixed;
   background-size: cover;
   width: 100%;
   height: 100%;
@@ -313,12 +351,25 @@ hr {
 }
 
 .logo-single {
-  width: 110px;
-  height: 35px;
-  background: url($logoPath) no-repeat;
+  width: 660px;
+  height: 210px;
+  background: url("/assets/img/Gara.svg") no-repeat;
   background-position: center center;
-  display: inline-block;
-  margin-bottom: 60px;
+  position: relative;
+  bottom:-30px;
+  // left: 10%;
+  padding : 50%;
+}
+
+.logo-single-register {
+  width: 660px;
+  height: 210px;
+  background: url("/assets/img/Gara.svg") no-repeat;
+  background-position: center center;
+  position: relative;
+  bottom:-30px;
+  left: 15%;
+  padding : 250px;
 }
 
 .list-item-heading-container {
@@ -333,6 +384,10 @@ hr {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.reset-padding {
+  padding: 0% !important;
 }
 
 .no-transition {
@@ -1349,6 +1404,9 @@ button {
   &.badge-top-right-2 {
     top: 40px;
     right: -7px;
+  }
+  &.badge-middle-flat{
+    padding-right: 0
   }
 }
 
@@ -5892,7 +5950,7 @@ input:-webkit-autofill {
   }
 
   .form-side {
-    width: 60%;
+    width: 100%;
     padding: 50px;
   }
 
@@ -6912,9 +6970,10 @@ input:-webkit-autofill {
   }
 }
 
-.wizard {
-  margin-top: -2rem;
-}
+// .wizard {
+//   //We remove the margin top of wizard
+//   //margin-top: -2rem;
+// }
 
 .wizard ul.nav {
   list-style: none;

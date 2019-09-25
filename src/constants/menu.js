@@ -166,6 +166,57 @@ const data = [{
     ]
   },
   {
+    id: "ebooks",
+    icon: "iconsminds-book",
+    label: "menu.ebooks",
+    to: "/app/ebooks",
+    subs: [{
+        icon: "iconsminds-library",
+        label: "menu.ebooks.myebook",
+        to: "/app/ebooks/myebooks"
+      },
+      {
+        icon: "iconsminds-add",
+        label: "menu.ebooks.add",
+        to: "/app/ebooks/addbook"
+      },
+    ]
+  },
+  {
+    id: "music",
+    icon: "iconsminds-headphones",
+    label: "menu.mymusic",
+    to: "/app/music",
+    subs: [{
+        icon: "iconsminds-electric-guitar",
+        label: "menu.music.mymusic",
+        to: "/app/music/mymusic"
+      },
+      {
+        icon: "iconsminds-add",
+        label: "menu.music.add",
+        to: "/app/music/addmusic"
+      },
+    ]
+  },
+  {
+    id: "video",
+    icon: "iconsminds-video-5",
+    label: "menu.myvideo",
+    to: "/app/video",
+    subs: [{
+        icon: "iconsminds-video-tripod",
+        label: "menu.video.myvideo",
+        to: "/app/video/myvideo"
+      },
+      {
+        icon: "iconsminds-add",
+        label: "menu.video.add",
+        to: "/app/video/addvideo"
+      },
+    ]
+  },
+  {
     id: "applications",
     icon: "iconsminds-air-balloon-1",
     label: "menu.applications",
@@ -353,10 +404,10 @@ const data = [{
     ]
   },
   {
-    id: "blankpage",
+    id: "company",
     icon: "iconsminds-bucket",
-    label: "menu.blank-page",
-    to: "/app/blank-page"
+    label: "menu.company",
+    to: "/app/company/mycompany",
   },
   {
     id: "docs",
