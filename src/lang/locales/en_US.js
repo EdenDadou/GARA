@@ -79,18 +79,10 @@ module.exports = {
 "button.paid": "Paid",
 "none.none": "    ",
 "button.upload": "Upload",
-<<<<<<< HEAD
-"menu.ebooks.preview": "Preview",
-"company.edit": "Edit",
-"edit.company": "Edit Company",
-"company.use": "Use that company",
-"company.delete": "Delete",
-=======
 "menu.preview": "Preview",
 
 
 
->>>>>>> register
 
 
 
